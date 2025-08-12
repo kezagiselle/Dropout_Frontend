@@ -44,6 +44,14 @@ const PasswordChanged: React.FC<Props> = ({ onProceed }) => {
           >
             Proceed to Login
           </button>
+          <p
+  className="mt-4 text-center text-sm text-gray-600 cursor-pointer hover:underline"
+  onClick={() => {
+    /* you can handle help click here */
+  }}
+>
+  Need Help?
+</p>
         </div>
       </div>
     </div>

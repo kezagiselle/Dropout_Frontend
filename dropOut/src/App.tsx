@@ -9,7 +9,9 @@ import PasswordChangedConfirmation from "./components/PasswordChange";
 
 function App() {
   return (
-    <Router>
+    // <>
+    // <PasswordChangedConfirmation />
+    // </>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
@@ -17,7 +19,6 @@ function App() {
         <Route path="/new-password-reset" element={<NewPasswordReset />} />
         <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
       </Routes>
-    </Router>
   );
 }
 

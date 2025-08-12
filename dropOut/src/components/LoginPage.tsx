@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import loginImage from "../../src/img/imageLo.png";
+import loginImage from "../../src/img/Login1.png";
 
 interface LoginForm {
   email: string;
@@ -31,11 +31,11 @@ const LoginPage: React.FC = () => {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section - Image */}
-      <div className="md:w-1/2 w-full">
+      <div className="h-screen flex items-center justify-center bg-gray-100">
         <img
           src={loginImage}
           alt="Login Illustration"
-          className="w-full h-full object-cover"
+          className="w-full h-300 object-cover"
         />
       </div>
 

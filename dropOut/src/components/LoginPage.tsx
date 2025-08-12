@@ -100,9 +100,9 @@ const LoginPage: React.FC = () => {
               />
               <span>Remember me</span>
             </label>
-            <a href="#" className="text-black font-bold">
-              Forgot Password?
-            </a>
+         <Link to="/reset-password" className="text-black font-bold hover:underline">
+  Forgot Password?
+</Link>
           </div>
 
   <button

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import loginImage from "../../src/img/Login1.png";
 import googleLogo from '../../src/img/light/googleIcon.png';
@@ -204,12 +205,12 @@ const SignUpPage: React.FC = () => {
             </button>
           </div>
 
-          <p className="text-center mt-6 text-sm">
-            Already have an account?{" "}
-            <a href="#" className="text-black font-bold">
-              Login
-            </a>
-          </p>
+         <p className="text-center mt-6 text-sm">
+  Already have an account?{" "}
+  <Link to="/" className="text-black font-bold hover:underline">
+    Login
+  </Link>
+</p>
         </form>
       </div>
     </div>

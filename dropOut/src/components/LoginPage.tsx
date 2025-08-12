@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import loginImage from "../../src/img/Login1.png";
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import googleLogo from '../../src/img/light/googleIcon.png';
 
 interface LoginForm {
   email: string;
@@ -99,7 +99,7 @@ const LoginPage: React.FC = () => {
               />
               <span>Remember me</span>
             </label>
-            <a href="#" className="text-orange-500">
+            <a href="#" className="text-black font-bold">
               Forgot Password?
             </a>
           </div>
@@ -134,16 +134,17 @@ const LoginPage: React.FC = () => {
           {/* Social buttons */}
           <div className="flex gap-4">
             <button
-              type="button"
-              className="flex-1 border py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-50"
-            >
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                alt="Google"
-                className="w-5 h-5"
-              />
-              Google
-            </button>
+  type="button"
+  className="flex-1 border py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
+>
+  {/* Google Logo */}
+  <img
+    src={googleLogo}
+    alt="Google"
+    className="w-5 h-5"
+  />
+  <span>Google</span>
+</button>
             <button
               type="button"
               className="flex-1 border py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-50"
@@ -159,7 +160,7 @@ const LoginPage: React.FC = () => {
 
           <p className="text-center mt-6 text-sm">
             Don’t have an account?{" "}
-            <a href="#" className="text-orange-500 font-semibold">
+            <a href="#" className="text-black font-bold">
               Sign up
             </a>
           </p>

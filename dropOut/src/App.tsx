@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import LoginPage from './components/LoginPage'
-import SignUpPage from './components/SignUp'
-// import ResetPasswordPage from './components/ResetPassword'
-import NewPasswordReset from './components/ResetInfo'
-import PasswordChangedConfirmation from './components/PasswordChange'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import LoginPage from "./components/LoginPage";
+import SignUpPage from "./components/SignUp";
+import NewPasswordReset from "./components/ResetInfo";
+import PasswordChangedConfirmation from "./components/PasswordChange";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-     <LoginPage />
-     {/* <SignUpPage /> */}
-     {/* <ResetPasswordPage /> */}
-     {/* <PasswordChangedConfirmation /> */}
-     {/* <NewPasswordReset /> */}
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/new-password-reset" element={<NewPasswordReset />} />
+        <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
+        {/* Add other routes here as needed */}
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

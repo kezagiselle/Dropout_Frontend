@@ -64,15 +64,29 @@ const LoginPage: React.FC = () => {
   </svg>
     
             </div>
-          <label className="block mb-2 font-semibold">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-          />
+        <label className="block mb-2 font-semibold">Password</label>
+<div className="relative">
+  <input
+    type="password"
+    name="password"
+    value={formData.password}
+    onChange={handleChange}
+    placeholder="Enter your password"
+    className="w-full border rounded-md px-10 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+  />
+  <svg
+    className="absolute left-3 top-2.5 h-5 w-5 text-gray-600"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
+      clipRule="evenodd"
+    />
+  </svg>
+  </div>
 
           <div className="flex justify-between items-center mt-2 text-sm">
             <label className="flex items-center space-x-2">
@@ -90,12 +104,25 @@ const LoginPage: React.FC = () => {
             </a>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-orange-400 hover:bg-orange-500 text-white py-2 rounded-full mt-6 flex items-center justify-center space-x-2"
-          >
-            <span>Login</span>
-          </button>
+  <button
+  type="submit"
+  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-2 rounded-full mt-6 flex items-center justify-center gap-2"
+>
+  {/* Right-pointing arrow (→) on the left */}
+  <svg
+    className="h-4 w-4 text-white"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M5 12h14M12 5l7 7-7 7" />
+  </svg>
+  <span>Login</span>
+</button>
 
           {/* OR divider */}
           <div className="flex items-center my-6">

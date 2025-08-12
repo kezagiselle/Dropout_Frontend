@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { Link } from "react-router-dom";
 import loginImage from "../../src/img/Login1.png";
 
 interface NewPasswordForm {
@@ -137,9 +138,11 @@ const NewPasswordReset: React.FC = () => {
     <path d="M5 12h14M12 5l7 7-7 7" />
   </svg>
 </button>
-<p className="mt-4 text-center font-bold text-gray-800 cursor-pointer hover:underline">
-  Return to Login
-</p>
+<Link to="/">
+  <p className="mt-4 text-center font-bold text-gray-800 cursor-pointer hover:underline">
+    Return to Login
+  </p>
+</Link>
         </form>
       </div>
     </div>

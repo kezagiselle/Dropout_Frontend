@@ -1,17 +1,26 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import loginImage from "../../src/img/Login1.png";
 
 const ResetPasswordSimple: React.FC = () => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+
+    if (!email) {
+      alert("Please enter your email");
+      return;
+    }
+
     console.log("Reset link sent to:", email);
-    // Add reset logic here
+
+    // Navigate to new password reset page after submitting email
+    navigate("/new-password-reset");
   };
 
   return (
@@ -83,24 +92,23 @@ const ResetPasswordSimple: React.FC = () => {
           </button>
 
           <div className="mt-6 text-center md:text-left">
-           <Link
-  to="/"
-  className="flex items-center gap-2 text-black font-bold hover:underline ml-40"
->
-  <svg
-    className="h-5 w-5"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    viewBox="0 0 24 24"
-  >
-    <path d="M15 19l-7-7 7-7" />
-  </svg>
-  Back to Login
-</Link>
-
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-black font-bold hover:underline ml-40"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <path d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Login
+            </Link>
           </div>
         </form>
       </div>

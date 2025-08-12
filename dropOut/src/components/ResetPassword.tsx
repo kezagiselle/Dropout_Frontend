@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
+import { motion } from "framer-motion";
 import loginImage from "../../src/img/Login1.png";
 
 const ResetPasswordSimple: React.FC = () => {
@@ -23,19 +24,40 @@ const ResetPasswordSimple: React.FC = () => {
     navigate("/new-password-reset");
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
+
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section - Image */}
-      <div className="h-screen flex items-center justify-center bg-gray-100 md:w-1/2">
+      <motion.div
+        className="h-screen flex items-center justify-center bg-gray-100 md:w-1/2"
+        variants={imageVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <img
           src={loginImage}
           alt="Reset Password Illustration"
           className="w-full h-300 object-cover"
         />
-      </div>
+      </motion.div>
 
       {/* Right Section - Form */}
-      <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
+      <motion.div
+        className="md:w-1/2 w-full flex flex-col justify-center items-center p-10"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <form onSubmit={handleSubmit} className="w-full max-w-md">
           <p className="text-gray-600 mb-6 text-center md:text-left">
             Enter your email to receive a password reset link
@@ -111,7 +133,7 @@ const ResetPasswordSimple: React.FC = () => {
             </Link>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

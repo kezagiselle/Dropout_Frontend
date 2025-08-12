@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import loginImage from "../../src/img/Login1.png";
 
 interface NewPasswordForm {
@@ -30,25 +31,43 @@ const NewPasswordReset: React.FC = () => {
       return;
     }
 
-    
-
     console.log("New password set:", formData.newPassword);
     // Add reset password logic here
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
   };
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section - Image */}
-      <div className="h-screen flex items-center justify-center bg-gray-100 md:w-1/2">
+      <motion.div
+        className="h-screen flex items-center justify-center bg-gray-100 md:w-1/2"
+        variants={imageVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <img
           src={loginImage}
           alt="New Password Illustration"
           className="w-full h-300 object-cover"
         />
-      </div>
+      </motion.div>
 
       {/* Right Section - Form */}
-      <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
+      <motion.div
+        className="md:w-1/2 w-full flex flex-col justify-center items-center p-10"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <form onSubmit={handleSubmit} className="w-full max-w-md">
           <p className="text-gray-600 mb-20 text-center md:text-left font-semibold">
             Please enter your new password below
@@ -89,62 +108,61 @@ const NewPasswordReset: React.FC = () => {
             />
           </div>
 
-      
-<div className="mb-6 text-sm text-gray-600">
-  <p className="font-semibold mb-1">Password must contain:</p>
-  <ul className="list-none space-y-2">
-    {[
-      "At least 8 characters",
-      "One uppercase letter",
-      "One lowercase letter",
-      "One number",
-      "One special character (e.g., !@#$%)",
-    ].map((item) => (
-      <li key={item} className="flex items-center gap-2">
-        {/* Green check icon */}
-        <svg
-          className="w-5 h-5 text-green-500 flex-shrink-0"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M5 13l4 4L19 7" />
-        </svg>
-        <span>{item}</span>
-      </li>
-    ))}
-  </ul>
-</div>
+          <div className="mb-6 text-sm text-gray-600">
+            <p className="font-semibold mb-1">Password must contain:</p>
+            <ul className="list-none space-y-2">
+              {[
+                "At least 8 characters",
+                "One uppercase letter",
+                "One lowercase letter",
+                "One number",
+                "One special character (e.g., !@#$%)",
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-2">
+                  {/* Green check icon */}
+                  <svg
+                    className="w-5 h-5 text-green-500 flex-shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-         <button
-  type="submit"
-  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-full flex justify-center items-center gap-2 font-semibold transition-colors"
->
-  Reset Password
-  {/* Right arrow icon */}
-  <svg
-    className="h-5 w-5"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    viewBox="0 0 24 24"
-  >
-    <path d="M5 12h14M12 5l7 7-7 7" />
-  </svg>
-</button>
-<Link to="/">
-  <p className="mt-4 text-center font-bold text-gray-800 cursor-pointer hover:underline">
-    Return to Login
-  </p>
-</Link>
+          <button
+            type="submit"
+            className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-full flex justify-center items-center gap-2 font-semibold transition-colors"
+          >
+            Reset Password
+            {/* Right arrow icon */}
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+          <Link to="/">
+            <p className="mt-4 text-center font-bold text-gray-800 cursor-pointer hover:underline">
+              Return to Login
+            </p>
+          </Link>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

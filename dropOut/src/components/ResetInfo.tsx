@@ -29,7 +29,7 @@ const NewPasswordReset: React.FC = () => {
       return;
     }
 
-    // You can add password strength validation here if needed
+    
 
     console.log("New password set:", formData.newPassword);
     // Add reset password logic here
@@ -49,7 +49,7 @@ const NewPasswordReset: React.FC = () => {
       {/* Right Section - Form */}
       <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
         <form onSubmit={handleSubmit} className="w-full max-w-md">
-          <p className="text-gray-600 mb-6 text-center md:text-left">
+          <p className="text-gray-600 mb-20 text-center md:text-left font-semibold">
             Please enter your new password below
           </p>
 
@@ -88,7 +88,7 @@ const NewPasswordReset: React.FC = () => {
             />
           </div>
 
-      {/* Password Requirements */}
+      
 <div className="mb-6 text-sm text-gray-600">
   <p className="font-semibold mb-1">Password must contain:</p>
   <ul className="list-none space-y-2">

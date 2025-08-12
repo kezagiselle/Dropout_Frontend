@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import LoginPage from './components/LoginPage'
-// import SignUpPage from './components/LoginPage'
+import SignUpPage from './components/SignUp'
 // import ResetPasswordPage from './components/ResetPassword'
 import NewPasswordReset from './components/ResetInfo'
 import PasswordChangedConfirmation from './components/PasswordChange'
@@ -11,10 +11,10 @@ function App() {
 
   return (
     <>
-     {/* <LoginPage /> */}
+     <LoginPage />
      {/* <SignUpPage /> */}
      {/* <ResetPasswordPage /> */}
-     <PasswordChangedConfirmation />
+     {/* <PasswordChangedConfirmation /> */}
      {/* <NewPasswordReset /> */}
     </>
   )

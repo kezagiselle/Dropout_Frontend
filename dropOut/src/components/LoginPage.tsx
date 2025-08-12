@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import loginImage from "../../src/img/Login1.png";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 
 interface LoginForm {
   email: string;
@@ -42,16 +43,27 @@ const LoginPage: React.FC = () => {
       {/* Right Section - Form */}
       <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
         <form onSubmit={handleSubmit} className="w-full max-w-md">
-          <label className="block mb-2 font-semibold">Email/Username</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            className="w-full border rounded-md px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-400"
-          />
-
+         <label className="block mb-2 font-semibold">Email/Username</label>
+<div className="relative">
+  <input
+    type="email"
+    name="email"
+    value={formData.email}
+    onChange={handleChange}
+    placeholder="Enter your email"
+    className="w-full border rounded-md px-10 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-400"
+  />
+  <svg
+    className="absolute left-3 top-2.5 h-5 w-5 text-gray-600"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+    <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+  </svg>
+    
+            </div>
           <label className="block mb-2 font-semibold">Password</label>
           <input
             type="password"

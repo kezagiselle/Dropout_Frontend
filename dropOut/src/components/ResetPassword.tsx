@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import loginImage from "../../src/img/Login1.png";
 
@@ -82,25 +83,24 @@ const ResetPasswordSimple: React.FC = () => {
           </button>
 
           <div className="mt-6 text-center md:text-left">
-            <a
-              href="#"
-              className="text-gray-800 font-semibold inline-flex items-center gap-1 hover:underline ml-40"
-            >
-              {/* Left arrow */}
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                viewBox="0 0 24 24"
-              >
-                <line x1="19" y1="12" x2="5" y2="12" />
-                <polyline points="12 19 5 12 12 5" />
-              </svg>
-              Back to Login
-            </a>
+           <Link
+  to="/"
+  className="flex items-center gap-2 text-black font-bold hover:underline ml-40"
+>
+  <svg
+    className="h-5 w-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+  >
+    <path d="M15 19l-7-7 7-7" />
+  </svg>
+  Back to Login
+</Link>
+
           </div>
         </form>
       </div>

@@ -30,7 +30,6 @@ const SignUpPage: React.FC = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Add your sign-up logic here
     console.log("SignUp form submitted:", formData);
   };
 
@@ -46,8 +45,11 @@ const SignUpPage: React.FC = () => {
       </div>
 
       {/* Right Section - Form */}
-      <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
-        <form onSubmit={handleSubmit} className="w-full max-w-md">
+     <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
+  <form onSubmit={handleSubmit} className="w-full max-w-md">
+    {/* Title - Improved visibility */}
+    <h2 className="text-3xl font-bold mb-1 text-yellow-800">Create Account</h2>
+    <p className="text-gray-500 mb-8">Sign up to get started</p>
 
           <label className="block mb-2 font-semibold">Username</label>
           <div className="relative">
@@ -161,7 +163,6 @@ const SignUpPage: React.FC = () => {
             type="submit"
             className="w-full bg-orange-400 hover:bg-orange-500 text-white py-2 rounded-full mt-6 flex items-center justify-center gap-2"
           >
-            {/* Right-pointing arrow (→) on the left */}
             <svg
               className="h-4 w-4 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +191,6 @@ const SignUpPage: React.FC = () => {
               type="button"
               className="flex-1 border py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
             >
-              {/* Google Logo */}
               <img src={googleLogo} alt="Google" className="w-5 h-5" />
               <span>Google</span>
             </button>

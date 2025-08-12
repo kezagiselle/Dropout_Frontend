@@ -46,10 +46,7 @@ const SignUpPage: React.FC = () => {
 
       {/* Right Section - Form */}
      <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
-  <form onSubmit={handleSubmit} className="w-full max-w-md">
-    {/* Title - Improved visibility */}
-    <h2 className="text-3xl font-bold mb-1 text-yellow-800">Create Account</h2>
-    <p className="text-gray-500 mb-8">Sign up to get started</p>
+        <form onSubmit={handleSubmit} className="w-full max-w-md">
 
           <label className="block mb-2 font-semibold">Username</label>
           <div className="relative">

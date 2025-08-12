@@ -3,6 +3,7 @@ import LoginPage from './components/LoginPage'
 // import SignUpPage from './components/LoginPage'
 // import ResetPasswordPage from './components/ResetPassword'
 import NewPasswordReset from './components/ResetInfo'
+import PasswordChangedConfirmation from './components/PasswordChange'
 import './App.css'
 
 function App() {
@@ -13,7 +14,8 @@ function App() {
      {/* <LoginPage /> */}
      {/* <SignUpPage /> */}
      {/* <ResetPasswordPage /> */}
-     <NewPasswordReset />
+     <PasswordChangedConfirmation />
+     {/* <NewPasswordReset /> */}
     </>
   )
 }

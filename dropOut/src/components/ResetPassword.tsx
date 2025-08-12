@@ -6,6 +6,7 @@ const ResetPasswordSimple: React.FC = () => {
   const [email, setEmail] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     console.log("Reset link sent to:", email);
@@ -13,15 +14,19 @@ const ResetPasswordSimple: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="flex flex-col md:flex-row md:items-center md:gap-10 max-w-4xl w-full">
-        {/* Image on the left */}
-        <div className="hidden md:block md:w-1/2">
-          <img src={loginImage} alt="Login Illustration" className="w-full h-auto rounded-lg" />
-        </div>
+    <div className="flex min-h-screen flex-col md:flex-row">
+      {/* Left Section - Image */}
+      <div className="h-screen flex items-center justify-center bg-gray-100 md:w-1/2">
+        <img
+          src={loginImage}
+          alt="Reset Password Illustration"
+          className="w-full h-300 object-cover"
+        />
+      </div>
 
-        {/* Form on the right */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md md:w-1/2">
+      {/* Right Section - Form */}
+      <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
+        <form onSubmit={handleSubmit} className="w-full max-w-md">
           <p className="text-gray-600 mb-6 text-center md:text-left">
             Enter your email to receive a password reset link
           </p>
@@ -52,13 +57,13 @@ const ResetPasswordSimple: React.FC = () => {
               value={email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="w-full rounded-full border border-gray-300 py-3 pl-10 pr-4 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full rounded-md border border-gray-300 py-3 pl-10 pr-4 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-orange-400 hover:bg-orange-500 text-white rounded-full py-3 flex justify-center items-center gap-2 font-semibold transition-colors"
+            className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-full flex justify-center items-center gap-2 font-semibold transition-colors"
           >
             {/* Paper plane icon */}
             <svg
@@ -79,7 +84,7 @@ const ResetPasswordSimple: React.FC = () => {
           <div className="mt-6 text-center md:text-left">
             <a
               href="#"
-              className="text-gray-800 font-semibold inline-flex items-center gap-1 hover:underline"
+              className="text-gray-800 font-semibold inline-flex items-center gap-1 hover:underline ml-40"
             >
               {/* Left arrow */}
               <svg

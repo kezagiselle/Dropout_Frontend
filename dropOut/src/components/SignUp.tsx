@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
+import { motion } from "framer-motion";
 import loginImage from "../../src/img/Login1.png";
 import googleLogo from '../../src/img/light/googleIcon.png';
 
@@ -34,19 +35,40 @@ const SignUpPage: React.FC = () => {
     console.log("SignUp form submitted:", formData);
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
+
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section - Image */}
-      <div className="h-screen flex items-center justify-center bg-gray-100">
+      <motion.div
+        className="h-screen flex items-center justify-center bg-gray-100"
+        variants={imageVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <img
           src={loginImage}
           alt="SignUp Illustration"
           className="w-full h-300 object-cover"
         />
-      </div>
+      </motion.div>
 
       {/* Right Section - Form */}
-     <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
+      <motion.div
+        className="md:w-1/2 w-full flex flex-col justify-center items-center p-10"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <form onSubmit={handleSubmit} className="w-full max-w-md">
 
           <label className="block mb-2 font-semibold">Username</label>
@@ -205,14 +227,14 @@ const SignUpPage: React.FC = () => {
             </button>
           </div>
 
-         <p className="text-center mt-6 text-sm">
-  Already have an account?{" "}
-  <Link to="/" className="text-black font-bold hover:underline">
-    Login
-  </Link>
-</p>
+          <p className="text-center mt-6 text-sm">
+            Already have an account?{" "}
+            <Link to="/" className="text-black font-bold hover:underline">
+              Login
+            </Link>
+          </p>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

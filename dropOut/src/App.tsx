@@ -12,6 +12,7 @@ function App() {
     // <>
     // <PasswordChangedConfirmation />
     // </>
+    <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
@@ -19,6 +20,7 @@ function App() {
         <Route path="/new-password-reset" element={<NewPasswordReset />} />
         <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
       </Routes>
+    </Router>
   );
 }
 

@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
-import loginImage from "../../src/img/Login1.png";
+import loginImage from "../../src/img/main.png";
 import googleLogo from '../../src/img/light/googleIcon.png';
 
 interface LoginForm {
   email: string;
   password: string;
   remember: boolean;
+  isStudent: boolean;
+  isHod: boolean;
+  isGovernment: boolean;
+  isTeacher: boolean;
 }
 
 const LoginPage: React.FC = () => {
@@ -16,14 +20,39 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
     remember: false,
+    isStudent: false,
+    isHod: false,
+    isGovernment: false,
+    isTeacher: false,
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    
+    if (type === "checkbox") {
+      // For user type checkboxes, ensure only one can be selected
+      if (["isStudent", "isHod", "isGovernment", "isTeacher"].includes(name)) {
+        setFormData((prev) => ({
+          ...prev,
+          isStudent: name === "isStudent" ? checked : false,
+          isHod: name === "isHod" ? checked : false,
+          isGovernment: name === "isGovernment" ? checked : false,
+          isTeacher: name === "isTeacher" ? checked : false,
+        }));
+      } else {
+        // For other checkboxes like "remember me"
+        setFormData((prev) => ({
+          ...prev,
+          [name]: checked,
+        }));
+      }
+    } else {
+      // For text inputs
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -42,10 +71,10 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       {/* Left Section - Image */}
       <motion.div
-        className="h-screen flex items-center justify-center bg-gray-100 md:w-1/2"
+        className="h-48 sm:h-64 md:h-80 lg:h-screen lg:w-1/2 flex items-center justify-center bg-gray-100 order-2 lg:order-1"
         variants={imageVariants}
         initial="hidden"
         animate="visible"
@@ -53,18 +82,18 @@ const LoginPage: React.FC = () => {
         <img
           src={loginImage}
           alt="Login Illustration"
-          className="w-full h-300 object-cover"
+          className="w-full h-full object-cover"
         />
       </motion.div>
 
       {/* Right Section - Form */}
       <motion.div
-        className="md:w-1/2 w-full flex flex-col justify-center items-center p-10"
+        className="lg:w-1/2 w-full flex flex-col justify-center items-center p-4 sm:p-6 md:p-8 lg:p-10 order-1 lg:order-2"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <form onSubmit={handleSubmit} className="w-full max-w-md">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm sm:max-w-md">
           <label className="block mb-2 font-semibold">Email/Username</label>
           <div className="relative">
             <input
@@ -109,7 +138,7 @@ const LoginPage: React.FC = () => {
             </svg>
           </div>
 
-          <div className="flex justify-between items-center mt-2 text-sm">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 text-sm space-y-2 sm:space-y-0">
             <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -118,11 +147,55 @@ const LoginPage: React.FC = () => {
                 onChange={handleChange}
                 className="accent-orange-400"
               />
-              <span>Remember me</span>
+              <span className="italic">Remember me</span>
             </label>
             <Link to="/reset-password" className="text-black font-bold hover:underline">
               Forgot Password?
             </Link>
+          </div>
+
+          {/* User Type Checkboxes */}
+          <div className="mt-4 space-y-2">
+            <label className="flex items-center space-x-2 text-sm">
+              <input
+                type="checkbox"
+                name="isStudent"
+                checked={formData.isStudent}
+                onChange={handleChange}
+                className="accent-orange-400"
+              />
+              <span>I am a student</span>
+            </label>
+            <label className="flex items-center space-x-2 text-sm">
+              <input
+                type="checkbox"
+                name="isHod"
+                checked={formData.isHod}
+                onChange={handleChange}
+                className="accent-orange-400"
+              />
+              <span>I am a HoD</span>
+            </label>
+            <label className="flex items-center space-x-2 text-sm">
+              <input
+                type="checkbox"
+                name="isGovernment"
+                checked={formData.isGovernment}
+                onChange={handleChange}
+                className="accent-orange-400"
+              />
+              <span>I am the government</span>
+            </label>
+            <label className="flex items-center space-x-2 text-sm">
+              <input
+                type="checkbox"
+                name="isTeacher"
+                checked={formData.isTeacher}
+                onChange={handleChange}
+                className="accent-orange-400"
+              />
+              <span>I am a teacher</span>
+            </label>
           </div>
 
           <button
@@ -153,7 +226,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           {/* Social buttons */}
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               type="button"
               className="flex-1 border py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"

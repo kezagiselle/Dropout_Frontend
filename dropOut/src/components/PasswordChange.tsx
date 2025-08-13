@@ -1,5 +1,5 @@
 import React from "react";
-import loginImage from "../../src/img/Login1.png";
+import loginImage from "../../src/img/main.png";
 
 interface Props {
   onProceed?: () => void;
@@ -7,19 +7,19 @@ interface Props {
 
 const PasswordChanged: React.FC<Props> = ({ onProceed }) => {
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       {/* Left Section - Image */}
-      <div className="h-screen flex items-center justify-center bg-gray-100 md:w-1/2">
+      <div className="h-48 sm:h-64 md:h-80 lg:h-screen lg:w-1/2 flex items-center justify-center bg-gray-100 order-2 lg:order-1">
         <img
           src={loginImage}
           alt="Password Changed Illustration"
-          className="w-full h-300 object-cover"
+          className="w-full h-full object-cover"
         />
       </div>
 
       {/* Right Section - Confirmation */}
-      <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-10">
-        <div className="max-w-md w-full text-center">
+      <div className="lg:w-1/2 w-full flex flex-col justify-center items-center p-4 sm:p-6 md:p-8 lg:p-10 order-1 lg:order-2">
+        <div className="max-w-sm sm:max-w-md w-full text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             {/* Green tick icon */}
             <svg

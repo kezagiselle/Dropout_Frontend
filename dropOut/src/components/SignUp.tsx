@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
-import loginImage from "../../src/img/Login1.png";
+import loginImage from "../../src/img/main.png";
 import googleLogo from '../../src/img/light/googleIcon.png';
 
 interface SignUpForm {
@@ -47,10 +47,10 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       {/* Left Section - Image */}
       <motion.div
-        className="h-screen flex items-center justify-center bg-gray-100"
+        className="h-48 sm:h-64 md:h-80 lg:h-screen lg:w-1/2 flex items-center justify-center bg-gray-100 order-2 lg:order-1"
         variants={imageVariants}
         initial="hidden"
         animate="visible"
@@ -58,18 +58,18 @@ const SignUpPage: React.FC = () => {
         <img
           src={loginImage}
           alt="SignUp Illustration"
-          className="w-full h-300 object-cover"
+          className="w-full h-full object-cover"
         />
       </motion.div>
 
       {/* Right Section - Form */}
       <motion.div
-        className="md:w-1/2 w-full flex flex-col justify-center items-center p-10"
+        className="lg:w-1/2 w-full flex flex-col justify-center items-center p-4 sm:p-6 md:p-8 lg:p-10 order-1 lg:order-2"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <form onSubmit={handleSubmit} className="w-full max-w-md">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm sm:max-w-md">
 
           <label className="block mb-2 font-semibold">Username</label>
           <div className="relative">

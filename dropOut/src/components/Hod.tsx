@@ -3,13 +3,13 @@ import Student from './HodPages/Student';
 import Teachers from './HodPages/Teachers';
 import Courses from './HodPages/Courses';
 import Reports from './HodPages/Reports';
-import { Link } from 'react-router-dom';
+import Attendance from './HodPages/Attendance';
 
 const Hod = () => {
 
   const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'reports' | 'communication' | 'settings'>('dashboard')
+  
   return (
-
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
@@ -166,7 +166,6 @@ const Hod = () => {
                       <span className="text-xl">⏰</span>
                     </div>
     <div>
-
                       <h3 className="text-sm font-medium text-gray-600">Pending Approvals</h3>
                       <p className="text-2xl font-bold text-gray-900">3</p>
                     </div>
@@ -257,24 +256,11 @@ const Hod = () => {
           )}
 
           {activeView === 'students' && <Student />}
-          
           {activeView === 'teachers' && <Teachers />}
-          
           {activeView === 'courses' && <Courses />}
+          {activeView === 'reports' && <Reports />}
           
-          {activeView === 'attendance' && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Attendance & Performance</h2>
-              <p className="text-gray-600">Attendance and performance tracking interface coming soon...</p>
-            </div>
-          )}
-          
-          {activeView === 'reports' && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Reports</h2>
-              <p className="text-gray-600">Reports and analytics interface coming soon...</p>
-            </div>
-          )}
+          {activeView === 'attendance' && <Attendance />}
           
           {activeView === 'communication' && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -296,4 +282,3 @@ const Hod = () => {
 }
 
 export default Hod
-

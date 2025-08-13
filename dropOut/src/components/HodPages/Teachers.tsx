@@ -168,7 +168,7 @@ const Teachers = () => {
               {teachers.map((teacher) => (
                 <tr key={teacher.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
+    <div>
                       <div className="text-sm font-medium text-gray-900">{teacher.name}</div>
                       <div className="text-sm text-gray-500">{teacher.email}</div>
                     </div>

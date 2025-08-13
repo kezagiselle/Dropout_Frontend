@@ -48,10 +48,10 @@ const LoginPage: React.FC = () => {
       }
     } else {
       // For text inputs
-      setFormData((prev) => ({
-        ...prev,
+    setFormData((prev) => ({
+      ...prev,
         [name]: value,
-      }));
+    }));
     }
   };
 

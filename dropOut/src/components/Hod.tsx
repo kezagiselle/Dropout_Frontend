@@ -2,11 +2,14 @@ import { useState } from 'react'
 import Student from './HodPages/Student';
 import Teachers from './HodPages/Teachers';
 import Courses from './HodPages/Courses';
+import Reports from './HodPages/Reports';
 import { Link } from 'react-router-dom';
 
 const Hod = () => {
+
   const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'reports' | 'communication' | 'settings'>('dashboard')
   return (
+
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
@@ -162,7 +165,8 @@ const Hod = () => {
                     <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                       <span className="text-xl">⏰</span>
                     </div>
-                    <div>
+    <div>
+
                       <h3 className="text-sm font-medium text-gray-600">Pending Approvals</h3>
                       <p className="text-2xl font-bold text-gray-900">3</p>
                     </div>
@@ -292,3 +296,4 @@ const Hod = () => {
 }
 
 export default Hod
+

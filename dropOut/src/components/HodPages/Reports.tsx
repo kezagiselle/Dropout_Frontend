@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaChartBar, FaEye } from "react-icons/fa";
+import { FaChartBar, FaEye, FaCalendarAlt, FaChevronDown } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 
 const Reports = () => {
@@ -18,100 +18,157 @@ const Reports = () => {
   };
 
   return (
-    <div>
-      {/* Top Bar */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Reports</h1>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2">
-          <AiOutlinePlus /> Generate Report
-        </button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Top Header Bar */}
+      <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">Reports</h1>
+          <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+            <AiOutlinePlus className="text-white" />
+            Generate Report
+          </button>
+        </div>
       </div>
 
-      {/* Report Generation Card */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-lg font-semibold mb-2">Report Generation</h2>
-        <p className="text-gray-500 mb-4">
-          Configure your report parameters and generate comprehensive reports
-        </p>
-
-        {/* Report Type */}
-        <label className="block text-sm font-medium mb-1">
-          Select Report Type
-        </label>
-        <select
-          value={reportType}
-          onChange={(e) => setReportType(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-4"
-        >
-          <option value="">Choose report type...</option>
-          <option value="attendance">Attendance Report</option>
-          <option value="performance">Performance Report</option>
-        </select>
-
-        {/* Filters */}
-        <h3 className="text-sm font-medium mb-2">Filters</h3>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm mb-1">Start Date</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-            />
+      {/* Main Content Area */}
+      <div className="p-8">
+        {/* Main Content Card */}
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          {/* Report Generation Section */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Report Generation</h2>
+            <p className="text-gray-600 mb-6">
+              Configure your report parameters and generate comprehensive reports
+            </p>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Select Report Type
+              </label>
+              <div className="relative">
+                <select
+                  value={reportType}
+                  onChange={(e) => setReportType(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none"
+                >
+                  <option value="">Choose report type...</option>
+                  <option value="attendance">Attendance Report</option>
+                  <option value="performance">Performance Report</option>
+                  <option value="academic">Academic Report</option>
+                  <option value="behavioral">Behavioral Report</option>
+                </select>
+                <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm mb-1">End Date</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-            />
+
+          {/* Filters Section */}
+          <div className="mb-8">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">Filters</h3>
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Start Date
+                </label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    placeholder="mm/dd/yyyy"
+                  />
+                  <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  End Date
+                </label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    placeholder="mm/dd/yyyy"
+                  />
+                  <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Department
+                </label>
+                <div className="relative">
+                  <select
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none"
+                  >
+                    <option>All Departments</option>
+                    <option>Science</option>
+                    <option>Mathematics</option>
+                    <option>English</option>
+                    <option>History</option>
+                  </select>
+                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Grade/Class
+                </label>
+                <div className="relative">
+                  <select
+                    value={grade}
+                    onChange={(e) => setGrade(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none"
+                  >
+                    <option>All Grades</option>
+                    <option>Grade 1</option>
+                    <option>Grade 2</option>
+                    <option>Grade 3</option>
+                    <option>Grade 4</option>
+                  </select>
+                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm mb-1">Department</label>
-            <select
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-              className="w-full border rounded px-3 py-2"
+
+          {/* Report Preview Section */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <FaEye className="text-gray-600" />
+              <h3 className="text-lg font-bold text-gray-800">Report Preview</h3>
+            </div>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+              <div className="w-16 h-20 bg-gray-200 rounded mx-auto mb-4 flex items-center justify-center">
+                <span className="text-gray-400 text-2xl">📄</span>
+              </div>
+              <p className="text-gray-500 text-sm">
+                Select report type and filters to see preview
+              </p>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4">
+            <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg flex items-center gap-3 transition-colors font-medium">
+              <FaChartBar className="text-white" />
+              Generate Report
+            </button>
+            <button
+              onClick={clearFilters}
+              className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium"
             >
-              <option>All Departments</option>
-              <option>Science</option>
-              <option>Mathematics</option>
-            </select>
+              Clear Filters
+            </button>
           </div>
-          <div>
-            <label className="block text-sm mb-1">Grade/Class</label>
-            <select
-              value={grade}
-              onChange={(e) => setGrade(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-            >
-              <option>All Grades</option>
-              <option>Grade 1</option>
-              <option>Grade 2</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Report Preview */}
-        <div className="border rounded p-6 text-center text-gray-500 mb-4">
-          <FaEye className="mx-auto mb-2 text-gray-400" size={24} />
-          Select report type and filters to see preview
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-4">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2">
-            <FaChartBar /> Generate Report
-          </button>
-          <button
-            onClick={clearFilters}
-            className="border px-4 py-2 rounded hover:bg-gray-50"
-          >
-            Clear Filters
-          </button>
         </div>
       </div>
     </div>

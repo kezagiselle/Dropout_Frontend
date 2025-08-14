@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import './Attendance.css'
+import React, { useState } from 'react';
+import './Attendance.css';
 
 const Attendance = () => {
   const [filters, setFilters] = useState({
@@ -7,19 +7,19 @@ const Attendance = () => {
     startDate: '2024-01-01',
     endDate: '2024-12-31',
     classSection: 'All Classes'
-  })
+  });
 
   const handleFilterChange = (field: string, value: string) => {
     setFilters(prev => ({
       ...prev,
       [field]: value
-    }))
-  }
+    }));
+  };
 
   const handleExport = (type: string) => {
-    console.log(`Exporting ${type}...`)
+    console.log(`Exporting ${type}...`);
     // Add export logic here
-  }
+  };
 
   return (
     <div className="attendance-dashboard">
@@ -263,7 +263,7 @@ const Attendance = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Attendance
+export default Attendance;

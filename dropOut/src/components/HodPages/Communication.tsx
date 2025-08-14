@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FaSearch, FaPlus } from 'react-icons/fa';
-import './Communication.css';
 
 const Communication = () => {
   const [selectedMessage, setSelectedMessage] = useState(0);
@@ -63,106 +62,92 @@ const Communication = () => {
   };
 
   return (
-    <div className="communication-dashboard">
-      {/* Left Sidebar Navigation */}
-      <div className="sidebar">
-        <h1 className="sidebar-title">Communication</h1>
-        <nav className="sidebar-nav">
-          <div className="nav-item">
-            <span className="nav-icon">📊</span>
-            <span className="nav-text">Dashboard</span>
-          </div>
-          <div className="nav-item">
-            <span className="nav-icon">👥</span>
-            <span className="nav-text">Students</span>
-          </div>
-          <div className="nav-item">
-            <span className="nav-icon">👨‍🏫</span>
-            <span className="nav-text">Teachers</span>
-          </div>
-          <div className="nav-item">
-            <span className="nav-icon">📅</span>
-            <span className="nav-text">Courses & Timetables</span>
-          </div>
-          <div className="nav-item">
-            <span className="nav-icon">📈</span>
-            <span className="nav-text">Attendance & Performance</span>
-          </div>
-          <div className="nav-item">
-            <span className="nav-icon">📄</span>
-            <span className="nav-text">Reports</span>
-          </div>
-          <div className="nav-item active">
-            <span className="nav-icon">💬</span>
-            <span className="nav-text">Communication</span>
-          </div>
-          <div className="nav-item">
-            <span className="nav-icon">⚙️</span>
-            <span className="nav-text">Settings</span>
-          </div>
-        </nav>
-      </div>
-
-      {/* Middle Panel - Message List */}
-      <div className="message-list">
-        <div className="search-container">
-          <div className="search-bar">
-            <FaSearch className="search-icon" />
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Panel - Message List */}
+      <div className="w-96 bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-6 border-b border-gray-200">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Messages</h1>
+          <div className="relative">
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
             <input
               type="text"
               placeholder="Search messages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
         </div>
         
-        <div className="messages-container">
+        <div className="flex-1 overflow-y-auto">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`message-item ${message.isSelected ? 'selected' : ''}`}
+              className={`p-4 border-b border-gray-100 cursor-pointer transition-colors duration-200 hover:bg-gray-50 ${
+                message.isSelected ? 'bg-orange-50 border-l-4 border-l-orange-500' : ''
+              }`}
               onClick={() => handleMessageSelect(message.id)}
             >
-              <div className="message-content">
-                <div className="message-header">
-                  <h3 className="sender-name">{message.sender}</h3>
-                  <span className="timestamp">{message.timestamp}</span>
-                </div>
-                <h4 className="message-subject">{message.subject}</h4>
-                <p className="message-preview">{message.preview}</p>
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="font-semibold text-gray-900 text-sm">{message.sender}</h3>
+                <span className="text-xs text-gray-500">{message.timestamp}</span>
               </div>
+              <h4 className="font-medium text-gray-800 text-sm mb-1">{message.subject}</h4>
+              <p className="text-xs text-gray-600 line-clamp-2">{message.preview}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Right Panel - Chat Window */}
-      <div className="chat-window">
-        <div className="chat-header">
-          <div className="chat-contact-info">
-            <h2 className="contact-name">{messages[selectedMessage].sender}</h2>
-            <p className="contact-subject">{messages[selectedMessage].subject}</p>
+      <div className="flex-1 bg-white flex flex-col">
+        <div className="p-6 border-b border-gray-200 flex justify-between items-start">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">{messages[selectedMessage].sender}</h2>
+            <p className="text-sm text-gray-600">{messages[selectedMessage].subject}</p>
           </div>
-          <button className="compose-btn">
-            <FaPlus className="compose-icon" />
+          <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+            <FaPlus className="text-sm" />
             Compose New Message
           </button>
         </div>
         
-        <div className="chat-messages">
-          {chatMessages.map((chatMsg) => (
-            <div
-              key={chatMsg.id}
-              className={`chat-message ${chatMsg.type}`}
-            >
-              <div className="message-bubble">
-                <p className="message-text">{chatMsg.text}</p>
-                <span className="message-time">{chatMsg.timestamp}</span>
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="space-y-4">
+            {chatMessages.map((chatMsg) => (
+              <div
+                key={chatMsg.id}
+                className={`flex ${chatMsg.type === 'outgoing' ? 'justify-end' : 'justify-start'}`}
+              >
+                                 <div className={`max-w-md px-4 py-3 rounded-lg ${
+                   chatMsg.type === 'incoming' 
+                     ? 'bg-gray-100 text-gray-900' 
+                     : 'bg-orange-300 text-gray-900'
+                 }`}>
+                  <p className="text-sm leading-relaxed">{chatMsg.text}</p>
+                                     <span className={`text-xs mt-2 block ${
+                      chatMsg.type === 'incoming' ? 'text-gray-500' : 'text-orange-700'
+                    }`}>
+                     {chatMsg.timestamp}
+                   </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+        
+        {/* Message Input Area */}
+        <div className="border-t border-gray-200 p-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+            <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 import loginImage from "../../src/img/main.png";
@@ -25,6 +25,8 @@ const LoginPage: React.FC = () => {
     isGovernment: false,
     isTeacher: false,
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
@@ -58,6 +60,20 @@ const LoginPage: React.FC = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    
+    // Temporary login functionality
+    if (formData.isHod) {
+      // For temporary testing - allow any email/password when HoD is selected
+      if (formData.email && formData.password) {
+        console.log("Temporary HoD login successful - navigating to dashboard");
+        navigate("/hod-dashboard");
+      } else {
+        alert("Please enter both email and password for temporary HoD login");
+      }
+    } else {
+      // For other user types, show normal login message
+      alert("Please select a user type and enter credentials");
+    }
   };
 
   const containerVariants = {
@@ -156,6 +172,15 @@ const LoginPage: React.FC = () => {
 
           {/* User Type Checkboxes */}
           <div className="mt-4 space-y-2">
+            {/* Temporary Login Message */}
+            {formData.isHod && (
+              <div className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                <p className="text-sm text-orange-800">
+                  <strong>Temporary Login:</strong> As a HoD, you can use any email and password to access the dashboard for testing purposes.
+                </p>
+              </div>
+            )}
+            
             <label className="flex items-center space-x-2 text-sm">
               <input
                 type="checkbox"

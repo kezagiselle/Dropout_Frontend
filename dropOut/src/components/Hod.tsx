@@ -5,6 +5,7 @@ import Courses from './HodPages/Courses';
 import Reports from './HodPages/Reports';
 import Attendance from './HodPages/Attendance';
 import Communication from './HodPages/Communication';
+import Settings from './HodPages/Settings';
 
 const Hod = () => {
 
@@ -265,12 +266,7 @@ const Hod = () => {
           
           {activeView === 'communication' && <Communication />}
           
-          {activeView === 'settings' && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Settings</h2>
-              <p className="text-gray-600">System settings interface coming soon...</p>
-            </div>
-          )}
+          {activeView === 'settings' && <Settings />}
         </main>
       </div>
     </div>

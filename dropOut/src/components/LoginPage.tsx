@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
-import loginImage from "../../src/img/main.png";
 import googleLogo from '../../src/img/light/googleIcon.png';
 
 interface LoginForm {
@@ -77,159 +76,156 @@ const LoginPage: React.FC = () => {
   };
 
   const containerVariants = {
-    hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
-  };
-
-  const imageVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
-      {/* Left Section - Image */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-orange-50 p-4">
+      {/* Centered Form Container */}
       <motion.div
-        className="h-48 sm:h-64 md:h-80 lg:h-screen lg:w-1/2 flex items-center justify-center bg-gray-100 order-2 lg:order-1"
-        variants={imageVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <img
-          src={loginImage}
-          alt="Login Illustration"
-          className="w-full h-full object-cover"
-        />
-      </motion.div>
-
-      {/* Right Section - Form */}
-      <motion.div
-        className="lg:w-1/2 w-full flex flex-col justify-center items-center p-4 sm:p-6 md:p-8 lg:p-10 order-1 lg:order-2"
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <form onSubmit={handleSubmit} className="w-full max-w-sm sm:max-w-md">
-          <label className="block mb-2 font-semibold">Email/Username</label>
-          <div className="relative">
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full border rounded-md px-10 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            />
-            <svg
-              className="absolute left-3 top-2.5 h-5 w-5 text-gray-600"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
-              <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
-            </svg>
-          </div>
-          <label className="block mb-2 font-semibold">Password</label>
-          <div className="relative">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              className="w-full border rounded-md px-10 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            />
-            <svg
-              className="absolute left-3 top-2.5 h-5 w-5 text-gray-600"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
-                clipRule="evenodd"
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
+          <p className="text-gray-600">Sign in to your account</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email Field */}
+          <div>
+            <label className="block mb-2 font-semibold text-gray-700">Email/Username</label>
+            <div className="relative">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                className="w-full border border-gray-300 rounded-lg px-10 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
               />
-            </svg>
+              <svg
+                className="absolute left-3 top-3.5 h-5 w-5 text-gray-500"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+                <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+              </svg>
+            </div>
           </div>
 
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 text-sm space-y-2 sm:space-y-0">
+          {/* Password Field */}
+          <div>
+            <label className="block mb-2 font-semibold text-gray-700">Password</label>
+            <div className="relative">
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className="w-full border border-gray-300 rounded-lg px-10 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+              />
+              <svg
+                className="absolute left-3 top-3.5 h-5 w-5 text-gray-500"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Remember Me & Forgot Password */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm space-y-2 sm:space-y-0">
             <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
                 name="remember"
                 checked={formData.remember}
                 onChange={handleChange}
-                className="accent-orange-400"
+                className="accent-orange-400 rounded"
               />
-              <span className="italic">Remember me</span>
+              <span className="text-gray-600">Remember me</span>
             </label>
-            <Link to="/reset-password" className="text-black font-bold hover:underline">
+            <Link to="/reset-password" className="text-orange-500 font-semibold hover:text-orange-600 transition-colors">
               Forgot Password?
             </Link>
           </div>
 
           {/* User Type Checkboxes */}
-          <div className="mt-4 space-y-2">
+          <div className="space-y-3">
             {/* Temporary Login Message */}
             {formData.isHod && (
-              <div className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
                 <p className="text-sm text-orange-800">
                   <strong>Temporary Login:</strong> As a HoD, you can use any email and password to access the dashboard for testing purposes.
                 </p>
               </div>
             )}
             
-            <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
-                name="isStudent"
-                checked={formData.isStudent}
-                onChange={handleChange}
-                className="accent-orange-400"
-              />
-              <span>I am a student</span>
-            </label>
-            <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
-                name="isHod"
-                checked={formData.isHod}
-                onChange={handleChange}
-                className="accent-orange-400"
-              />
-              <span>I am a HoD</span>
-            </label>
-            <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
-                name="isGovernment"
-                checked={formData.isGovernment}
-                onChange={handleChange}
-                className="accent-orange-400"
-              />
-              <span>I am the government</span>
-            </label>
-            <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
-                name="isTeacher"
-                checked={formData.isTeacher}
-                onChange={handleChange}
-                className="accent-orange-400"
-              />
-              <span>I am a teacher</span>
-            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="isStudent"
+                  checked={formData.isStudent}
+                  onChange={handleChange}
+                  className="accent-orange-400 rounded"
+                />
+                <span className="text-gray-700">Student</span>
+              </label>
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="isHod"
+                  checked={formData.isHod}
+                  onChange={handleChange}
+                  className="accent-orange-400 rounded"
+                />
+                <span className="text-gray-700">HoD</span>
+              </label>
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="isGovernment"
+                  checked={formData.isGovernment}
+                  onChange={handleChange}
+                  className="accent-orange-400 rounded"
+                />
+                <span className="text-gray-700">Government</span>
+              </label>
+              <label className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="isTeacher"
+                  checked={formData.isTeacher}
+                  onChange={handleChange}
+                  className="accent-orange-400 rounded"
+                />
+                <span className="text-gray-700">Teacher</span>
+              </label>
+            </div>
           </div>
 
+          {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-orange-400 hover:bg-orange-500 text-white py-2 rounded-full mt-6 flex items-center justify-center gap-2"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg mt-6 flex items-center justify-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg"
           >
-            {/* Right-pointing arrow (→) on the left */}
             <svg
-              className="h-4 w-4 text-white"
+              className="h-5 w-5 text-white"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="none"
@@ -240,42 +236,42 @@ const LoginPage: React.FC = () => {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-            <span>Login</span>
+            <span>Sign In</span>
           </button>
 
           {/* OR divider */}
           <div className="flex items-center my-6">
             <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="px-2 text-gray-500 text-sm">OR</span>
+            <span className="px-4 text-gray-500 text-sm font-medium">OR</span>
             <div className="flex-1 h-px bg-gray-300"></div>
           </div>
 
           {/* Social buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex flex-col gap-3">
             <button
               type="button"
-              className="flex-1 border py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
+              className="w-full border border-gray-300 py-3 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors font-medium"
             >
-              {/* Google Logo */}
               <img src={googleLogo} alt="Google" className="w-5 h-5" />
-              <span>Google</span>
+              <span>Continue with Google</span>
             </button>
             <button
               type="button"
-              className="flex-1 border py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-50"
+              className="w-full border border-gray-300 py-3 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors font-medium"
             >
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png"
                 alt="Facebook"
                 className="w-5 h-5"
               />
-              Facebook
+              <span>Continue with Facebook</span>
             </button>
           </div>
 
-          <p className="text-center mt-6 text-sm">
-            Don’t have an account?{" "}
-            <Link to="/signup" className="text-black font-bold hover:underline">
+          {/* Sign Up Link */}
+          <p className="text-center text-sm text-gray-600">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-orange-500 font-semibold hover:text-orange-600 transition-colors">
               Sign up
             </Link>
           </p>

@@ -6,20 +6,24 @@ import SignUpPage from "./components/SignUp";
 import ResetPasswordSimple from "./components/ResetPassword";
 import NewPasswordReset from "./components/ResetInfo";
 import PasswordChangedConfirmation from "./components/PasswordChange";
+import LandingPage from "./components/LandingPage";
 import Hod from "./components/Hod";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/reset-password" element={<ResetPasswordSimple />} />
-        <Route path="/new-password-reset" element={<NewPasswordReset />} />
-        <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
-        <Route path="/hod-dashboard" element={<Hod />} />
-      </Routes>
-    </Router>
+    <div>
+      <LandingPage />
+    </div>
+    // <Router>
+    //   <Routes>
+    //   <Route path="/" element={<LoginPage />} />
+    //   <Route path="/signup" element={<SignUpPage />} />
+    //   <Route path="/reset-password" element={<ResetPasswordSimple />} />
+    //   <Route path="/new-password-reset" element={<NewPasswordReset />} />
+    //   <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
+    //   <Route path="/hod-dashboard" element={<Hod />} />
+    //   </Routes>
+    // </Router>
   );
 }
 

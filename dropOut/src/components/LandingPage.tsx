@@ -49,12 +49,12 @@ const LandingPage = () => {
                 Join thousands of schools, teachers, and parents already using our system to make a difference in students' lives.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <button className="px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold">
-                  Get Started
-                </button>
-                <a href="#demo" className="text-black hover:text-gray-600 transition-colors font-medium">
-                  Watch a Demo
-                </a>
+                                 <button className="px-8 py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors font-semibold">
+                   Get Started
+                 </button>
+                                 <button className="px-8 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors font-medium">
+                   Watch a Demo
+                 </button>
               </div>
             </div>
             
@@ -273,26 +273,26 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Statistics Bar */}
-      <section className="py-12 bg-blue-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">38%</div>
-              <div className="text-white text-sm">Average Dropout Reduction</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">500+</div>
-              <div className="text-white text-sm">Schools Using Our Platform</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">125K+</div>
-              <div className="text-white text-sm">Students Supported</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">98%</div>
-              <div className="text-white text-sm">Customer Satisfaction</div>
-            </div>
+             {/* Statistics Bar */}
+       <section className="py-16 bg-blue-100">
+         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                         <div>
+               <div className="text-4xl font-bold text-blue-800 mb-2">38%</div>
+               <div className="text-blue-700 text-sm">Average Dropout Reduction</div>
+             </div>
+             <div>
+               <div className="text-4xl font-bold text-blue-800 mb-2">500+</div>
+               <div className="text-blue-700 text-sm">Schools Using Our Platform</div>
+             </div>
+             <div>
+               <div className="text-4xl font-bold text-blue-800 mb-2">125K+</div>
+               <div className="text-blue-700 text-sm">Students Supported</div>
+             </div>
+             <div>
+               <div className="text-4xl font-bold text-blue-800 mb-2">98%</div>
+               <div className="text-blue-700 text-sm">Customer Satisfaction</div>
+             </div>
           </div>
         </div>
       </section>

@@ -101,7 +101,7 @@ const ResetPasswordSimple: React.FC = () => {
           <div className="text-center">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-orange-500 font-semibold hover:text-orange-600 transition-colors"
+              className="inline-flex items-center gap-2 text-black font-bold hover:text-gray-800 transition-colors"
             >
               <svg
                 className="h-5 w-5"

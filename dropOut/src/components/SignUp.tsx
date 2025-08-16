@@ -176,10 +176,10 @@ const SignUpPage: React.FC = () => {
           </div>
 
           {/* Sign Up Button */}
-          <button
-            type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg mt-6 flex items-center justify-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg"
-          >
+                           <button
+                   type="submit"
+                   className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-full mt-6 flex items-center justify-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg"
+                 >
             <svg
               className="h-5 w-5 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -227,9 +227,9 @@ const SignUpPage: React.FC = () => {
           {/* Login Link */}
           <p className="text-center text-sm text-gray-600">
             Already have an account?{" "}
-            <Link to="/" className="text-orange-500 font-semibold hover:text-orange-600 transition-colors">
-              Login
-            </Link>
+                               <Link to="/" className="text-black font-bold hover:text-gray-800 transition-colors">
+                     Login
+                   </Link>
           </p>
         </form>
       </motion.div>

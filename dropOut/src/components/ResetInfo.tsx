@@ -143,7 +143,7 @@ const NewPasswordReset: React.FC = () => {
 
           {/* Return to Login Link */}
           <div className="text-center">
-            <Link to="/" className="text-orange-500 font-semibold hover:text-orange-600 transition-colors">
+            <Link to="/" className="text-black font-bold hover:text-gray-800 transition-colors">
               Return to Login
             </Link>
           </div>

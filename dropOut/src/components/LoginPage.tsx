@@ -160,11 +160,11 @@ const LoginPage: React.FC = () => {
                 onChange={handleChange}
                 className="accent-orange-400 rounded"
               />
-              <span className="text-gray-600">Remember me</span>
+                             <span className="text-gray-600 italic">Remember me</span>
             </label>
-            <Link to="/reset-password" className="text-orange-500 font-semibold hover:text-orange-600 transition-colors">
-              Forgot Password?
-            </Link>
+                         <Link to="/reset-password" className="text-black font-bold hover:text-gray-800 transition-colors">
+               Forgot Password?
+             </Link>
           </div>
 
           {/* User Type Checkboxes */}
@@ -233,10 +233,10 @@ const LoginPage: React.FC = () => {
           </div>
 
           {/* Login Button */}
-          <button
-            type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg mt-6 flex items-center justify-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg"
-          >
+                     <button
+             type="submit"
+             className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-full mt-6 flex items-center justify-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg"
+           >
             <svg
               className="h-5 w-5 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -284,9 +284,9 @@ const LoginPage: React.FC = () => {
           {/* Sign Up Link */}
           <p className="text-center text-sm text-gray-600">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-orange-500 font-semibold hover:text-orange-600 transition-colors">
-              Sign up
-            </Link>
+                         <Link to="/signup" className="text-black font-bold hover:text-gray-800 transition-colors">
+               Sign up
+             </Link>
           </p>
         </form>
       </motion.div>

@@ -16,9 +16,9 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <FaGraduationCap className="text-2xl text-black" />
@@ -68,7 +68,6 @@ const LandingPage = () => {
          <div className="max-w-7xl mx-auto">
            <div className="grid lg:grid-cols-2 gap-12 items-center">
              <div className="space-y-6 animate-fade-in-up">
-              <div className="text-orange-500 font-semibold">BrightWay</div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black leading-tight">
                 Let's <span className="text-orange-500">Prevent DropOuts</span> and Secure Futures of our{' '}
                 <span className="text-orange-500">Students</span>
@@ -235,16 +234,20 @@ const LandingPage = () => {
            </div>
           
                      <div className="grid md:grid-cols-3 gap-6">
-             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-blue-600 font-semibold">MJ</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800">Michael Johnson</h4>
-                  <p className="text-sm text-gray-600">Principal, Lincoln High School</p>
-                </div>
-              </div>
+                           <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up">
+               <div className="flex items-center mb-4">
+                 <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
+                   <img 
+                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
+                     alt="Michael Johnson" 
+                     className="w-full h-full object-cover"
+                   />
+                 </div>
+                 <div>
+                   <h4 className="font-semibold text-gray-800">Michael Johnson</h4>
+                   <p className="text-sm text-gray-600">Principal, Lincoln High School</p>
+                 </div>
+               </div>
               <p className="text-gray-700 mb-4 italic">
                 "Since implementing BrightWay, we've seen a 42% reduction in our dropout rate. The early warning system has been a game-changer for our counseling team."
               </p>
@@ -255,16 +258,20 @@ const LandingPage = () => {
               </div>
             </div>
             
-                         <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-100">
-               <div className="flex items-center mb-4">
-                 <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
-                   <span className="text-orange-600 font-semibold">SM</span>
-                 </div>
-                 <div>
-                   <h4 className="font-semibold text-gray-800">Sarah Martinez</h4>
-                   <p className="text-sm text-gray-600">District Administrator, Oakwood Schools</p>
-                 </div>
-               </div>
+                                                   <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-100">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
+                    <img 
+                      src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face" 
+                      alt="Sarah Martinez" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800">Sarah Martinez</h4>
+                    <p className="text-sm text-gray-600">District Administrator, Oakwood Schools</p>
+                  </div>
+                </div>
                <p className="text-gray-700 mb-4 italic">
                  "The data insights have helped us allocate resources more effectively. We're now able to provide targeted support to students who need it most."
                </p>
@@ -275,16 +282,20 @@ const LandingPage = () => {
                </div>
              </div>
             
-                         <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-200">
-               <div className="flex items-center mb-4">
-                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                   <span className="text-green-600 font-semibold">DC</span>
-                 </div>
-                 <div>
-                   <h4 className="font-semibold text-gray-800">David Chen</h4>
-                   <p className="text-sm text-gray-600">School Counselor, Westview Academy</p>
-                 </div>
-               </div>
+                                                   <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-200">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
+                    <img 
+                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                      alt="David Chen" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800">David Chen</h4>
+                    <p className="text-sm text-gray-600">School Counselor, Westview Academy</p>
+                  </div>
+                </div>
                <p className="text-gray-700 mb-4 italic">
                  "The intervention plans save me hours of work each week. I can focus on actually helping students rather than trying to identify who needs help."
                </p>

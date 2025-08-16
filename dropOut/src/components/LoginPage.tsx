@@ -12,6 +12,7 @@ interface LoginForm {
   isHod: boolean;
   isGovernment: boolean;
   isTeacher: boolean;
+  isParent: boolean;
 }
 
 const LoginPage: React.FC = () => {
@@ -23,6 +24,7 @@ const LoginPage: React.FC = () => {
     isHod: false,
     isGovernment: false,
     isTeacher: false,
+    isParent: false,
   });
 
   const navigate = useNavigate();
@@ -31,16 +33,17 @@ const LoginPage: React.FC = () => {
     const { name, value, type, checked } = e.target;
     
     if (type === "checkbox") {
-      // For user type checkboxes, ensure only one can be selected
-      if (["isStudent", "isHod", "isGovernment", "isTeacher"].includes(name)) {
-        setFormData((prev) => ({
-          ...prev,
-          isStudent: name === "isStudent" ? checked : false,
-          isHod: name === "isHod" ? checked : false,
-          isGovernment: name === "isGovernment" ? checked : false,
-          isTeacher: name === "isTeacher" ? checked : false,
-        }));
-      } else {
+                   // For user type checkboxes, ensure only one can be selected
+             if (["isStudent", "isHod", "isGovernment", "isTeacher", "isParent"].includes(name)) {
+               setFormData((prev) => ({
+                 ...prev,
+                 isStudent: name === "isStudent" ? checked : false,
+                 isHod: name === "isHod" ? checked : false,
+                 isGovernment: name === "isGovernment" ? checked : false,
+                 isTeacher: name === "isTeacher" ? checked : false,
+                 isParent: name === "isParent" ? checked : false,
+               }));
+             } else {
         // For other checkboxes like "remember me"
         setFormData((prev) => ({
           ...prev,
@@ -175,48 +178,58 @@ const LoginPage: React.FC = () => {
               </div>
             )}
             
-            <div className="grid grid-cols-2 gap-3">
-              <label className="flex items-center space-x-2 text-sm">
-                <input
-                  type="checkbox"
-                  name="isStudent"
-                  checked={formData.isStudent}
-                  onChange={handleChange}
-                  className="accent-orange-400 rounded"
-                />
-                <span className="text-gray-700">Student</span>
-              </label>
-              <label className="flex items-center space-x-2 text-sm">
-                <input
-                  type="checkbox"
-                  name="isHod"
-                  checked={formData.isHod}
-                  onChange={handleChange}
-                  className="accent-orange-400 rounded"
-                />
-                <span className="text-gray-700">HoD</span>
-              </label>
-              <label className="flex items-center space-x-2 text-sm">
-                <input
-                  type="checkbox"
-                  name="isGovernment"
-                  checked={formData.isGovernment}
-                  onChange={handleChange}
-                  className="accent-orange-400 rounded"
-                />
-                <span className="text-gray-700">Government</span>
-              </label>
-              <label className="flex items-center space-x-2 text-sm">
-                <input
-                  type="checkbox"
-                  name="isTeacher"
-                  checked={formData.isTeacher}
-                  onChange={handleChange}
-                  className="accent-orange-400 rounded"
-                />
-                <span className="text-gray-700">Teacher</span>
-              </label>
-            </div>
+                               <div className="grid grid-cols-2 gap-3">
+                     <label className="flex items-center space-x-2 text-sm">
+                       <input
+                         type="checkbox"
+                         name="isStudent"
+                         checked={formData.isStudent}
+                         onChange={handleChange}
+                         className="accent-orange-400 rounded"
+                       />
+                       <span className="text-gray-700">Student</span>
+                     </label>
+                     <label className="flex items-center space-x-2 text-sm">
+                       <input
+                         type="checkbox"
+                         name="isHod"
+                         checked={formData.isHod}
+                         onChange={handleChange}
+                         className="accent-orange-400 rounded"
+                       />
+                       <span className="text-gray-700">HoD</span>
+                     </label>
+                     <label className="flex items-center space-x-2 text-sm">
+                       <input
+                         type="checkbox"
+                         name="isGovernment"
+                         checked={formData.isGovernment}
+                         onChange={handleChange}
+                         className="accent-orange-400 rounded"
+                       />
+                       <span className="text-gray-700">Government</span>
+                     </label>
+                     <label className="flex items-center space-x-2 text-sm">
+                       <input
+                         type="checkbox"
+                         name="isTeacher"
+                         checked={formData.isTeacher}
+                         onChange={handleChange}
+                         className="accent-orange-400 rounded"
+                       />
+                       <span className="text-gray-700">Teacher</span>
+                     </label>
+                     <label className="flex items-center space-x-2 text-sm">
+                       <input
+                         type="checkbox"
+                         name="isParent"
+                         checked={formData.isParent}
+                         onChange={handleChange}
+                         className="accent-orange-400 rounded"
+                       />
+                       <span className="text-gray-700">Parent</span>
+                     </label>
+                   </div>
           </div>
 
           {/* Login Button */}

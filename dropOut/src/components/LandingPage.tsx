@@ -1,6 +1,7 @@
 import landing from "../../src/img/landing.png";
 import landing22 from "../../src/img/landing22.png";
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaGraduationCap, FaBrain, FaClipboardList, FaChartLine, FaComments, FaStar, FaEnvelope, FaPhone, FaWhatsapp, FaMapMarkerAlt, FaTwitter, FaLinkedin, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const LandingPage = () => {
@@ -52,12 +53,12 @@ const LandingPage = () => {
            </nav>
           
           <div className="flex items-center space-x-4">
-            <button className="px-4 py-2 text-black border border-black rounded-lg hover:bg-gray-50 transition-colors">
+            <Link to="/login" className="px-4 py-2 text-black border border-black rounded-full hover:bg-gray-50 transition-colors">
               Login
-            </button>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            </Link>
+            <Link to="/signup" className="px-4 py-2 bg-orange-400 text-white rounded-full hover:bg-orange-500 transition-colors">
               Sign Up
-            </button>
+            </Link>
           </div>
         </div>
       </header>

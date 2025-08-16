@@ -11,19 +11,17 @@ import Hod from "./components/Hod";
 
 function App() {
   return (
-    <div>
-      <LandingPage />
-    </div>
-    // <Router>
-    //   <Routes>
-    //   <Route path="/" element={<LoginPage />} />
-    //   <Route path="/signup" element={<SignUpPage />} />
-    //   <Route path="/reset-password" element={<ResetPasswordSimple />} />
-    //   <Route path="/new-password-reset" element={<NewPasswordReset />} />
-    //   <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
-    //   <Route path="/hod-dashboard" element={<Hod />} />
-    //   </Routes>
-    // </Router>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/reset-password" element={<ResetPasswordSimple />} />
+        <Route path="/new-password-reset" element={<NewPasswordReset />} />
+        <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
+        <Route path="/hod-dashboard" element={<Hod />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -4,6 +4,16 @@ import React from 'react';
 import { FaGraduationCap, FaBrain, FaClipboardList, FaChartLine, FaComments, FaStar, FaEnvelope, FaPhone, FaWhatsapp, FaMapMarkerAlt, FaTwitter, FaLinkedin, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const LandingPage = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -15,10 +25,30 @@ const LandingPage = () => {
           </div>
           
                      <nav className="hidden md:flex items-center space-x-8">
-             <a href="#home" className="text-black hover:text-gray-600 transition-colors font-bold">Home</a>
-             <a href="#about" className="text-black hover:text-gray-600 transition-colors font-bold">About</a>
-             <a href="#features" className="text-black hover:text-gray-600 transition-colors font-bold">Features</a>
-             <a href="#contact" className="text-black hover:text-gray-600 transition-colors font-bold">Contact</a>
+             <button 
+               onClick={() => scrollToSection('home')} 
+               className="text-black hover:text-gray-600 transition-all duration-300 font-semibold hover:scale-105 cursor-pointer"
+             >
+               Home
+             </button>
+             <button 
+               onClick={() => scrollToSection('about')} 
+               className="text-black hover:text-gray-600 transition-all duration-300 font-semibold hover:scale-105 cursor-pointer"
+             >
+               About
+             </button>
+             <button 
+               onClick={() => scrollToSection('features')} 
+               className="text-black hover:text-gray-600 transition-all duration-300 font-semibold hover:scale-105 cursor-pointer"
+             >
+               Features
+             </button>
+             <button 
+               onClick={() => scrollToSection('contact')} 
+               className="text-black hover:text-gray-600 transition-all duration-300 font-semibold hover:scale-105 cursor-pointer"
+             >
+               Contact
+             </button>
            </nav>
           
           <div className="flex items-center space-x-4">
@@ -32,11 +62,11 @@ const LandingPage = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section id="home" className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
+             {/* Hero Section */}
+       <section id="home" className="py-16 px-4 sm:px-6 lg:px-8">
+         <div className="max-w-7xl mx-auto">
+           <div className="grid lg:grid-cols-2 gap-12 items-center">
+             <div className="space-y-6 animate-fade-in-up">
               <div className="text-orange-500 font-semibold">BrightWay</div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black leading-tight">
                 Let's <span className="text-orange-500">Prevent DropOuts</span> and Secure Futures of our{' '}
@@ -58,50 +88,48 @@ const LandingPage = () => {
               </div>
             </div>
             
-            <div className="relative">
-              <div className="bg-white rounded-lg shadow-lg p-4">
-                <img 
-                  src={landing} 
-                  alt="BrightWay Platform Preview" 
-                  className="w-full h-80 object-cover rounded-lg"
-                />
-              </div>
-            </div>
+                         <div className="relative animate-fade-in-up animate-delay-200">
+               <div className="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-all duration-500 hover:scale-105">
+                 <img 
+                   src={landing} 
+                   alt="BrightWay Platform Preview" 
+                   className="w-full h-80 object-cover rounded-lg"
+                 />
+               </div>
+             </div>
           </div>
         </div>
       </section>
 
-      {/* About Our Platform */}
-      <section id="about" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6">
-            About Our Platform
-          </h2>
-          <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            BrightWay is a system education platform designed to identify students at risk of dropping out before it happens. By analyzing academic performance, attendance patterns, and engagement metrics, we provide schools with actionable insights and intervention strategies to support every student's educational journey.
-          </p>
-        </div>
-      </section>
+             {/* About Our Platform */}
+       <section id="about" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+         <div className="max-w-4xl mx-auto text-center">
+           <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 animate-fade-in-up">About Our Platform</h2>
+           <div className="w-24 h-1 bg-blue-500 mx-auto mb-8 animate-expand"></div>
+           <p className="text-lg text-gray-600 leading-relaxed animate-fade-in-up animate-delay-200">
+             BrightWay is a system education platform designed to identify students at risk of dropping out before it happens. By analyzing academic performance, attendance patterns, and engagement metrics, we provide schools with actionable insights and intervention strategies to support every student's educational journey.
+           </p>
+         </div>
+       </section>
 
       {/* Why Choose BrightWay */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative">
-              <div className="bg-white rounded-lg shadow-lg p-4">
-                <img 
-                  src={landing22} 
-                  alt="Data Analytics and Insights" 
-                  className="w-full h-80 object-cover rounded-lg"
-                />
-              </div>
-            </div>
+                         <div className="relative animate-fade-in-left">
+               <div className="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-all duration-500 hover:scale-105">
+                 <img 
+                   src={landing22} 
+                   alt="Data Analytics and Insights" 
+                   className="w-full h-80 object-cover rounded-lg"
+                 />
+               </div>
+             </div>
             
-            <div className="space-y-8">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
-                Why Choose BrightWay ?
-              </h2>
+                         <div className="space-y-8 animate-fade-in-right">
+               <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+                 Why Choose BrightWay ?
+               </h2>
               
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
@@ -139,21 +167,19 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Key Features */}
-      <section id="features" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6">
-              Key Features
-            </h2>
-            <div className="w-24 h-1 bg-blue-500 mx-auto mb-6"></div>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Our comprehensive platform offers powerful tools to help educational institutions reduce dropout rates and improve student success.
-            </p>
-          </div>
+             {/* Key Features */}
+       <section id="features" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+         <div className="max-w-7xl mx-auto">
+           <div className="text-center mb-12">
+             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 animate-fade-in-up">Key Features</h2>
+             <div className="w-24 h-1 bg-blue-500 mx-auto mb-6 animate-expand"></div>
+             <p className="text-lg text-gray-600 max-w-3xl mx-auto animate-fade-in-up animate-delay-200">
+               Our comprehensive platform offers powerful tools to help educational institutions reduce dropout rates and improve student success.
+             </p>
+           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+             <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FaBrain className="text-blue-600 text-2xl" />
               </div>
@@ -163,54 +189,52 @@ const LandingPage = () => {
               <div className="text-sm text-gray-500">Accuracy in early detection</div>
             </div>
             
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaClipboardList className="text-orange-600 text-2xl" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">Intervention Plans</h3>
-              <p className="text-gray-600 mb-4">Customized action plans for teachers and counselors to support students.</p>
-              <div className="text-3xl font-bold text-orange-600 mb-1">87%</div>
-              <div className="text-sm text-gray-500">Intervention success rate</div>
-            </div>
+                         <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-100">
+               <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                 <FaClipboardList className="text-orange-600 text-2xl" />
+               </div>
+               <h3 className="text-xl font-semibold text-gray-800 mb-3">Intervention Plans</h3>
+               <p className="text-gray-600 mb-4">Customized action plans for teachers and counselors to support students.</p>
+               <div className="text-3xl font-bold text-orange-600 mb-1">87%</div>
+               <div className="text-sm text-gray-500">Intervention success rate</div>
+             </div>
             
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaChartLine className="text-blue-600 text-2xl" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">Progress Tracking</h3>
-              <p className="text-gray-600 mb-4">Real-time dashboards to monitor student improvement and engagement.</p>
-              <div className="text-3xl font-bold text-blue-600 mb-1">24/7</div>
-              <div className="text-sm text-gray-500">Continuous monitoring</div>
-            </div>
+                         <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-200">
+               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                 <FaChartLine className="text-blue-600 text-2xl" />
+               </div>
+               <h3 className="text-xl font-semibold text-gray-800 mb-3">Progress Tracking</h3>
+               <p className="text-gray-600 mb-4">Real-time dashboards to monitor student improvement and engagement.</p>
+               <div className="text-3xl font-bold text-blue-600 mb-1">24/7</div>
+               <div className="text-sm text-gray-500">Continuous monitoring</div>
+             </div>
             
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaComments className="text-orange-600 text-2xl" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">Communication Hub</h3>
-              <p className="text-gray-600 mb-4">Integrated messaging system connecting all stakeholders in a student's success.</p>
-              <div className="text-3xl font-bold text-orange-600 mb-1">65%</div>
-              <div className="text-sm text-gray-500">Increased parent engagement</div>
-            </div>
+                         <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-300">
+               <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                 <FaComments className="text-orange-600 text-2xl" />
+               </div>
+               <h3 className="text-xl font-semibold text-gray-800 mb-3">Communication Hub</h3>
+               <p className="text-gray-600 mb-4">Integrated messaging system connecting all stakeholders in a student's success.</p>
+               <div className="text-3xl font-bold text-orange-600 mb-1">65%</div>
+               <div className="text-sm text-gray-500">Increased parent engagement</div>
+             </div>
           </div>
         </div>
       </section>
 
-      {/* Success Stories */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6">
-              Success Stories
-            </h2>
-            <div className="w-24 h-1 bg-blue-500 mx-auto mb-6"></div>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              See how schools and districts have transformed their student retention with our platform.
-            </p>
-          </div>
+             {/* Success Stories */}
+       <section className="py-16 px-4 sm:px-6 lg:px-8">
+         <div className="max-w-7xl mx-auto">
+           <div className="text-center mb-12">
+             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 animate-fade-in-up">Success Stories</h2>
+             <div className="w-24 h-1 bg-blue-500 mx-auto mb-6 animate-expand"></div>
+             <p className="text-lg text-gray-600 max-w-3xl mx-auto animate-fade-in-up animate-delay-200">
+               See how schools and districts have transformed their student retention with our platform.
+             </p>
+           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+                     <div className="grid md:grid-cols-3 gap-6">
+             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
                   <span className="text-blue-600 font-semibold">MJ</span>
@@ -230,87 +254,85 @@ const LandingPage = () => {
               </div>
             </div>
             
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-orange-600 font-semibold">SM</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800">Sarah Martinez</h4>
-                  <p className="text-sm text-gray-600">District Administrator, Oakwood Schools</p>
-                </div>
-              </div>
-              <p className="text-gray-700 mb-4 italic">
-                "The data insights have helped us allocate resources more effectively. We're now able to provide targeted support to students who need it most."
-              </p>
-              <div className="flex space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-blue-500" />
-                ))}
-              </div>
-            </div>
+                         <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-100">
+               <div className="flex items-center mb-4">
+                 <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                   <span className="text-orange-600 font-semibold">SM</span>
+                 </div>
+                 <div>
+                   <h4 className="font-semibold text-gray-800">Sarah Martinez</h4>
+                   <p className="text-sm text-gray-600">District Administrator, Oakwood Schools</p>
+                 </div>
+               </div>
+               <p className="text-gray-700 mb-4 italic">
+                 "The data insights have helped us allocate resources more effectively. We're now able to provide targeted support to students who need it most."
+               </p>
+               <div className="flex space-x-1">
+                 {[...Array(5)].map((_, i) => (
+                   <FaStar key={i} className="text-blue-500" />
+                 ))}
+               </div>
+             </div>
             
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-green-600 font-semibold">DC</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800">David Chen</h4>
-                  <p className="text-sm text-gray-600">School Counselor, Westview Academy</p>
-                </div>
-              </div>
-              <p className="text-gray-700 mb-4 italic">
-                "The intervention plans save me hours of work each week. I can focus on actually helping students rather than trying to identify who needs help."
-              </p>
-              <div className="flex space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-blue-500" />
-                ))}
-              </div>
-            </div>
+                         <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-200">
+               <div className="flex items-center mb-4">
+                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                   <span className="text-green-600 font-semibold">DC</span>
+                 </div>
+                 <div>
+                   <h4 className="font-semibold text-gray-800">David Chen</h4>
+                   <p className="text-sm text-gray-600">School Counselor, Westview Academy</p>
+                 </div>
+               </div>
+               <p className="text-gray-700 mb-4 italic">
+                 "The intervention plans save me hours of work each week. I can focus on actually helping students rather than trying to identify who needs help."
+               </p>
+               <div className="flex space-x-1">
+                 {[...Array(5)].map((_, i) => (
+                   <FaStar key={i} className="text-blue-500" />
+                 ))}
+               </div>
+             </div>
           </div>
         </div>
       </section>
 
-             {/* Statistics Bar */}
-       <section className="py-16 bg-blue-100">
-         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                         <div>
-               <div className="text-4xl font-bold text-blue-800 mb-2">38%</div>
-               <div className="text-blue-700 text-sm">Average Dropout Reduction</div>
-             </div>
-             <div>
-               <div className="text-4xl font-bold text-blue-800 mb-2">500+</div>
-               <div className="text-blue-700 text-sm">Schools Using Our Platform</div>
-             </div>
-             <div>
-               <div className="text-4xl font-bold text-blue-800 mb-2">125K+</div>
-               <div className="text-blue-700 text-sm">Students Supported</div>
-             </div>
-             <div>
-               <div className="text-4xl font-bold text-blue-800 mb-2">98%</div>
-               <div className="text-blue-700 text-sm">Customer Satisfaction</div>
-             </div>
+                    {/* Statistics Bar */}
+        <section className="py-16 bg-blue-100">
+          <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+              <div className="animate-fade-in-up hover:scale-105 transition-transform duration-300">
+                <div className="text-4xl font-bold text-blue-800 mb-2">38%</div>
+                <div className="text-blue-700 text-sm">Average Dropout Reduction</div>
+              </div>
+              <div className="animate-fade-in-up animate-delay-100 hover:scale-105 transition-transform duration-300">
+                <div className="text-4xl font-bold text-blue-800 mb-2">500+</div>
+                <div className="text-blue-700 text-sm">Schools Using Our Platform</div>
+              </div>
+              <div className="animate-fade-in-up animate-delay-200 hover:scale-105 transition-transform duration-300">
+                <div className="text-4xl font-bold text-blue-800 mb-2">125K+</div>
+                <div className="text-blue-700 text-sm">Students Supported</div>
+              </div>
+              <div className="animate-fade-in-up animate-delay-300 hover:scale-105 transition-transform duration-300">
+                <div className="text-4xl font-bold text-blue-800 mb-2">98%</div>
+                <div className="text-blue-700 text-sm">Customer Satisfaction</div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6">
-              Get in Touch
-            </h2>
-            <p className="text-lg text-gray-600">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 animate-fade-in-up">Get in Touch</h2>
+            <p className="text-lg text-gray-600 animate-fade-in-up animate-delay-200">
               Have questions about our platform? Our support team is ready to help you.
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up">
               <FaEnvelope className="text-blue-500 text-3xl mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Email Support</h3>
               <p className="text-gray-600 mb-4">Get a response within 24 hours</p>
@@ -319,14 +341,14 @@ const LandingPage = () => {
               </a>
             </div>
             
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-100">
               <FaPhone className="text-orange-500 text-3xl mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Phone Support</h3>
               <p className="text-gray-600 mb-4">Available Mon-Fri, 9am-5pm EST</p>
               <div className="text-orange-500 font-semibold">+1 (800) 555-1234</div>
             </div>
             
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105 animate-fade-in-up animate-delay-200">
               <FaWhatsapp className="text-blue-500 text-3xl mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-800 mb-2">WhatsApp</h3>
               <p className="text-gray-600 mb-4">Quick responses for urgent inquiries</p>
@@ -335,7 +357,7 @@ const LandingPage = () => {
           </div>
           
           {/* Demo Form */}
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
+          <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto hover:shadow-xl transition-all duration-300 animate-fade-in-up animate-delay-300">
             <h3 className="text-2xl font-bold text-gray-800 mb-6">Schedule a Demo</h3>
             <form className="space-y-4">
               <input
@@ -369,23 +391,21 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-            Ready to Reduce Dropout Rates?
-          </h2>
-          <p className="text-lg text-gray-300 mb-8">
-            Join hundreds of schools already using our platform to improve student retention and success.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                         <button className="px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold">
+             {/* Call to Action */}
+       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900">
+         <div className="max-w-4xl mx-auto text-center">
+           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 animate-fade-in-up">Ready to Reduce Dropout Rates?</h2>
+           <p className="text-lg text-gray-300 mb-8 animate-fade-in-up animate-delay-200">
+             Join hundreds of schools already using our platform to improve student retention and success.
+           </p>
+                     <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+             <button className="px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-300 font-semibold hover:scale-105 animate-fade-in-up animate-delay-300">
                Start Free Trial
              </button>
-            <button className="px-8 py-3 border border-white text-white rounded-lg hover:bg-white hover:text-gray-900 transition-colors font-semibold">
-              Schedule Consultation
-            </button>
-          </div>
+             <button className="px-8 py-3 border border-white text-white rounded-lg hover:bg-white hover:text-gray-900 transition-all duration-300 font-semibold hover:scale-105 animate-fade-in-up animate-delay-400">
+               Schedule Consultation
+             </button>
+           </div>
         </div>
       </section>
 

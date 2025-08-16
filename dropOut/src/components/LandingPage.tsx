@@ -1,4 +1,6 @@
 import landing from "../../src/img/landing.png";
+import landing22 from "../../src/img/landing22.png";
+import React from 'react';
 import { FaGraduationCap, FaBrain, FaClipboardList, FaChartLine, FaComments, FaStar, FaEnvelope, FaPhone, FaWhatsapp, FaMapMarkerAlt, FaTwitter, FaLinkedin, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const LandingPage = () => {
@@ -37,7 +39,7 @@ const LandingPage = () => {
             <div className="space-y-6">
               <div className="text-orange-500 font-semibold">BrightWay</div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black leading-tight">
-                Let's Prevent Dropouts and Secure Futures of our{' '}
+                Let's <span className="text-orange-500">Prevent DropOuts</span> and Secure Futures of our{' '}
                 <span className="text-orange-500">Students</span>
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed">
@@ -58,13 +60,11 @@ const LandingPage = () => {
             
             <div className="relative">
               <div className="bg-white rounded-lg shadow-lg p-4">
-                <div className="w-full h-80 bg-gradient-to-br from-blue-100 to-orange-100 rounded-lg flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <FaGraduationCap className="text-6xl mx-auto mb-4" />
-                    <p className="text-lg">Modern Classroom with Students</p>
-                    <p className="text-sm">Using laptops and technology</p>
-                  </div>
-                </div>
+                <img 
+                  src={landing} 
+                  alt="BrightWay Platform Preview" 
+                  className="w-full h-80 object-cover rounded-lg"
+                />
               </div>
             </div>
           </div>
@@ -90,13 +90,11 @@ const LandingPage = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <div className="bg-white rounded-lg shadow-lg p-4">
-                <div className="w-full h-80 bg-gradient-to-br from-gray-100 to-blue-100 rounded-lg flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <FaChartLine className="text-6xl mx-auto mb-4" />
-                    <p className="text-lg">Data Analytics Meeting</p>
-                    <p className="text-sm">Educators reviewing insights</p>
-                  </div>
-                </div>
+                <img 
+                  src={landing22} 
+                  alt="Data Analytics and Insights" 
+                  className="w-full h-80 object-cover rounded-lg"
+                />
               </div>
             </div>
             

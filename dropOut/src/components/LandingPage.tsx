@@ -14,12 +14,12 @@ const LandingPage = () => {
             <span className="text-xl font-bold text-black">BrightWay.</span>
           </div>
           
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-black hover:text-gray-600 transition-colors">Home</a>
-            <a href="#about" className="text-black hover:text-gray-600 transition-colors">About</a>
-            <a href="#features" className="text-black hover:text-gray-600 transition-colors">Features</a>
-            <a href="#contact" className="text-black hover:text-gray-600 transition-colors">Contact</a>
-          </nav>
+                     <nav className="hidden md:flex items-center space-x-8">
+             <a href="#home" className="text-black hover:text-gray-600 transition-colors font-bold">Home</a>
+             <a href="#about" className="text-black hover:text-gray-600 transition-colors font-bold">About</a>
+             <a href="#features" className="text-black hover:text-gray-600 transition-colors font-bold">Features</a>
+             <a href="#contact" className="text-black hover:text-gray-600 transition-colors font-bold">Contact</a>
+           </nav>
           
           <div className="flex items-center space-x-4">
             <button className="px-4 py-2 text-black border border-black rounded-lg hover:bg-gray-50 transition-colors">
@@ -379,9 +379,9 @@ const LandingPage = () => {
             Join hundreds of schools already using our platform to improve student retention and success.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
-              Start Free Trial
-            </button>
+                         <button className="px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold">
+               Start Free Trial
+             </button>
             <button className="px-8 py-3 border border-white text-white rounded-lg hover:bg-white hover:text-gray-900 transition-colors font-semibold">
               Schedule Consultation
             </button>

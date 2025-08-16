@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTheme } from '../Hod'
 
 interface PendingTimetable {
   id: number
@@ -17,6 +18,7 @@ interface ApprovedTimetable {
 }
 
 const Courses = () => {
+  const { theme } = useTheme()
   const [pendingTimetables] = useState<PendingTimetable[]>([
     {
       id: 1,
@@ -54,12 +56,18 @@ const Courses = () => {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+      <div className={`shadow-sm border-b px-3 sm:px-6 py-3 sm:py-4 mb-4 sm:mb-6 transition-colors duration-200 ${
+        theme === 'dark' 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'
+      }`}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Courses & Timetables</h1>
+            <h1 className={`text-xl sm:text-2xl font-bold transition-colors duration-200 ${
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
+            }`}>Courses & Timetables</h1>
           </div>
-          <button className="bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-orange-700 transition-colors">
+          <button className="bg-orange-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center sm:justify-start space-x-2 hover:bg-orange-700 transition-colors text-sm sm:text-base">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -69,54 +77,86 @@ const Courses = () => {
       </div>
 
       {/* Pending Timetable Approvals */}
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg mb-6">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Pending Timetable Approvals</h2>
+      <div className={`shadow-sm border rounded-lg mb-4 sm:mb-6 transition-colors duration-200 ${
+        theme === 'dark' 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'
+      }`}>
+        <div className={`px-3 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
+          theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+        }`}>
+          <h2 className={`text-base sm:text-lg font-semibold transition-colors duration-200 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          }`}>Pending Timetable Approvals</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className={`transition-colors duration-200 ${
+              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+            }`}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Course Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Department
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Start Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className={`divide-y transition-colors duration-200 ${
+              theme === 'dark' 
+                ? 'bg-gray-800 divide-gray-700' 
+                : 'bg-white divide-gray-200'
+            }`}>
               {pendingTimetables.map((timetable) => (
-                <tr key={timetable.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{timetable.courseName}</div>
+                <tr key={timetable.id} className={`hover:transition-colors duration-200 ${
+                  theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                }`}>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>{timetable.courseName}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{timetable.department}</div>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-sm transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>{timetable.department}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{timetable.startDate}</div>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-sm transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>{timetable.startDate}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-500 text-white">
                       {timetable.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <button className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                      <button className="bg-green-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-xs hover:bg-green-700 transition-colors">
                         Approve
                       </button>
-                      <button className="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700 transition-colors">
+                      <button className="bg-red-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-xs hover:bg-red-700 transition-colors">
                         Reject
                       </button>
                     </div>
@@ -129,52 +169,86 @@ const Courses = () => {
       </div>
 
       {/* Approved Timetables */}
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Approved Timetables</h2>
+      <div className={`shadow-sm border rounded-lg transition-colors duration-200 ${
+        theme === 'dark' 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'
+      }`}>
+        <div className={`px-3 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
+          theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+        }`}>
+          <h2 className={`text-base sm:text-lg font-semibold transition-colors duration-200 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          }`}>Approved Timetables</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className={`transition-colors duration-200 ${
+              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+            }`}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Course Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Department
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Start Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   End Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className={`divide-y transition-colors duration-200 ${
+              theme === 'dark' 
+                ? 'bg-gray-800 divide-gray-700' 
+                : 'bg-white divide-gray-200'
+            }`}>
               {approvedTimetables.map((timetable) => (
-                <tr key={timetable.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{timetable.courseName}</div>
+                <tr key={timetable.id} className={`hover:transition-colors duration-200 ${
+                  theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                }`}>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>{timetable.courseName}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{timetable.department}</div>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-sm transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>{timetable.department}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{timetable.startDate}</div>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-sm transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>{timetable.startDate}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{timetable.endDate}</div>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-sm transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>{timetable.endDate}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <button className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                      <button className="bg-blue-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-xs hover:bg-blue-700 transition-colors">
                         View Details
                       </button>
-                      <button className="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700 transition-colors">
+                      <button className="bg-gray-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-xs hover:bg-gray-700 transition-colors">
                         Notify Stakeholders
                       </button>
                     </div>

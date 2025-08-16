@@ -253,7 +253,7 @@ const LandingPage = () => {
               </p>
               <div className="flex space-x-1">
                 {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-blue-500" />
+                  <FaStar key={i} className="text-yellow-500" />
                 ))}
               </div>
             </div>
@@ -262,7 +262,7 @@ const LandingPage = () => {
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
                     <img 
-                      src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face" 
+                      src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" 
                       alt="Sarah Martinez" 
                       className="w-full h-full object-cover"
                     />
@@ -277,7 +277,7 @@ const LandingPage = () => {
                </p>
                <div className="flex space-x-1">
                  {[...Array(5)].map((_, i) => (
-                   <FaStar key={i} className="text-blue-500" />
+                   <FaStar key={i} className="text-yellow-500" />
                  ))}
                </div>
              </div>
@@ -301,7 +301,7 @@ const LandingPage = () => {
                </p>
                <div className="flex space-x-1">
                  {[...Array(5)].map((_, i) => (
-                   <FaStar key={i} className="text-blue-500" />
+                   <FaStar key={i} className="text-yellow-500" />
                  ))}
                </div>
              </div>

@@ -49,7 +49,7 @@ const LandingPage = () => {
                 Join thousands of schools, teachers, and parents already using our system to make a difference in students' lives.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <button className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                <button className="px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold">
                   Get Started
                 </button>
                 <a href="#demo" className="text-black hover:text-gray-600 transition-colors font-medium">

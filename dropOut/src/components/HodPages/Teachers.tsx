@@ -224,7 +224,7 @@ const Teachers = () => {
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
                   <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <div>
+    <div>
                       <div className={`text-sm font-medium transition-colors duration-200 ${
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                       }`}>{teacher.name}</div>

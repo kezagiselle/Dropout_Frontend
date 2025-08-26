@@ -17,6 +17,8 @@ import { FaClipboardCheck } from "react-icons/fa";
 import { FaComments } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { TbReport } from "react-icons/tb";
+import { CiWavePulse1 } from "react-icons/ci";
+
 
 
 
@@ -139,7 +141,7 @@ const Hod = () => {
               theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
             }`}>Filters:</span>
             
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -151,7 +153,7 @@ const Hod = () => {
               <option>Grade 12</option>
             </select>
 
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -162,7 +164,7 @@ const Hod = () => {
               <option>Class C</option>
             </select>
 
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -345,17 +347,12 @@ const Hod = () => {
                 {/* Summary Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                   {/* Total Students */}
-                  <div className={`rounded-lg shadow-sm p-6 border transition-colors duration-200 ${
+                  <div className={`rounded-lg shadow-sm p-6 border transition-colors duration-200 cursor-pointer hover:bg-orange-100 hover:border-orange-300 ${
                     theme === 'dark' 
-                      ? 'bg-gray-800 border-gray-700' 
+                      ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                       : 'bg-white border-gray-200'
                   }`}>
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                        </svg>
-                      </div>
+                    <div className="flex items-center justify-between">
                       <div>
                         <h3 className={`text-sm font-medium transition-colors duration-200 ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
@@ -364,6 +361,9 @@ const Hod = () => {
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
                         }`}>1,247</p>
                         <p className="text-sm text-green-600 font-medium">↑+3.2% vs last term</p>
+                      </div>
+                      <div className="flex items-center justify-center -mt-2">
+                        <IoIosPeople className="w-6 h-6 text-blue-400" />
                       </div>
                     </div>
                   </div>
@@ -422,9 +422,7 @@ const Hod = () => {
                   }`}>
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                        <CiWavePulse1 className="w-6 h-6 text-green-600" />
                       </div>
                       <div>
                         <h3 className={`text-sm font-medium transition-colors duration-200 ${

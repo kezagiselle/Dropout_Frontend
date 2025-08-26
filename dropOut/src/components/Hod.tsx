@@ -12,7 +12,8 @@ import { FaSave } from "react-icons/fa";
 import { IoIosPeople } from "react-icons/io";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaCalendarAlt } from "react-icons/fa";
-import { FaClipboardCheck } from "react-icons/fa6";
+import { FaClipboardCheck } from "react-icons/fa";
+
 import { FaComments } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { TbReport } from "react-icons/tb";
@@ -274,9 +275,7 @@ const Hod = () => {
                 }`}
                 onClick={() => { setActiveView('attendance'); closeMobileMenu(); }}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <FaClipboardCheck className="w-5 h-5" />
                 <span className="font-medium">Attendance</span>
               </div>
               <div 

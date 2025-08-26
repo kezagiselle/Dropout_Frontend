@@ -141,7 +141,7 @@ const Hod = () => {
               theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
             }`}>Filters:</span>
             
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -153,7 +153,7 @@ const Hod = () => {
               <option>Grade 12</option>
             </select>
 
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -164,7 +164,7 @@ const Hod = () => {
               <option>Class C</option>
             </select>
 
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -352,7 +352,7 @@ const Hod = () => {
                       ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                       : 'bg-white border-gray-200'
                   }`}>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-start justify-between">
                       <div>
                         <h3 className={`text-sm font-medium transition-colors duration-200 ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
@@ -362,7 +362,7 @@ const Hod = () => {
                         }`}>1,247</p>
                         <p className="text-sm text-green-600 font-medium">↑+3.2% vs last term</p>
                       </div>
-                      <div className="flex items-center justify-center -mt-2">
+                      <div className="flex items-center justify-center">
                         <IoIosPeople className="w-6 h-6 text-blue-400" />
                       </div>
                     </div>
@@ -374,12 +374,7 @@ const Hod = () => {
                       ? 'bg-gray-800 border-gray-700' 
                       : 'bg-white border-gray-200'
                   }`}>
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
+                    <div className="flex items-start justify-between">
                       <div>
                         <h3 className={`text-sm font-medium transition-colors duration-200 ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
@@ -388,6 +383,9 @@ const Hod = () => {
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
                         }`}>72</p>
                         <p className="text-sm text-green-600 font-medium">↑+3.2% vs last term</p>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <LiaChalkboardTeacherSolid className="w-6 h-6 text-green-400" />
                       </div>
                     </div>
                   </div>
@@ -422,7 +420,9 @@ const Hod = () => {
                   }`}>
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <CiWavePulse1 className="w-6 h-6 text-green-600" />
+                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                       </div>
                       <div>
                         <h3 className={`text-sm font-medium transition-colors duration-200 ${

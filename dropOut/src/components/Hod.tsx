@@ -385,7 +385,7 @@ const Hod = () => {
                         <p className="text-sm text-green-600 font-medium">↑+3.2% vs last term</p>
                       </div>
                       <div className="flex items-center justify-center">
-                        <LiaChalkboardTeacherSolid className="w-6 h-6 text-green-400" />
+                        <IoIosPeople className="w-6 h-6 text-blue-400" />
                       </div>
                     </div>
                   </div>

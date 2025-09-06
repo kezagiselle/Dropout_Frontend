@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt } from 'react-icons/fa'
+import { FaClipboardCheck } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+
 
 interface Teacher {
   id: number
@@ -108,14 +111,14 @@ const Teachers = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {/* Total Teachers */}
         <div className={`rounded-lg shadow-sm border p-6 transition-colors duration-200 ${
-          theme === 'dark' 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'
-        }`}>
+        theme === 'dark' 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'
+      }`}>
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <p className={`text-sm font-medium text-gray-600 transition-colors duration-200 ${
-                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Total Teachers
               </p>
@@ -137,24 +140,22 @@ const Teachers = () => {
             ? 'bg-gray-800 border-gray-700' 
             : 'bg-white border-gray-200'
         }`}>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
               <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 On leave
               </p>
-              <p className="text-3xl font-bold mt-2 text-black">3</p>
+              <p className="text-3xl font-bold mt-2 text-orange-400">3</p>
               <div className="flex items-center mt-1">
                 <svg className="w-3 h-3 text-orange-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-                <span className="text-xs text-orange-600 font-medium">-8.1% vs last term</span>
+                <span className="text-xs text-orange-400 font-medium">-8.1% vs last term</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <IoIosWarning className="w-6 h-6 text-orange-600" />
-            </div>
+            <IoIosWarning className="w-4 h-4 text-orange-600 ml-4" />
           </div>
         </div>
 
@@ -164,8 +165,8 @@ const Teachers = () => {
             ? 'bg-gray-800 border-gray-700' 
             : 'bg-white border-gray-200'
         }`}>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
               <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
@@ -173,9 +174,7 @@ const Teachers = () => {
               </p>
               <p className="text-xl sm:text-2xl font-bold mt-1 text-green-600">28</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <IoIosCheckmarkCircle className="w-6 h-6 text-green-600" />
-            </div>
+            <FaClipboardCheck className="w-4 h-4 text-green-600 ml-4" />
           </div>
         </div>
 
@@ -185,8 +184,8 @@ const Teachers = () => {
             ? 'bg-gray-800 border-gray-700' 
             : 'bg-white border-gray-200'
         }`}>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
               <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
@@ -195,9 +194,7 @@ const Teachers = () => {
               <p className="text-xl sm:text-2xl font-bold mt-1 text-red-600">2</p>
               <p className="text-xs text-gray-500 mt-1">8 registrations, 4 timetable</p>
             </div>
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <IoIosTime className="w-6 h-6 text-red-600" />
-            </div>
+            <IoIosTime className="w-4 h-4 text-red-600 ml-4" />
           </div>
         </div>
       </div>
@@ -208,18 +205,25 @@ const Teachers = () => {
           ? 'bg-gray-800 border-gray-700' 
           : 'bg-white border-gray-200'
       }`}>
-        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-3 xl:space-y-0">
-          <h3 className={`text-xs sm:text-sm lg:text-base font-medium transition-colors duration-200 ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-          }`}>Filters</h3>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+          <h3 className={`text-sm font-bold transition-colors duration-200 ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            Filters
+          </h3>
           
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-4">
-            <div className="flex flex-wrap gap-2 sm:gap-3">
-              {/* Department Filter */}
+          <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6">
+            {/* Department Filter */}
+            <div className="flex items-center space-x-2">
+              <label className={`text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Department:
+              </label>
               <select
                 value={selectedDepartment}
                 onChange={(e) => setSelectedDepartment(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
@@ -232,12 +236,19 @@ const Teachers = () => {
                 <option>History</option>
                 <option>Art</option>
               </select>
+            </div>
 
-              {/* Status Filter */}
+            {/* Status Filter */}
+            <div className="flex items-center space-x-2">
+              <label className={`text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Status:
+              </label>
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
@@ -250,19 +261,14 @@ const Teachers = () => {
               </select>
             </div>
             
-            <div className="flex items-center space-x-3">
-              <button className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                theme === 'dark'
-                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}>
-                <FaFilter className="w-4 h-4" />
-                <span>Clear Filters</span>
-              </button>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-bold transition-colors duration-200">
-                Clear All
-              </button>
-            </div>
+            <button className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+              theme === 'dark'
+                ? 'text-gray-400 hover:text-gray-200'
+                : 'text-gray-600 hover:text-gray-800'
+            }`}>
+              <FaFilter className="w-4 h-4" />
+              <span>Clear Filters</span>
+            </button>
           </div>
         </div>
       </div>
@@ -309,27 +315,27 @@ const Teachers = () => {
               theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
             }`}>
               <tr>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Teacher Name
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Department
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Assigned Courses
-                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                </th>
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Status
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Actions
@@ -346,13 +352,18 @@ const Teachers = () => {
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
-    <div>
-                      <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                        theme === 'dark' ? 'text-white' : 'text-gray-900'
-                      }`}>{teacher.name}</div>
-                      <div className={`text-xs transition-colors duration-200 ${
-                        theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                      }`}>{teacher.email}</div>
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                        <FaUser className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 truncate ${
+                          theme === 'dark' ? 'text-white' : 'text-gray-900'
+                        }`}>{teacher.name}</div>
+                        <div className={`text-xs transition-colors duration-200 ${
+                          theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                        }`}>{teacher.email}</div>
+                      </div>
                     </div>
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -421,4 +432,5 @@ const Teachers = () => {
 }
 
 export default Teachers
+
 

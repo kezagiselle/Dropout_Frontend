@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTheme } from '../Hod'
+import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
+import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt } from 'react-icons/fa'
 
 interface Teacher {
   id: number
@@ -45,92 +47,184 @@ const Teachers = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Active':
-        return 'bg-green-500 text-white'
+        return 'bg-green-100 text-green-800'
       case 'On Leave':
-        return 'bg-yellow-500 text-white'
+        return 'bg-yellow-100 text-yellow-800'
       case 'Inactive':
-        return 'bg-red-500 text-white'
+        return 'bg-red-100 text-red-800'
       default:
-        return 'bg-gray-500 text-white'
+        return 'bg-gray-100 text-gray-800'
     }
   }
 
   const getCourseColor = (index: number) => {
-    const colors = ['bg-blue-300', 'bg-green-300', 'bg-blue-300', 'bg-green-300']
+    const colors = ['bg-blue-100 text-blue-800', 'bg-green-100 text-green-800', 'bg-purple-100 text-purple-800']
     return colors[index % colors.length]
   }
 
-  const clearFilters = () => {
-    setSelectedDepartment('All Departments')
-    setSelectedStatus('All')
-    setSearchTerm('')
-  }
-
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className={`shadow-sm border-b px-3 sm:px-6 py-3 sm:py-4 mb-4 sm:mb-6 transition-colors duration-200 ${
-        theme === 'dark' 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'
-      }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-          <div>
-            <h1 className={`text-xl sm:text-2xl font-bold transition-colors duration-200 ${
-              theme === 'dark' ? 'text-white' : 'text-gray-900'
-            }`}>Teachers</h1>
-            <p className={`mt-1 text-sm sm:text-base transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-            }`}>Manage teacher profiles and assignments</p>
+    <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
+      {/* Header Section */}
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
+        <div className="flex-1 min-w-0">
+          <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold transition-colors duration-200 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          }`}>
+            Teachers Management
+          </h1>
+          <p className={`text-xs sm:text-sm lg:text-base mt-1 transition-colors duration-200 ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            Manage Teachers Activities
+          </p>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-4">
+          {/* Search Bar */}
+          <div className="relative flex-1 sm:flex-none sm:w-64 lg:w-80">
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
+            <input
+              type="text"
+              placeholder="Search Teacher"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={`w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base ${
+                theme === 'dark'
+                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+              }`}
+            />
           </div>
-          <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <div className="relative w-full sm:w-64">
-              <input
-                type="text"
-                placeholder="Search teachers..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={`w-full px-3 sm:px-4 py-2 pl-8 sm:pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                    : 'border-gray-300'
-                }`}
-              />
-              <svg className={`w-4 sm:w-5 h-4 sm:h-5 absolute left-2 sm:left-3 top-2.5 transition-colors duration-200 ${
-                theme === 'dark' ? 'text-gray-400' : 'text-gray-400'
-              }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+          
+          {/* Add Teacher Button */}
+          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
+            <span className="text-sm sm:text-base">+</span>
+            <span>Add Teacher</span>
+          </button>
+        </div>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        {/* Total Teachers */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Total Teachers
+              </p>
+              <p className="text-xl sm:text-2xl font-bold mt-1 text-gray-900 dark:text-white">72</p>
+              <div className="flex items-center mt-1">
+                <svg className="w-3 h-3 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-xs text-green-600 font-medium">+3.2% vs last term</span>
+              </div>
             </div>
-            <button className="bg-orange-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-orange-700 transition-colors text-sm sm:text-base w-full sm:w-auto">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              <span>Add Teacher</span>
-            </button>
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <IoIosPeople className="w-6 h-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* On Leave */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                On leave
+              </p>
+              <p className="text-xl sm:text-2xl font-bold mt-1 text-gray-900 dark:text-white">3</p>
+              <div className="flex items-center mt-1">
+                <svg className="w-3 h-3 text-orange-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-xs text-orange-600 font-medium">-8.1% vs last term</span>
+              </div>
+            </div>
+            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+              <IoIosWarning className="w-6 h-6 text-orange-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Available */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Available
+              </p>
+              <p className="text-xl sm:text-2xl font-bold mt-1 text-green-600">28</p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <IoIosCheckmarkCircle className="w-6 h-6 text-green-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Substitutes Needed */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Substitutes Needed
+              </p>
+              <p className="text-xl sm:text-2xl font-bold mt-1 text-red-600">2</p>
+              <p className="text-xs text-gray-500 mt-1">8 registrations, 4 timetable</p>
+            </div>
+            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+              <IoIosTime className="w-6 h-6 text-red-600" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Filters */}
-      <div className={`shadow-sm border rounded-lg px-3 sm:px-6 py-3 sm:py-4 mb-4 sm:mb-6 transition-colors duration-200 ${
+      {/* Filters Section */}
+      <div className={`rounded-lg shadow-sm border p-3 sm:p-4 lg:p-6 transition-colors duration-200 ${
         theme === 'dark' 
           ? 'bg-gray-800 border-gray-700' 
           : 'bg-white border-gray-200'
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-          <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6">
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-              <label className={`text-sm font-medium transition-colors duration-200 ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-              }`}>Department:</label>
+        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-3 xl:space-y-0">
+          <h3 className={`text-xs sm:text-sm lg:text-base font-medium transition-colors duration-200 ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+          }`}>Filters</h3>
+          
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-4">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              {/* Department Filter */}
               <select
                 value={selectedDepartment}
                 onChange={(e) => setSelectedDepartment(e.target.value)}
-                className={`px-2 sm:px-3 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300'
+                    : 'bg-white border-gray-300 text-gray-900'
                 }`}
               >
                 <option>All Departments</option>
@@ -140,74 +234,104 @@ const Teachers = () => {
                 <option>History</option>
                 <option>Art</option>
               </select>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-              <label className={`text-sm font-medium transition-colors duration-200 ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-              }`}>Status:</label>
+
+              {/* Status Filter */}
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className={`px-2 sm:px-3 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300'
+                    : 'bg-white border-gray-300 text-gray-900'
                 }`}
               >
-                <option>All</option>
+                <option>All...</option>
                 <option>Active</option>
                 <option>On Leave</option>
                 <option>Inactive</option>
               </select>
             </div>
+            
+            <div className="flex items-center space-x-3">
+              <button className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark'
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}>
+                <FaFilter className="w-4 h-4" />
+                <span>Clear Filters</span>
+              </button>
+              <button className="text-blue-600 hover:text-blue-700 text-sm font-bold transition-colors duration-200">
+                Clear All
+              </button>
+            </div>
           </div>
-          <button
-            onClick={clearFilters}
-            className={`flex items-center justify-center sm:justify-start space-x-2 transition-colors duration-200 text-sm ${
-              theme === 'dark' ? 'text-gray-400 hover:text-gray-200' : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            <span>Clear Filters</span>
-          </button>
         </div>
       </div>
 
-      {/* Teachers Table */}
-      <div className={`shadow-sm border rounded-lg transition-colors duration-200 ${
+      {/* Teachers List Table */}
+      <div className={`rounded-lg shadow-sm border transition-colors duration-200 ${
         theme === 'dark' 
           ? 'bg-gray-800 border-gray-700' 
           : 'bg-white border-gray-200'
       }`}>
+        {/* Table Header */}
+        <div className={`px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
+          theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+        }`}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+            <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
+            }`}>
+              Teachers List
+            </h2>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <button className={`p-1.5 sm:p-2 rounded-lg transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'text-gray-400 hover:text-white hover:bg-gray-700' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}>
+                <FaDownload className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+              <button className={`p-1.5 sm:p-2 rounded-lg transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'text-gray-400 hover:text-white hover:bg-gray-700' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}>
+                <FaFilter className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[800px]">
             <thead className={`transition-colors duration-200 ${
               theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
             }`}>
               <tr>
-                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Teacher Name
                 </th>
-                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Department
                 </th>
-                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
-                   Assigned<br />Courses
-                 </th>
-                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                  Assigned Courses
+                </th>
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Status
                 </th>
-                <th className={`px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Actions
@@ -223,53 +347,43 @@ const Teachers = () => {
                 <tr key={teacher.id} className={`hover:transition-colors duration-200 ${
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
-                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-    <div>
-                      <div className={`text-sm font-medium transition-colors duration-200 ${
+                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div>
+                      <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                       }`}>{teacher.name}</div>
-                      <div className={`text-xs sm:text-sm transition-colors duration-200 ${
+                      <div className={`text-xs transition-colors duration-200 ${
                         theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                       }`}>{teacher.email}</div>
                     </div>
                   </td>
-                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <div className={`text-sm transition-colors duration-200 ${
+                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className={`text-xs sm:text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>{teacher.department}</div>
                   </td>
-                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                     <div className="flex flex-col gap-1">
-                       {teacher.assignedCourses.map((course, index) => (
-                         <span
-                           key={course}
-                           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full text-white ${getCourseColor(index)}`}
-                         >
-                           {course}
-                         </span>
-                       ))}
-                     </div>
-                   </td>
-                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(teacher.status)}`}>
+                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className="flex flex-wrap gap-1">
+                      {teacher.assignedCourses.map((course, index) => (
+                        <span
+                          key={course}
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index)}`}
+                        >
+                          {course}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(teacher.status)}`}>
                       {teacher.status}
                     </span>
                   </td>
-                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                      <button className="text-orange-600 hover:text-orange-900 flex items-center justify-center sm:justify-start space-x-1 transition-colors text-sm">
-                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                         </svg>
-                         <span>Edit Profile</span>
-                       </button>
-                       <button className="text-orange-600 hover:text-orange-900 flex items-center justify-center sm:justify-start space-x-1 transition-colors text-sm">
-                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                         </svg>
-                         <span>Manage Assignments</span>
-                       </button>
-                    </div>
+                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
+                    <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-1 sm:space-x-2">
+                      <FaExternalLinkAlt className="w-3 h-3" />
+                      <span>View Profile</span>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -278,26 +392,26 @@ const Teachers = () => {
         </div>
 
         {/* Pagination */}
-        <div className={`px-3 sm:px-6 py-3 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 transition-colors duration-200 ${
+        <div className={`px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 transition-colors duration-200 ${
           theme === 'dark' 
             ? 'bg-gray-800 border-gray-700' 
             : 'bg-white border-gray-200'
         }`}>
-          <div className={`text-sm transition-colors duration-200 ${
+          <div className={`text-xs sm:text-sm transition-colors duration-200 ${
             theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
           }`}>
             Showing <span className="font-medium">1</span> to <span className="font-medium">3</span> of{' '}
             <span className="font-medium">3</span> results
           </div>
           <div>
-            <nav className="flex items-center justify-center sm:justify-start space-x-2">
-              <button className="px-2 sm:px-3 py-1 text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+            <nav className="flex items-center justify-center sm:justify-start space-x-1 sm:space-x-2">
+              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                 &lt; Previous
               </button>
-                             <button className="px-2 sm:px-3 py-1 text-sm bg-orange-600 text-white rounded-md">
-                 1
-               </button>
-              <button className="px-2 sm:px-3 py-1 text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-600 text-white rounded-md font-medium">
+                1
+              </button>
+              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                 Next &gt;
               </button>
             </nav>

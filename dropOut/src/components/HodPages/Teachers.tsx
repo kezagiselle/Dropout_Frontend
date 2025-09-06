@@ -60,9 +60,14 @@ const Teachers = () => {
     }
   }
 
-  const getCourseColor = (index: number) => {
-    const colors = ['bg-blue-100 text-blue-800', 'bg-green-100 text-green-800', 'bg-purple-100 text-purple-800']
-    return colors[index % colors.length]
+  const getCourseColor = (index: number, teacherName: string) => {
+    if (teacherName === 'Sarah Lee') {
+      return 'bg-purple-100 text-purple-800'
+    }
+    if (teacherName === 'David Smith') {
+      return 'bg-green-100 text-green-800'
+    }
+    return 'bg-blue-100 text-blue-800'
   }
 
   return (
@@ -261,6 +266,7 @@ const Teachers = () => {
               </select>
             </div>
             
+          <div className="flex items-center space-x-3">
             <button className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
               theme === 'dark'
                 ? 'text-gray-400 hover:text-gray-200'
@@ -269,6 +275,10 @@ const Teachers = () => {
               <FaFilter className="w-4 h-4" />
               <span>Clear Filters</span>
             </button>
+            <button className="text-blue-600 hover:text-blue-700 text-sm font-bold transition-colors duration-200">
+              Clear All
+            </button>
+          </div>
           </div>
         </div>
       </div>
@@ -284,7 +294,7 @@ const Teachers = () => {
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         }`}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-            <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
+            <h2 className={`text-sm sm:text-base font-semibold transition-colors duration-200 ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>
               Teachers List
@@ -315,27 +325,27 @@ const Teachers = () => {
               theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
             }`}>
               <tr>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Teacher Name
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Department
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Assigned Courses
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Status
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-200 ${
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Actions
@@ -373,15 +383,15 @@ const Teachers = () => {
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className="flex flex-wrap gap-1">
-                       {teacher.assignedCourses.map((course, index) => (
-                         <span
-                           key={course}
-                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index)}`}
-                         >
-                           {course}
-                         </span>
-                       ))}
-                     </div>
+                      {teacher.assignedCourses.map((course, index) => (
+                        <span
+                          key={course}
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index, teacher.name)}`}
+                        >
+                          {course}
+                        </span>
+                      ))}
+                    </div>
                    </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(teacher.status)}`}>
@@ -417,9 +427,9 @@ const Teachers = () => {
               <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                 &lt; Previous
               </button>
-              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-600 text-white rounded-md font-medium">
-                 1
-               </button>
+              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-orange-400 text-white rounded-md font-medium">
+                1
+              </button>
               <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                 Next &gt;
               </button>

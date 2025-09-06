@@ -4,6 +4,10 @@ import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'reac
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt } from 'react-icons/fa'
 import { FaClipboardCheck } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
+import { FaBook } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
+
+
 
 
 interface Teacher {

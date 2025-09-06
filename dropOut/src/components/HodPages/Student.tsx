@@ -223,9 +223,7 @@ const Student = () => {
               <h3 className={`text-xs lg:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>Pending Approvals</h3>
-              <p className={`text-xl lg:text-2xl font-bold mt-1 transition-colors duration-200 ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>12</p>
+              <p className="text-xl lg:text-2xl font-bold mt-1 text-orange-600">12</p>
               <p className={`text-xs lg:text-sm transition-colors duration-200 mt-1 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>8 registrations, 4 timetable</p>
@@ -351,7 +349,7 @@ const Student = () => {
           theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
         }`}>
           <div className="flex items-center justify-between">
-            <h2 className={`text-lg lg:text-xl font-semibold transition-colors duration-200 ${
+            <h2 className={`text-lg lg:text-xl font-bold transition-colors duration-200 ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>
               Students List
@@ -469,7 +467,7 @@ const Student = () => {
                     </div>
                   </td>
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center space-x-20">
+                    <div className="flex items-center space-x-24">
                       <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-2">
                         <FaExternalLinkAlt className="w-3 h-3" />
                         <span>View Profile</span>

@@ -107,35 +107,33 @@ const Teachers = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {/* Total Teachers */}
-        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+        <div className={`rounded-lg shadow-sm border p-6 transition-colors duration-200 ${
           theme === 'dark' 
             ? 'bg-gray-800 border-gray-700' 
             : 'bg-white border-gray-200'
         }`}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className={`text-sm font-medium text-gray-600 transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Total Teachers
               </p>
-              <p className="text-xl sm:text-2xl font-bold mt-1 text-gray-900 dark:text-white">72</p>
-              <div className="flex items-center mt-1">
-                <svg className="w-3 h-3 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <p className="text-3xl font-bold mt-2 text-black">72</p>
+              <div className="flex items-center mt-2">
+                <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
                 </svg>
-                <span className="text-xs text-green-600 font-medium">+3.2% vs last term</span>
+                <span className="text-sm text-green-600 font-medium">+3.2% vs last term</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <IoIosPeople className="w-6 h-6 text-blue-600" />
-            </div>
+            <IoIosPeople className="w-6 h-6 text-blue-400 ml-4" />
           </div>
         </div>
 
         {/* On Leave */}
         <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
-          theme === 'dark' 
+                  theme === 'dark'
             ? 'bg-gray-800 border-gray-700' 
             : 'bg-white border-gray-200'
         }`}>
@@ -146,11 +144,11 @@ const Teachers = () => {
               }`}>
                 On leave
               </p>
-              <p className="text-xl sm:text-2xl font-bold mt-1 text-gray-900 dark:text-white">3</p>
+              <p className="text-3xl font-bold mt-2 text-black">3</p>
               <div className="flex items-center mt-1">
                 <svg className="w-3 h-3 text-orange-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+              </svg>
                 <span className="text-xs text-orange-600 font-medium">-8.1% vs last term</span>
               </div>
             </div>
@@ -212,7 +210,7 @@ const Teachers = () => {
       }`}>
         <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-3 xl:space-y-0">
           <h3 className={`text-xs sm:text-sm lg:text-base font-medium transition-colors duration-200 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
           }`}>Filters</h3>
           
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-4">
@@ -325,7 +323,7 @@ const Teachers = () => {
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Assigned Courses
-                </th>
+                 </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
@@ -348,7 +346,7 @@ const Teachers = () => {
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <div>
+    <div>
                       <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                       }`}>{teacher.name}</div>
@@ -364,16 +362,16 @@ const Teachers = () => {
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className="flex flex-wrap gap-1">
-                      {teacher.assignedCourses.map((course, index) => (
-                        <span
-                          key={course}
+                       {teacher.assignedCourses.map((course, index) => (
+                         <span
+                           key={course}
                           className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index)}`}
-                        >
-                          {course}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
+                         >
+                           {course}
+                         </span>
+                       ))}
+                     </div>
+                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(teacher.status)}`}>
                       {teacher.status}
@@ -383,7 +381,7 @@ const Teachers = () => {
                     <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-1 sm:space-x-2">
                       <FaExternalLinkAlt className="w-3 h-3" />
                       <span>View Profile</span>
-                    </button>
+                       </button>
                   </td>
                 </tr>
               ))}
@@ -409,8 +407,8 @@ const Teachers = () => {
                 &lt; Previous
               </button>
               <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-600 text-white rounded-md font-medium">
-                1
-              </button>
+                 1
+               </button>
               <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                 Next &gt;
               </button>
@@ -423,3 +421,4 @@ const Teachers = () => {
 }
 
 export default Teachers
+

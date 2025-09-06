@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt } from 'react-icons/fa'
+import { FaClipboardCheck } from "react-icons/fa";
 
 interface Student {
   id: string
@@ -130,7 +131,7 @@ const Student = () => {
           </div>
           
           {/* Add Student Button */}
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2">
+          <button className="bg-black hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2">
             <span>+</span>
             <span>Add Student</span>
           </button>
@@ -206,7 +207,7 @@ const Student = () => {
               }`}>1,152 present / 47 absent</p>
             </div>
             <div className="flex items-center justify-center flex-shrink-0 ml-2">
-              <IoIosCheckmarkCircle className="w-6 h-6 text-green-500" />
+              <FaClipboardCheck className="w-6 h-6 text-green-500" />
             </div>
           </div>
         </div>
@@ -253,7 +254,7 @@ const Student = () => {
               <select
                 value={selectedGrade}
                 onChange={(e) => setSelectedGrade(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
@@ -270,7 +271,7 @@ const Student = () => {
               <select
                 value={selectedRisk}
                 onChange={(e) => setSelectedRisk(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
@@ -286,7 +287,7 @@ const Student = () => {
               <select
                 value={selectedAttendance}
                 onChange={(e) => setSelectedAttendance(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
@@ -302,7 +303,7 @@ const Student = () => {
               <select
                 value={selectedGPA}
                 onChange={(e) => setSelectedGPA(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
@@ -318,7 +319,7 @@ const Student = () => {
               <select
                 value={selectedDepartment}
                 onChange={(e) => setSelectedDepartment(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
@@ -332,7 +333,7 @@ const Student = () => {
               </select>
             </div>
             
-            <button className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors duration-200">
+            <button className="text-blue-600 hover:text-blue-700 text-sm font-bold transition-colors duration-200">
               Clear All
             </button>
           </div>

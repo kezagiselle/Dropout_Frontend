@@ -112,13 +112,13 @@ const Courses = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Active':
-        return 'bg-green-100 text-green-800'
+        return 'bg-green-600 text-white font-bold'
       case 'Pending':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-orange-600 text-white font-bold'
       case 'Inactive':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-600 text-white font-bold'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-900 font-bold'
     }
   }
 

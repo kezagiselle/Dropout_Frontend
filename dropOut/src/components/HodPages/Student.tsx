@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
-import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt } from 'react-icons/fa'
-import { FaClipboardCheck } from "react-icons/fa";
+import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt, FaUser, FaClipboardCheck } from 'react-icons/fa'
+
 
 interface Student {
   id: string
@@ -426,7 +426,7 @@ const Student = () => {
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                        <IoIosPeople className="w-4 h-4 text-blue-600" />
+                        <FaUser className="w-4 h-4 text-blue-600" />
                       </div>
                       <div>
                         <div className={`text-sm font-medium transition-colors duration-200 ${
@@ -455,24 +455,28 @@ const Student = () => {
                     </span>
                   </td>
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
-                    <div className={`text-sm font-medium ${getAttendanceColor(student.attendance)}`}>
+                    <div className={`text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>
                       {student.attendance}%
                     </div>
                   </td>
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
-                    <div className={`text-sm font-medium ${getGPAColor(student.gpa)}`}>
+                    <div className={`text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>
                       {student.gpa}
                     </div>
                   </td>
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center space-x-3">
-                      <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-1">
-                        <span>View Profile</span>
+                    <div className="flex items-center space-x-20">
+                      <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-2">
                         <FaExternalLinkAlt className="w-3 h-3" />
+                        <span>View Profile</span>
                       </button>
-                      <button className="text-gray-600 hover:text-gray-700 transition-colors duration-200 flex items-center space-x-1">
-                        <span>Historic</span>
+                      <button className="text-orange-500 hover:text-orange-600 transition-colors duration-200 flex items-center space-x-2 pr-2">
                         <FaFileAlt className="w-3 h-3" />
+                        <span>Historic</span>
                       </button>
                     </div>
                   </td>

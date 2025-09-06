@@ -18,6 +18,7 @@ import { FaComments } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { TbReport } from "react-icons/tb";
 import { CiWavePulse1 } from "react-icons/ci";
+import dash2 from "../../src/img/dash2.png"
 
 
 
@@ -360,7 +361,7 @@ const Hod = () => {
                         <p className={`text-2xl font-bold transition-colors duration-200 ${
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
                         }`}>1,247</p>
-                        <p className="text-sm text-green-600 font-medium">↑+3.2% vs last term</p>
+                        <p className="text-sm text-green-500 font-medium">↑+3.2% vs last term</p>
                       </div>
                       <div className="flex items-center justify-center">
                         <IoIosPeople className="w-6 h-6 text-blue-400" />
@@ -382,7 +383,7 @@ const Hod = () => {
                         <p className={`text-2xl font-bold transition-colors duration-200 ${
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
                         }`}>72</p>
-                        <p className="text-sm text-green-600 font-medium">↑+3.2% vs last term</p>
+                        <p className="text-sm text-green-500 font-medium">↑+3.2% vs last term</p>
                       </div>
                       <div className="flex items-center justify-center">
                         <IoIosPeople className="w-6 h-6 text-blue-400" />
@@ -396,19 +397,18 @@ const Hod = () => {
                       ? 'bg-gray-800 border-gray-700' 
                       : 'bg-white border-gray-200'
                   }`}>
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <h3 className={`text-sm font-medium transition-colors duration-200 ${
-                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                        }`}>At-Risk Students</h3>
-                        <p className="text-2xl font-bold text-red-600">47</p>
-                        <p className="text-sm text-red-600 font-medium">↓-8.1% vs last term</p>
-                      </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className={`text-sm font-medium transition-colors duration-200 ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                      }`}>At-Risk Students</h3>
+                      {/* Alert Icon - On the same line as title */}
+                      <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-red-600">47</p>
+                      <p className="text-sm text-red-400 font-medium">↓-8.1% vs last term</p>
                     </div>
                   </div>
 
@@ -418,19 +418,16 @@ const Hod = () => {
                       ? 'bg-gray-800 border-gray-700' 
                       : 'bg-white border-gray-200'
                   }`}>
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <h3 className={`text-sm font-medium transition-colors duration-200 ${
-                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                        }`}>Today's Attendance</h3>
-                        <p className="text-2xl font-bold text-green-600">92.4%</p>
-                        <p className="text-sm text-gray-600">1,152 present / 47 absent</p>
-                      </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className={`text-sm font-medium transition-colors duration-200 ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                      }`}>Today's Attendance</h3>
+                      {/* Clipboard Checkmark Icon - On the same line as title */}
+                      <FaClipboardCheck className="w-5 h-5 text-green-500" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-green-600">92.4%</p>
+                      <p className="text-sm text-gray-600">1,152 present / 47 absent</p>
                     </div>
                   </div>
                 </div>
@@ -449,28 +446,117 @@ const Hod = () => {
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                       }`}>Risk Level Trends</h2>
                       
-                      {/* Chart Placeholder */}
-                      <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
+                      {/* Risk Level Trends Chart */}
+                      <div className="h-80 bg-white rounded-lg p-4 border shadow-sm">
+                        <div className="h-full flex flex-col">
+                          {/* Chart Area */}
+                          <div className="flex-1 relative">
+                            {/* Y-axis labels */}
+                            <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-600 pr-2">
+                              <span>100</span>
+                              <span>75</span>
+                              <span>50</span>
+                              <span>25</span>
+                              <span>0</span>
+                            </div>
+                            
+                            {/* Chart content */}
+                            <div className="ml-8 h-full relative">
+                              {/* Grid lines */}
+                              <div className="absolute inset-0">
+                                <div className="h-full flex flex-col justify-between">
+                                  {[0, 25, 50, 75, 100].map((_, i) => (
+                                    <div key={i} className="border-t border-gray-200"></div>
+                                  ))}
+                                </div>
+                              </div>
+                              
+                              {/* Chart lines */}
+                              <div className="absolute inset-0">
+                                <svg className="w-full h-full" viewBox="0 0 300 150" preserveAspectRatio="none">
+                                  {/* High Risk (Red) - Jan: 45, Feb: 52, Mar: 48, Apr: 58, May: 56, Jun: 62 */}
+                                  <polyline
+                                    points="15,82 65,78 115,81 165,63 215,66 255,57"
+                                    fill="none"
+                                    stroke="#dc2626"
+                                    strokeWidth="2.5"
+                                  />
+                                  {[45, 52, 48, 58, 56, 62].map((value, i) => (
+                                    <circle
+                                      key={i}
+                                      cx={15 + i * 48}
+                                      cy={150 - (value * 1.5)}
+                                      r="3"
+                                      fill="#dc2626"
+                                      stroke="white"
+                                      strokeWidth="1"
+                                    />
+                                  ))}
+                                  
+                                  {/* Medium Risk (Orange) - Jan: 78, Feb: 82, Mar: 75, Apr: 90, May: 78, Jun: 88 */}
+                                  <polyline
+                                    points="15,33 65,27 115,37 165,15 215,18 255,9"
+                                    fill="none"
+                                    stroke="#ea580c"
+                                    strokeWidth="2.5"
+                                  />
+                                  {[78, 82, 75, 90, 78, 88].map((value, i) => (
+                                    <polygon
+                                      key={i}
+                                      points={`${15 + i * 48},${150 - (value * 1.5) - 3} ${15 + i * 48 + 3},${150 - (value * 1.5)} ${15 + i * 48},${150 - (value * 1.5) + 3} ${15 + i * 48 - 3},${150 - (value * 1.5)}`}
+                                      fill="#ea580c"
+                                      stroke="white"
+                                      strokeWidth="1"
+                                    />
+                                  ))}
+                                  
+                                  {/* Low Risk (Green) - Jan: 23, Feb: 28, Mar: 25, Apr: 32, May: 28, Jun: 28 */}
+                                  <polyline
+                                    points="15,115 65,108 115,112 165,102 215,108 255,108"
+                                    fill="none"
+                                    stroke="#16a34a"
+                                    strokeWidth="2.5"
+                                  />
+                                  {[23, 28, 25, 32, 28, 28].map((value, i) => (
+                                    <rect
+                                      key={i}
+                                      x={15 + i * 48 - 2}
+                                      y={150 - (value * 1.5) - 2}
+                                      width="4"
+                                      height="4"
+                                      fill="#16a34a"
+                                      stroke="white"
+                                      strokeWidth="1"
+                                    />
+                                  ))}
+                                </svg>
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-gray-600 font-medium">Risk Level Trends Chart</p>
-                          <p className="text-sm text-gray-500">Jan - Jun 2024</p>
-                          <div className="flex items-center justify-center space-x-4 mt-4">
-                            <div className="flex items-center space-x-2">
-                              <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                              <span className="text-sm text-gray-600">High Risk</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
+                          
+                          {/* X-axis labels */}
+                          <div className="flex justify-between mt-2 ml-8 text-xs text-gray-600">
+                            <span>Jan</span>
+                            <span>Feb</span>
+                            <span>Mar</span>
+                            <span>Apr</span>
+                            <span>May</span>
+                            <span>Jun</span>
+                          </div>
+                          
+                          {/* Legend */}
+                          <div className="flex justify-center space-x-6 mt-3 text-xs">
+                            <div className="flex items-center space-x-1">
                               <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                              <span className="text-sm text-gray-600">Medium Risk</span>
+                              <span className="text-gray-600">High Risk</span>
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-1">
+                              <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                              <span className="text-gray-600">Medium Risk</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
                               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                              <span className="text-sm text-gray-600">Low Risk</span>
+                              <span className="text-gray-600">Low Risk</span>
                             </div>
                           </div>
                         </div>

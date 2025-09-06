@@ -7,6 +7,11 @@ import Attendance from './HodPages/Attendance';
 import Communication from './HodPages/Communication';
 import Settings from './HodPages/Settings';
 import userr from "../../src/img/userr.png";
+import dashlast from "../../src/img/dashlast.png";
+import das from "../../src/img/das.png";
+import pe1 from "../../src/img/pe1.png";
+import pe2 from "../../src/img/pe2.png";
+import pe3 from "../../src/img/pe3.png";
 import { IoIosNotifications } from "react-icons/io"
 import { FaSave } from "react-icons/fa";
 import { IoIosPeople } from "react-icons/io";
@@ -17,8 +22,6 @@ import { FaClipboardCheck } from "react-icons/fa";
 import { FaComments } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { TbReport } from "react-icons/tb";
-import { CiWavePulse1 } from "react-icons/ci";
-import dash2 from "../../src/img/dash2.png"
 
 
 
@@ -437,195 +440,76 @@ const Hod = () => {
                   {/* Left Column - Charts and Teacher Info */}
                   <div className="xl:col-span-2 space-y-6">
                     {/* Risk Level Trends Chart */}
+                    <div className="h-80 flex items-center justify-center">
+                      <img 
+                        src={dashlast} 
+                        alt="Risk Level Trends Chart" 
+                        className="w-full h-full object-contain rounded-lg scale-110"
+                      />
+                    </div>
+
+                    {/* Teacher Roster Today */}
+                    <div className={`rounded-lg shadow-sm border p-8 transition-colors duration-200 ${
+                      theme === 'dark' 
+                        ? 'bg-gray-800 border-gray-700' 
+                        : 'bg-white border-gray-200'
+                    }`}>
+                      <h3 className={`text-xl font-bold mb-6 transition-colors duration-200 ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>Teacher Roster Today</h3>
+                      
+                      <div className="space-y-4 mb-6">
+                        <div className="flex items-center justify-between">
+                          <span className={`text-base font-medium transition-colors duration-200 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Available</span>
+                          <span className="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-base font-medium">28</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-base font-medium transition-colors duration-200 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>On Leave</span>
+                          <span className="px-4 py-2 bg-orange-100 text-orange-800 rounded-lg text-base font-medium">3</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-base font-medium transition-colors duration-200 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Substitutes Needed</span>
+                          <span className="px-4 py-2 bg-red-100 text-red-800 rounded-lg text-base font-medium">2</span>
+                        </div>
+                      </div>
+
+                      <div className="border-t border-gray-200 pt-6">
+                        <h4 className={`text-base font-bold mb-4 transition-colors duration-200 ${
+                          theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                        }`}>Free Periods Now</h4>
+                        <div className="space-y-2">
+                          <p className="text-base text-gray-600">Ms. Rodriguez</p>
+                          <p className="text-base text-gray-600">Mr. Thompson</p>
+                          <p className="text-base text-gray-600">Dr. Kim</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Actions */}
                     <div className={`rounded-lg shadow-sm border p-6 transition-colors duration-200 ${
                       theme === 'dark' 
                         ? 'bg-gray-800 border-gray-700' 
                         : 'bg-white border-gray-200'
                     }`}>
-                      <h2 className={`text-lg font-semibold mb-4 transition-colors duration-200 ${
+                      <h3 className={`text-lg font-bold mb-4 transition-colors duration-200 ${
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
-                      }`}>Risk Level Trends</h2>
+                      }`}>Quick Actions</h3>
                       
-                      {/* Risk Level Trends Chart */}
-                      <div className="h-80 bg-white rounded-lg p-4 border shadow-sm">
-                        <div className="h-full flex flex-col">
-                          {/* Chart Area */}
-                          <div className="flex-1 relative">
-                            {/* Y-axis labels */}
-                            <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-600 pr-2">
-                              <span>100</span>
-                              <span>75</span>
-                              <span>50</span>
-                              <span>25</span>
-                              <span>0</span>
-                            </div>
-                            
-                            {/* Chart content */}
-                            <div className="ml-8 h-full relative">
-                              {/* Grid lines */}
-                              <div className="absolute inset-0">
-                                <div className="h-full flex flex-col justify-between">
-                                  {[0, 25, 50, 75, 100].map((_, i) => (
-                                    <div key={i} className="border-t border-gray-200"></div>
-                                  ))}
-                                </div>
-                              </div>
-                              
-                              {/* Chart lines */}
-                              <div className="absolute inset-0">
-                                <svg className="w-full h-full" viewBox="0 0 300 150" preserveAspectRatio="none">
-                                  {/* High Risk (Red) - Jan: 45, Feb: 52, Mar: 48, Apr: 58, May: 56, Jun: 62 */}
-                                  <polyline
-                                    points="15,82 65,78 115,81 165,63 215,66 255,57"
-                                    fill="none"
-                                    stroke="#dc2626"
-                                    strokeWidth="2.5"
-                                  />
-                                  {[45, 52, 48, 58, 56, 62].map((value, i) => (
-                                    <circle
-                                      key={i}
-                                      cx={15 + i * 48}
-                                      cy={150 - (value * 1.5)}
-                                      r="3"
-                                      fill="#dc2626"
-                                      stroke="white"
-                                      strokeWidth="1"
-                                    />
-                                  ))}
-                                  
-                                  {/* Medium Risk (Orange) - Jan: 78, Feb: 82, Mar: 75, Apr: 90, May: 78, Jun: 88 */}
-                                  <polyline
-                                    points="15,33 65,27 115,37 165,15 215,18 255,9"
-                                    fill="none"
-                                    stroke="#ea580c"
-                                    strokeWidth="2.5"
-                                  />
-                                  {[78, 82, 75, 90, 78, 88].map((value, i) => (
-                                    <polygon
-                                      key={i}
-                                      points={`${15 + i * 48},${150 - (value * 1.5) - 3} ${15 + i * 48 + 3},${150 - (value * 1.5)} ${15 + i * 48},${150 - (value * 1.5) + 3} ${15 + i * 48 - 3},${150 - (value * 1.5)}`}
-                                      fill="#ea580c"
-                                      stroke="white"
-                                      strokeWidth="1"
-                                    />
-                                  ))}
-                                  
-                                  {/* Low Risk (Green) - Jan: 23, Feb: 28, Mar: 25, Apr: 32, May: 28, Jun: 28 */}
-                                  <polyline
-                                    points="15,115 65,108 115,112 165,102 215,108 255,108"
-                                    fill="none"
-                                    stroke="#16a34a"
-                                    strokeWidth="2.5"
-                                  />
-                                  {[23, 28, 25, 32, 28, 28].map((value, i) => (
-                                    <rect
-                                      key={i}
-                                      x={15 + i * 48 - 2}
-                                      y={150 - (value * 1.5) - 2}
-                                      width="4"
-                                      height="4"
-                                      fill="#16a34a"
-                                      stroke="white"
-                                      strokeWidth="1"
-                                    />
-                                  ))}
-                                </svg>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* X-axis labels */}
-                          <div className="flex justify-between mt-2 ml-8 text-xs text-gray-600">
-                            <span>Jan</span>
-                            <span>Feb</span>
-                            <span>Mar</span>
-                            <span>Apr</span>
-                            <span>May</span>
-                            <span>Jun</span>
-                          </div>
-                          
-                          {/* Legend */}
-                          <div className="flex justify-center space-x-6 mt-3 text-xs">
-                            <div className="flex items-center space-x-1">
-                              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                              <span className="text-gray-600">High Risk</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                              <span className="text-gray-600">Medium Risk</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                              <span className="text-gray-600">Low Risk</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Teacher Roster and Quick Actions */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {/* Teacher Roster Today */}
-                      <div className={`rounded-lg shadow-sm border p-6 transition-colors duration-200 ${
-                        theme === 'dark' 
-                          ? 'bg-gray-800 border-gray-700' 
-                          : 'bg-white border-gray-200'
-                      }`}>
-                        <h3 className={`text-lg font-semibold mb-4 transition-colors duration-200 ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>Teacher Roster Today</h3>
-                        
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <span className={`text-sm transition-colors duration-200 ${
-                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                            }`}>Available</span>
-                            <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">28</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className={`text-sm transition-colors duration-200 ${
-                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                            }`}>On Leave</span>
-                            <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">3</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className={`text-sm transition-colors duration-200 ${
-                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                            }`}>Substitutes Needed</span>
-                            <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">2</span>
-                          </div>
-                        </div>
-
-                        <div className="mt-4 pt-4 border-t border-gray-200">
-                          <h4 className={`text-sm font-medium mb-2 transition-colors duration-200 ${
-                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                          }`}>Free Periods Now</h4>
-                          <div className="space-y-1">
-                            <p className="text-sm text-gray-600">Ms. Rodriguez</p>
-                            <p className="text-sm text-gray-600">Mr. Thompson</p>
-                            <p className="text-sm text-gray-600">Dr. Kim</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Quick Actions */}
-                      <div className={`rounded-lg shadow-sm border p-6 transition-colors duration-200 ${
-                        theme === 'dark' 
-                          ? 'bg-gray-800 border-gray-700' 
-                          : 'bg-white border-gray-200'
-                      }`}>
-                        <h3 className={`text-lg font-semibold mb-4 transition-colors duration-200 ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>Quick Actions</h3>
-                        
-                        <div className="space-y-3">
-                          <button className="w-full px-4 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium">
-                            + Add Teacher
-                          </button>
-                          <button className="w-full px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium">
-                            + Add Student
-                          </button>
-                        </div>
+                      <div className="flex space-x-3">
+                        <button className="px-3 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold flex items-center justify-center space-x-1 text-sm">
+                          <span className="text-sm">+</span>
+                          <span>Add Teacher</span>
+                        </button>
+                        <button className="px-3 py-1.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold flex items-center justify-center space-x-1 text-sm">
+                          <span className="text-sm">+</span>
+                          <span>Add Student</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -644,40 +528,40 @@ const Hod = () => {
                       
                       <div className="space-y-4">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-blue-600">AJ</span>
+                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                            <img src={pe1} alt="Alex Johnson" className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1">
                             <p className="font-medium text-gray-900">Alex Johnson</p>
                             <p className="text-sm text-gray-600">Grade 10A</p>
                           </div>
-                          <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">High Risk</span>
+                          <span className="px-3 py-1 bg-orange-400 text-white rounded-full text-xs font-medium">High Risk</span>
                         </div>
 
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-green-600">ED</span>
+                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                            <img src={pe2} alt="Emma Davis" className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1">
                             <p className="font-medium text-gray-900">Emma Davis</p>
                             <p className="text-sm text-gray-600">Grade 9B</p>
                           </div>
-                          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Med Risk</span>
+                          <span className="px-3 py-1 bg-orange-400 text-white rounded-full text-xs font-medium">Med Risk</span>
                         </div>
 
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-purple-600">MC</span>
+                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                            <img src={pe3} alt="Michael Chen" className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1">
                             <p className="font-medium text-gray-900">Michael Chen</p>
                             <p className="text-sm text-gray-600">Grade 11A</p>
                           </div>
-                          <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">High Risk</span>
+                          <span className="px-3 py-1 bg-orange-400 text-white rounded-full text-xs font-medium">High Risk</span>
                         </div>
                       </div>
 
-                      <button className="w-full mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium">
+                      <button className="w-full mt-4 px-4 py-2 bg-blue-300 text-white rounded-lg hover:bg-blue-400 transition-colors text-sm font-medium">
                         View All Flagged Students
                       </button>
                     </div>
@@ -692,39 +576,42 @@ const Hod = () => {
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                       }`}>Alerts & Tasks</h3>
                       
-                      <div className="space-y-4">
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="space-y-3">
+                        {/* First Alert - Pink Background */}
+                        <div className="flex items-start space-x-3 p-4 bg-pink-100 rounded-lg hover:bg-pink-200 transition-colors cursor-pointer">
+                          <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                             </svg>
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-900">5 students hit High Risk this week</p>
+                            <p className="text-sm font-bold text-gray-900">5 students hit High Risk this week</p>
                             <p className="text-xs text-gray-600">Requires immediate intervention</p>
                           </div>
                         </div>
 
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {/* Second Alert - Yellow Background */}
+                        <div className="flex items-start space-x-3 p-4 bg-yellow-100 rounded-lg hover:bg-yellow-200 transition-colors cursor-pointer">
+                          <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-900">Timetable overlap detected</p>
+                            <p className="text-sm font-bold text-gray-900">Timetable overlap detected</p>
                             <p className="text-xs text-gray-600">Room 204 - Period 3</p>
                           </div>
                         </div>
 
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {/* Third Alert - Blue Background */}
+                        <div className="flex items-start space-x-3 p-4 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer">
+                          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-900">12 pending approvals</p>
+                            <p className="text-sm font-bold text-gray-900">12 pending approvals</p>
                             <p className="text-xs text-gray-600">8 registrations, 4 timetable changes</p>
                           </div>
                         </div>

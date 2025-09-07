@@ -90,7 +90,7 @@ const Courses = () => {
 
   const [timetable] = useState<TimetableSlot[]>([
     {
-      period: 'Period 1',
+      period: '1',
       time: '8:00-9:00',
       monday: 'Mathematics, Mr. Johnson • 10A',
       tuesday: 'Physics, Dr. Smith • 11A',
@@ -99,7 +99,7 @@ const Courses = () => {
       friday: 'CONFLICT - Room 205 • 2 classes'
     },
     {
-      period: 'Period 2',
+      period: '2',
       time: '9:00-10:00',
       monday: 'Biology, Dr. Wilson • 11B',
       tuesday: 'History, Mr. Taylor • 10A',
@@ -123,10 +123,15 @@ const Courses = () => {
   }
 
   const getTimetableColor = (content: string) => {
-    if (content.includes('CONFLICT')) return 'bg-red-100 text-red-800'
-    if (content.includes('Mathematics') || content.includes('Biology')) return 'bg-green-100 text-green-800'
-    if (content.includes('Chemistry') || content.includes('Literature')) return 'bg-orange-100 text-orange-800'
+    if (content.includes('CONFLICT')) return 'bg-red-100 text-red-800 border border-red-300'
+    if (content.includes('Mathematics')) return 'bg-blue-100 text-blue-800'
+    if (content.includes('Biology')) return 'bg-green-100 text-green-800'
+    if (content.includes('Physics')) return 'bg-green-100 text-green-800'
+    if (content.includes('History')) return 'bg-blue-100 text-blue-800'
+    if (content.includes('Chemistry')) return 'bg-orange-100 text-orange-800'
+    if (content.includes('Literature')) return 'bg-orange-100 text-orange-800'
     if (content.includes('English')) return 'bg-blue-100 text-blue-800'
+    if (content.includes('Art')) return 'bg-blue-100 text-blue-800'
     return 'bg-gray-100 text-gray-800'
   }
 
@@ -223,10 +228,10 @@ const Courses = () => {
 
         {/* Conflicts Detected */}
         <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
-          theme === 'dark' 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'
-        }`}>
+        theme === 'dark' 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'
+      }`}>
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
@@ -253,7 +258,7 @@ const Courses = () => {
         }`}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
             <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
-              theme === 'dark' ? 'text-white' : 'text-gray-900'
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>
               Course Overview
             </h2>
@@ -387,39 +392,37 @@ const Courses = () => {
         {/* Timetable Grid */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[800px]">
-            <thead className={`transition-colors duration-200 ${
-              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
-            }`}>
+            <thead className="transition-colors duration-200">
               <tr>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Period
+                <th className="px-0.5 sm:px-1 py-1 sm:py-2">
+                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex flex-col items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-sm font-bold uppercase">Period</div>
+                  </div>
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Monday
+                <th className="px-0.5 sm:px-1 py-1 sm:py-2">
+                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-sm font-bold uppercase">Monday</div>
+                  </div>
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Tuesday
+                <th className="px-0.5 sm:px-1 py-1 sm:py-2">
+                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-sm font-bold uppercase">Tuesday</div>
+                  </div>
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Wednesday
+                <th className="px-0.5 sm:px-1 py-1 sm:py-2">
+                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-sm font-bold uppercase">Wednesday</div>
+                  </div>
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Thursday
+                <th className="px-0.5 sm:px-1 py-1 sm:py-2">
+                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-sm font-bold uppercase">Thursday</div>
+                  </div>
                 </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Friday
+                <th className="px-0.5 sm:px-1 py-1 sm:py-2">
+                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-sm font-bold uppercase">Friday</div>
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -432,37 +435,35 @@ const Courses = () => {
                 <tr key={index} className={`hover:transition-colors duration-200 ${
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-white' : 'text-gray-900'
-                    }`}>{slot.period}</div>
-                    <div className={`text-xs transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                    }`}>{slot.time}</div>
-                  </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
-                    <div className={`inline-flex px-2 py-1 text-xs font-medium rounded ${getTimetableColor(slot.monday)}`}>
-                      {slot.monday}
+                  <td className="px-0.5 sm:px-1 py-1 sm:py-2">
+                    <div className="w-full p-7 rounded-lg text-center min-h-[90px] flex flex-col items-center justify-center bg-gray-200 text-gray-900">
+                      <div className="text-sm font-bold">{slot.period}</div>
+                      <div className="text-xs mt-1">{slot.time}</div>
                     </div>
                   </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
-                    <div className={`inline-flex px-2 py-1 text-xs font-medium rounded ${getTimetableColor(slot.tuesday)}`}>
-                      {slot.tuesday}
+                  <td className="px-0.5 sm:px-1 py-1 sm:py-2">
+                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.monday)}`}>
+                      <div className="text-sm font-semibold">{slot.monday}</div>
                     </div>
                   </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
-                    <div className={`inline-flex px-2 py-1 text-xs font-medium rounded ${getTimetableColor(slot.wednesday)}`}>
-                      {slot.wednesday}
+                  <td className="px-0.5 sm:px-1 py-1 sm:py-2">
+                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.tuesday)}`}>
+                      <div className="text-sm font-semibold">{slot.tuesday}</div>
                     </div>
                   </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
-                    <div className={`inline-flex px-2 py-1 text-xs font-medium rounded ${getTimetableColor(slot.thursday)}`}>
-                      {slot.thursday}
+                  <td className="px-0.5 sm:px-1 py-1 sm:py-2">
+                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.wednesday)}`}>
+                      <div className="text-sm font-semibold">{slot.wednesday}</div>
                     </div>
                   </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
-                    <div className={`inline-flex px-2 py-1 text-xs font-medium rounded ${getTimetableColor(slot.friday)}`}>
-                      {slot.friday}
+                  <td className="px-0.5 sm:px-1 py-1 sm:py-2">
+                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.thursday)}`}>
+                      <div className="text-sm font-semibold">{slot.thursday}</div>
+                    </div>
+                  </td>
+                  <td className="px-0.5 sm:px-1 py-1 sm:py-2">
+                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.friday)}`}>
+                      <div className="text-sm font-semibold">{slot.friday}</div>
                     </div>
                   </td>
                 </tr>

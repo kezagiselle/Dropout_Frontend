@@ -4,10 +4,6 @@ import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'reac
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt } from 'react-icons/fa'
 import { FaClipboardCheck } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import { FaBook } from "react-icons/fa";
-import { MdCancel } from "react-icons/md";
-
-
 
 
 interface Teacher {
@@ -282,7 +278,7 @@ const Teachers = () => {
             <button className="text-blue-600 hover:text-blue-700 text-sm font-bold transition-colors duration-200">
               Clear All
             </button>
-          </div>
+            </div>
           </div>
         </div>
       </div>
@@ -343,7 +339,7 @@ const Teachers = () => {
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Assigned Courses
-                </th>
+                 </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
@@ -372,11 +368,11 @@ const Teachers = () => {
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 truncate ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>{teacher.name}</div>
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>{teacher.name}</div>
                         <div className={`text-xs transition-colors duration-200 ${
-                          theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                        }`}>{teacher.email}</div>
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                      }`}>{teacher.email}</div>
                       </div>
                     </div>
                   </td>
@@ -387,15 +383,15 @@ const Teachers = () => {
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className="flex flex-wrap gap-1">
-                      {teacher.assignedCourses.map((course, index) => (
-                        <span
-                          key={course}
+                       {teacher.assignedCourses.map((course, index) => (
+                         <span
+                           key={course}
                           className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index, teacher.name)}`}
-                        >
-                          {course}
-                        </span>
-                      ))}
-                    </div>
+                         >
+                           {course}
+                         </span>
+                       ))}
+                     </div>
                    </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(teacher.status)}`}>
@@ -432,8 +428,8 @@ const Teachers = () => {
                 &lt; Previous
               </button>
               <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-orange-400 text-white rounded-md font-medium">
-                1
-              </button>
+                 1
+               </button>
               <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                 Next &gt;
               </button>

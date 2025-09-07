@@ -123,16 +123,16 @@ const Courses = () => {
   }
 
   const getTimetableColor = (content: string) => {
-    if (content.includes('CONFLICT')) return 'bg-red-100 text-red-800 border border-red-300'
-    if (content.includes('Mathematics')) return 'bg-blue-100 text-blue-800'
-    if (content.includes('Biology')) return 'bg-green-100 text-green-800'
-    if (content.includes('Physics')) return 'bg-green-100 text-green-800'
-    if (content.includes('History')) return 'bg-blue-100 text-blue-800'
-    if (content.includes('Chemistry')) return 'bg-orange-100 text-orange-800'
-    if (content.includes('Literature')) return 'bg-orange-100 text-orange-800'
-    if (content.includes('English')) return 'bg-blue-100 text-blue-800'
-    if (content.includes('Art')) return 'bg-blue-100 text-blue-800'
-    return 'bg-gray-100 text-gray-800'
+    if (content.includes('CONFLICT')) return 'bg-red-50 text-red-700 border border-red-200'
+    if (content.includes('Mathematics')) return 'bg-blue-50 text-blue-700'
+    if (content.includes('Biology')) return 'bg-green-50 text-green-700'
+    if (content.includes('Physics')) return 'bg-green-50 text-green-700'
+    if (content.includes('History')) return 'bg-blue-50 text-blue-700'
+    if (content.includes('Chemistry')) return 'bg-orange-50 text-orange-700'
+    if (content.includes('Literature')) return 'bg-orange-50 text-orange-700'
+    if (content.includes('English')) return 'bg-blue-50 text-blue-700'
+    if (content.includes('Art')) return 'bg-blue-50 text-blue-700'
+    return 'bg-gray-50 text-gray-700'
   }
 
   return (
@@ -262,22 +262,22 @@ const Courses = () => {
             }`}>
               Course Overview
             </h2>
-            <div className="flex items-center space-x-3">
-              <div className="relative">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
+              <div className="relative flex-1 sm:flex-none sm:w-64">
                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search courses..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-sm ${
+                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-sm ${
                     theme === 'dark'
                       ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
                   }`}
                 />
               </div>
-              <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg flex items-center space-x-2 text-sm font-medium transition-colors duration-200">
+              <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg flex items-center justify-center space-x-2 text-sm font-medium transition-colors duration-200 w-full sm:w-auto">
                 <FaFilter className="w-4 h-4" />
                 <span>Filter</span>
               </button>
@@ -290,29 +290,33 @@ const Courses = () => {
           <table className="w-full min-w-[800px]">
             <thead className="bg-orange-500 transition-colors duration-200">
               <tr>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
-                  Course Code
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                  <span className="hidden sm:inline">Course Code</span>
+                  <span className="sm:hidden">Code</span>
                 </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
-                  Course Name
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                  <span className="hidden sm:inline">Course Name</span>
+                  <span className="sm:hidden">Course</span>
                 </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
                   Grade
                 </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
                   Teacher
                 </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
                   Section
                 </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
-                  Credit Hours
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                  <span className="hidden sm:inline">Credit Hours</span>
+                  <span className="sm:hidden">Hours</span>
                 </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
                   Status
                 </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
-                  At-Risk Students
+                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
+                  <span className="hidden sm:inline">At-Risk Students</span>
+                  <span className="sm:hidden">At-Risk</span>
                 </th>
               </tr>
             </thead>
@@ -391,37 +395,52 @@ const Courses = () => {
 
         {/* Timetable Grid */}
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
+          <table className="w-full min-w-[600px] sm:min-w-[800px]">
             <thead className="transition-colors duration-200">
               <tr>
                 <th className="px-0.5 sm:px-1 py-1 sm:py-2">
-                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex flex-col items-center justify-center bg-blue-200 text-blue-900">
-                    <div className="text-sm font-bold uppercase">Period</div>
+                  <div className="w-full p-2 sm:p-4 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex flex-col items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-xs sm:text-sm font-bold uppercase">Period</div>
                   </div>
                 </th>
                 <th className="px-0.5 sm:px-1 py-1 sm:py-2">
-                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
-                    <div className="text-sm font-bold uppercase">Monday</div>
+                  <div className="w-full p-2 sm:p-4 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-xs sm:text-sm font-bold uppercase">
+                      <span className="hidden sm:inline">Monday</span>
+                      <span className="sm:hidden">Mon</span>
+                    </div>
                   </div>
                 </th>
                 <th className="px-0.5 sm:px-1 py-1 sm:py-2">
-                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
-                    <div className="text-sm font-bold uppercase">Tuesday</div>
+                  <div className="w-full p-2 sm:p-4 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-xs sm:text-sm font-bold uppercase">
+                      <span className="hidden sm:inline">Tuesday</span>
+                      <span className="sm:hidden">Tue</span>
+                    </div>
                   </div>
                 </th>
                 <th className="px-0.5 sm:px-1 py-1 sm:py-2">
-                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
-                    <div className="text-sm font-bold uppercase">Wednesday</div>
+                  <div className="w-full p-2 sm:p-4 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-xs sm:text-sm font-bold uppercase">
+                      <span className="hidden sm:inline">Wednesday</span>
+                      <span className="sm:hidden">Wed</span>
+                    </div>
                   </div>
                 </th>
                 <th className="px-0.5 sm:px-1 py-1 sm:py-2">
-                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
-                    <div className="text-sm font-bold uppercase">Thursday</div>
+                  <div className="w-full p-2 sm:p-4 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-xs sm:text-sm font-bold uppercase">
+                      <span className="hidden sm:inline">Thursday</span>
+                      <span className="sm:hidden">Thu</span>
+                    </div>
                   </div>
                 </th>
                 <th className="px-0.5 sm:px-1 py-1 sm:py-2">
-                  <div className="w-full p-4 rounded-lg text-center min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
-                    <div className="text-sm font-bold uppercase">Friday</div>
+                  <div className="w-full p-2 sm:p-4 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center bg-blue-200 text-blue-900">
+                    <div className="text-xs sm:text-sm font-bold uppercase">
+                      <span className="hidden sm:inline">Friday</span>
+                      <span className="sm:hidden">Fri</span>
+                    </div>
                   </div>
                 </th>
               </tr>
@@ -436,34 +455,34 @@ const Courses = () => {
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
                   <td className="px-0.5 sm:px-1 py-1 sm:py-2">
-                    <div className="w-full p-7 rounded-lg text-center min-h-[90px] flex flex-col items-center justify-center bg-gray-200 text-gray-900">
-                      <div className="text-sm font-bold">{slot.period}</div>
-                      <div className="text-xs mt-1">{slot.time}</div>
+                    <div className="w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex flex-col items-center justify-center bg-gray-200 text-gray-900">
+                      <div className="text-xs sm:text-sm font-bold">{slot.period}</div>
+                      <div className="text-xs font-semibold mt-1 hidden sm:block">{slot.time}</div>
                     </div>
                   </td>
                   <td className="px-0.5 sm:px-1 py-1 sm:py-2">
-                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.monday)}`}>
-                      <div className="text-sm font-semibold">{slot.monday}</div>
+                    <div className={`w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center ${getTimetableColor(slot.monday)}`}>
+                      <div className="text-xs sm:text-sm font-bold break-words">{slot.monday}</div>
                     </div>
                   </td>
                   <td className="px-0.5 sm:px-1 py-1 sm:py-2">
-                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.tuesday)}`}>
-                      <div className="text-sm font-semibold">{slot.tuesday}</div>
+                    <div className={`w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center ${getTimetableColor(slot.tuesday)}`}>
+                      <div className="text-xs sm:text-sm font-bold break-words">{slot.tuesday}</div>
                     </div>
                   </td>
                   <td className="px-0.5 sm:px-1 py-1 sm:py-2">
-                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.wednesday)}`}>
-                      <div className="text-sm font-semibold">{slot.wednesday}</div>
+                    <div className={`w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center ${getTimetableColor(slot.wednesday)}`}>
+                      <div className="text-xs sm:text-sm font-bold break-words">{slot.wednesday}</div>
                     </div>
                   </td>
                   <td className="px-0.5 sm:px-1 py-1 sm:py-2">
-                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.thursday)}`}>
-                      <div className="text-sm font-semibold">{slot.thursday}</div>
+                    <div className={`w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center ${getTimetableColor(slot.thursday)}`}>
+                      <div className="text-xs sm:text-sm font-bold break-words">{slot.thursday}</div>
                     </div>
                   </td>
                   <td className="px-0.5 sm:px-1 py-1 sm:py-2">
-                    <div className={`w-full p-7 rounded-lg text-center min-h-[90px] flex items-center justify-center ${getTimetableColor(slot.friday)}`}>
-                      <div className="text-sm font-semibold">{slot.friday}</div>
+                    <div className={`w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex items-center justify-center ${getTimetableColor(slot.friday)}`}>
+                      <div className="text-xs sm:text-sm font-bold break-words">{slot.friday}</div>
                     </div>
                   </td>
                 </tr>
@@ -474,23 +493,31 @@ const Courses = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-        <button className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 text-sm font-medium transition-colors duration-200">
-          <FaDownload className="w-4 h-4" />
-          <span>Export PDF</span>
-        </button>
-        <button className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 text-sm font-medium transition-colors duration-200">
-          <FaFileAlt className="w-4 h-4" />
-          <span>Export Excel</span>
-        </button>
-        <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 text-sm font-medium transition-colors duration-200">
-          <FaFire className="w-4 h-4" />
-          <span>Publish Changes</span>
-        </button>
-        <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 text-sm font-medium transition-colors duration-200">
-          <FaSync className="w-4 h-4" />
-          <span>Sync Updates</span>
-        </button>
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-end space-y-3 lg:space-y-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-xs sm:text-sm font-medium transition-colors duration-200">
+            <FaDownload className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Export PDF</span>
+            <span className="sm:hidden">PDF</span>
+          </button>
+          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-xs sm:text-sm font-medium transition-colors duration-200">
+            <FaFileAlt className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Export Excel</span>
+            <span className="sm:hidden">Excel</span>
+          </button>
+        </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 lg:ml-8 xl:ml-12">
+          <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-xs sm:text-sm font-medium transition-colors duration-200">
+            <FaFire className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Publish Changes</span>
+            <span className="sm:hidden">Publish</span>
+          </button>
+          <button className="bg-green-500 hover:bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-xs sm:text-sm font-medium transition-colors duration-200">
+            <FaSync className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Sync Updates</span>
+            <span className="sm:hidden">Sync</span>
+          </button>
+        </div>
       </div>
     </div>
   )

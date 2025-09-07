@@ -111,24 +111,24 @@ const Student = () => {
           }`}>
             Monitor and manage student dropout risk factors
           </p>
-        </div>
+          </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-4">
           {/* Search Bar */}
           <div className="relative flex-1 sm:flex-none sm:w-64 lg:w-80">
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
-            <input
-              type="text"
+              <input
+                type="text"
               placeholder="Search student"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               className={`w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base ${
-                theme === 'dark'
-                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                  theme === 'dark'
+                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                   : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-              }`}
-            />
-          </div>
+                }`}
+              />
+            </div>
           
           {/* Add Student Button */}
           <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
@@ -340,15 +340,15 @@ const Student = () => {
       </div>
 
       {/* Students List Table */}
-      <div className={`rounded-lg shadow-sm border transition-colors duration-200 ${
-        theme === 'dark' 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'
-      }`}>
-        {/* Table Header */}
-        <div className={`px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
-          theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+        <div className={`rounded-lg shadow-sm border transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
         }`}>
+          {/* Table Header */}
+        <div className={`px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
+            theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+          }`}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
             <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
               theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -372,56 +372,56 @@ const Student = () => {
               </button>
             </div>
           </div>
-        </div>
+          </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
+          {/* Table */}
+          <div className="overflow-x-auto">
           <table className="w-full min-w-[800px]">
-            <thead className={`transition-colors duration-200 ${
-              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
-            }`}>
-              <tr>
+              <thead className={`transition-colors duration-200 ${
+                theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+              }`}>
+                <tr>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                   Student
-                </th>
+                  </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Grade
-                </th>
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
+                    Grade
+                  </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Risk Level
                 </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                   Attendance
-                </th>
+                  </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                   GPA
-                </th>
+                  </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className={`divide-y transition-colors duration-200 ${
-              theme === 'dark' 
-                ? 'bg-gray-800 divide-gray-700' 
-                : 'bg-white divide-gray-200'
-            }`}>
-              {students.map((student) => (
-                <tr key={student.id} className={`hover:transition-colors duration-200 ${
-                  theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
-                }`}>
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className={`divide-y transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'bg-gray-800 divide-gray-700' 
+                  : 'bg-white divide-gray-200'
+              }`}>
+                {students.map((student) => (
+                  <tr key={student.id} className={`hover:transition-colors duration-200 ${
+                    theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                  }`}>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-full flex items-center justify-center mr-2 sm:mr-3">
@@ -429,7 +429,7 @@ const Student = () => {
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 truncate ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
                         }`}>
                           {student.name}
                         </div>
@@ -440,19 +440,19 @@ const Student = () => {
                         </div>
                       </div>
                     </div>
-                  </td>
+                    </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className={`text-xs sm:text-sm transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>
                       {student.grade}
                     </div>
-                  </td>
+                    </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium border ${getRiskLevelColor(student.riskLevel)}`}>
                       {student.riskLevel}
-                    </span>
-                  </td>
+                      </span>
+                    </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -466,26 +466,26 @@ const Student = () => {
                     }`}>
                       {student.gpa}
                     </div>
-                  </td>
+                    </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 lg:space-x-24">
                       <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
                         <FaExternalLinkAlt className="w-3 h-3" />
                         <span className="hidden sm:inline">View Profile</span>
                         <span className="sm:hidden">View</span>
-                      </button>
+                        </button>
                       <button className="text-orange-500 hover:text-orange-600 transition-colors duration-200 flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
                         <FaFileAlt className="w-3 h-3" />
                         <span>Historic</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '../Hod';
-import { FaDownload, FaFileAlt, FaCheck, FaTimes, FaClock, FaExclamationTriangle, FaInfoCircle, FaStar, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaFileAlt, FaCheck, FaTimes, FaClock, FaExclamationTriangle, FaInfoCircle, FaStar, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaDownload } from "react-icons/fa6";
 
 const Attendance = () => {
   const { theme } = useTheme();
@@ -272,57 +273,53 @@ const Attendance = () => {
                 Attendance Trends
               </h2>
               <div className="flex items-center space-x-2">
-                <button 
-                  onClick={() => handleExport('PDF')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
-                >
-                  <FaFileAlt className="w-3 h-3" />
-                  <span>PDF</span>
-                </button>
-                <button 
-                  onClick={() => handleExport('Excel')}
-                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
-                >
-                  <FaFileAlt className="w-3 h-3" />
-                  <span>Excel</span>
-                </button>
+                 <button 
+                   onClick={() => handleExport('PDF')}
+                   className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                 >
+                   <FaDownload className="w-3 h-3 text-black" />
+                   <span>PDF</span>
+                 </button>
+                 <button 
+                   onClick={() => handleExport('Excel')}
+                   className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                 >
+                   <FaFileAlt className="w-3 h-3 text-black" />
+                   <span>Excel</span>
+                 </button>
               </div>
             </div>
           </div>
           
            <div className="p-3 sm:p-4 lg:p-6">
-             {/* Chart placeholder */}
-             <div className="h-48 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-8">
-               <p className={`text-sm transition-colors duration-200 ${
-                 theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-               }`}>Chart placeholder</p>
-             </div>
+             {/* White space where chart was */}
+             <div className="h-48 mb-8"></div>
              
              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                {/* Average Attendance Card */}
-               <div className="bg-green-100 dark:bg-green-900/20 p-6 rounded-lg flex items-center space-x-3 min-h-[120px]">
-                 <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
-                   <FaCheck className="w-6 h-6 text-white" />
-                 </div>
-                 <div>
+               <div className="bg-green-50 dark:bg-green-900/10 p-6 rounded-lg min-h-[120px]">
+                 <div className="flex items-center space-x-3 mb-3">
+                   <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                     <FaCheck className="w-4 h-4 text-white" />
+                   </div>
                    <p className={`text-base font-medium transition-colors duration-200 ${
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                    }`}>Average Attendance</p>
-                   <p className="text-3xl font-bold text-green-600">87.5%</p>
                  </div>
+                 <p className="text-3xl font-bold text-green-600">87.5%</p>
                </div>
                
                {/* Total Absences Card */}
-               <div className="bg-red-100 dark:bg-red-900/20 p-6 rounded-lg flex items-center space-x-3 min-h-[120px]">
-                 <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
-                   <FaTimes className="w-8 h-8 text-white" />
-                 </div>
-                 <div>
+               <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-lg min-h-[120px]">
+                 <div className="flex items-center space-x-3 mb-3">
+                   <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                     <FaTimes className="w-4 h-4 text-white" />
+                   </div>
                    <p className={`text-base font-medium transition-colors duration-200 ${
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                    }`}>Total Absences</p>
-                   <p className="text-3xl font-bold text-red-600">234</p>
                  </div>
+                 <p className="text-3xl font-bold text-red-600">234</p>
                </div>
              </div>
            </div>
@@ -344,76 +341,69 @@ const Attendance = () => {
                 Performance Trends
               </h2>
               <div className="flex items-center space-x-2">
-                <button 
-                  onClick={() => handleExport('PDF')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
-                >
-                  <FaFileAlt className="w-3 h-3" />
-                  <span>PDF</span>
-                </button>
-                <button 
-                  onClick={() => handleExport('Excel')}
-                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
-                >
-                  <FaFileAlt className="w-3 h-3" />
-                  <span>Excel</span>
-                </button>
+                 <button 
+                   onClick={() => handleExport('PDF')}
+                   className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                 >
+                   <FaDownload className="w-3 h-3 text-black" />
+                   <span>PDF</span>
+                 </button>
+                 <button 
+                   onClick={() => handleExport('Excel')}
+                   className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                 >
+                   <FaFileAlt className="w-3 h-3 text-black" />
+                   <span>Excel</span>
+                 </button>
               </div>
             </div>
           </div>
           
-          <div className="p-3 sm:p-4 lg:p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <FaStar className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                    }`}>Average GPA</p>
-                    <p className="text-2xl font-bold text-blue-600">3.2</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <FaArrowUp className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                    }`}>Highest Score</p>
-                    <p className="text-2xl font-bold text-green-600">98%</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                    <FaArrowDown className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                    }`}>Lowest Score</p>
-                    <p className="text-2xl font-bold text-orange-600">45%</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Chart placeholder */}
-              <div className="h-32 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                <p className={`text-sm transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                }`}>Chart placeholder</p>
-              </div>
-            </div>
-          </div>
+           <div className="p-3 sm:p-4 lg:p-6">
+             {/* White space where chart was */}
+             <div className="h-48 mb-8"></div>
+             
+             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+               {/* Average GPA Card */}
+               <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg">
+                 <div className="flex items-center space-x-3 mb-3">
+                   <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                     <FaStar className="w-4 h-4 text-white" />
+                   </div>
+                   <p className={`text-sm font-medium transition-colors duration-200 ${
+                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                   }`}>Average GPA</p>
+                 </div>
+                 <p className="text-2xl font-bold text-blue-600">3.2</p>
+               </div>
+               
+               {/* Highest Score Card */}
+               <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-lg">
+                 <div className="flex items-center space-x-3 mb-3">
+                   <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                     <FaArrowUp className="w-4 h-4 text-white" />
+                   </div>
+                   <p className={`text-sm font-medium transition-colors duration-200 ${
+                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                   }`}>Highest Score</p>
+                 </div>
+                 <p className="text-2xl font-bold text-green-600">98%</p>
+               </div>
+               
+               {/* Lowest Score Card */}
+               <div className="bg-orange-50 dark:bg-orange-900/10 p-4 rounded-lg">
+                 <div className="flex items-center space-x-3 mb-3">
+                   <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                     <FaArrowDown className="w-4 h-4 text-white" />
+                   </div>
+                   <p className={`text-sm font-medium transition-colors duration-200 ${
+                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                   }`}>Lowest Score</p>
+                 </div>
+                 <p className="text-2xl font-bold text-orange-600">45%</p>
+               </div>
+             </div>
+           </div>
         </div>
       </div>
 
@@ -441,10 +431,10 @@ const Attendance = () => {
         <div className="p-3 sm:p-4 lg:p-6">
           <div className="space-y-4">
             {/* High Risk Alert */}
-            <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+            <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-800">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center">
-                  <FaExclamationTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                <div className="w-10 h-10 bg-red-600 dark:bg-red-600 rounded-full flex items-center justify-center">
+                  <FaExclamationTriangle className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <p className={`text-sm font-medium transition-colors duration-200 ${
@@ -460,10 +450,10 @@ const Attendance = () => {
             </div>
             
             {/* Tardiness Pattern */}
-            <div className="flex items-center justify-between p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+            <div className="flex items-center justify-between p-4 bg-yellow-50 dark:bg-yellow-900/10 rounded-lg border border-yellow-100 dark:border-yellow-800">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center">
-                  <FaClock className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                <div className="w-10 h-10 bg-yellow-600 dark:bg-yellow-600 rounded-full flex items-center justify-center">
+                  <FaClock className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <p className={`text-sm font-medium transition-colors duration-200 ${
@@ -473,16 +463,16 @@ const Attendance = () => {
                   </p>
                 </div>
               </div>
-              <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+              <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                 Review
               </button>
             </div>
             
             {/* Attendance Improvement */}
-            <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-800">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
-                  <FaInfoCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <div className="w-10 h-10 bg-blue-600 dark:bg-blue-600 rounded-full flex items-center justify-center">
+                  <FaInfoCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <p className={`text-sm font-medium transition-colors duration-200 ${

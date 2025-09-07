@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from '../Hod';
-import './Attendance.css';
+import { FaDownload, FaFileAlt, FaCheck, FaTimes, FaClock, FaExclamationTriangle, FaInfoCircle, FaStar, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 
 const Attendance = () => {
   const { theme } = useTheme();
@@ -24,334 +24,479 @@ const Attendance = () => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-200 ${
-      theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
-    }`}>
-      {/* Header */}
-      <div className={`px-3 sm:px-6 py-3 sm:py-4 mb-4 sm:mb-6 transition-colors duration-200 ${
-        theme === 'dark' 
-          ? 'bg-gray-800 border-b border-gray-700' 
-          : 'bg-white border-b border-gray-200'
-      }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-          <h1 className={`text-xl sm:text-2xl font-bold transition-colors duration-200 ${
+    <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
+      {/* Header Section */}
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
+        <div className="flex-1 min-w-0">
+          <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold transition-colors duration-200 ${
             theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>Attendance & Performance</h1>
-          <button className="bg-orange-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center sm:justify-start space-x-2 hover:bg-orange-700 transition-colors text-sm sm:text-base">
-            <span>Filters</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </button>
+          }`}>
+            Attendance Management
+          </h1>
+          <p className={`text-xs sm:text-sm lg:text-base mt-1 transition-colors duration-200 ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            Monitor student attendance and identify at-risk patterns
+          </p>
+        </div>
+        
+        <button className="bg-gray-600 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
+          <FaDownload className="w-4 h-4" />
+          <span>Export</span>
+        </button>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        {/* Present Today */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Present Today
+              </p>
+              <p className="text-3xl font-bold mt-2 text-green-600">847</p>
+              <div className="flex items-center mt-2">
+                <span className="text-sm text-green-600 font-medium">+2.3% from yesterday</span>
+              </div>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center ml-4">
+              <FaCheck className="w-6 h-6 text-green-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Absent Today */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Absent Today
+              </p>
+              <p className="text-3xl font-bold mt-2 text-red-600">23</p>
+              <div className="flex items-center mt-2">
+                <span className="text-sm text-red-600 font-medium">+5 from yesterday</span>
+              </div>
+            </div>
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center ml-4">
+              <FaTimes className="w-6 h-6 text-red-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Late Arrivals */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Late Arrivals
+              </p>
+              <p className="text-3xl font-bold mt-2 text-orange-600">12</p>
+              <div className="flex items-center mt-2">
+                <span className="text-sm text-orange-600 font-medium">-3 from yesterday</span>
+              </div>
+            </div>
+            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center ml-4">
+              <FaClock className="w-6 h-6 text-orange-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* At Risk Students */}
+        <div className={`rounded-lg shadow-sm border p-4 lg:p-6 transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                At Risk Students
+              </p>
+              <p className="text-3xl font-bold mt-2 text-red-600">8</p>
+              <div className="flex items-center mt-2">
+                <span className="text-sm text-red-600 font-medium">Needs attention</span>
+              </div>
+            </div>
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center ml-4">
+              <FaExclamationTriangle className="w-6 h-6 text-red-600" />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Filters Section */}
-      <div className={`mx-3 sm:mx-6 mb-4 sm:mb-6 p-3 sm:p-6 rounded-lg shadow-sm border transition-colors duration-200 ${
+      <div className={`rounded-lg shadow-sm border transition-colors duration-200 ${
         theme === 'dark' 
           ? 'bg-gray-800 border-gray-700' 
           : 'bg-white border-gray-200'
       }`}>
-        <h2 className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 transition-colors duration-200 ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}>Filters</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <div className="space-y-2">
-            <label className={`block text-sm font-medium transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-            }`}>Course</label>
-            <select 
-              value={filters.course}
-              onChange={(e) => handleFilterChange('course', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
-                theme === 'dark'
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'border-gray-300'
-              }`}
-            >
-              <option>All Courses</option>
-              <option>Mathematics</option>
-              <option>Science</option>
-              <option>English</option>
-              <option>History</option>
-            </select>
-          </div>
-          
-          <div className="space-y-2">
-            <label className={`block text-sm font-medium transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-            }`}>Start Date</label>
-            <div className="relative">
-              <input
-                type="date"
-                value={filters.startDate}
-                onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
+        <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+          <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          }`}>
+            Filters
+          </h2>
+        </div>
+        
+        <div className="p-3 sm:p-4 lg:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="space-y-2">
+              <label className={`block text-sm font-semibold transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}>Course</label>
+              <select 
+                value={filters.course}
+                onChange={(e) => handleFilterChange('course', e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300'
+                    : 'bg-white border-gray-300 text-gray-900'
                 }`}
-              />
-              <svg className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
+              >
+                <option>All Courses</option>
+                <option>Mathematics</option>
+                <option>Science</option>
+                <option>English</option>
+                <option>History</option>
+              </select>
             </div>
-          </div>
-          
-          <div className="space-y-2">
-            <label className={`block text-sm font-medium transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-            }`}>End Date</label>
-            <div className="relative">
-              <input
-                type="date"
-                value={filters.endDate}
-                onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
+            
+            <div className="space-y-2">
+              <label className={`block text-sm font-semibold transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}>Start Date</label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={filters.startDate}
+                  onChange={(e) => handleFilterChange('startDate', e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
+                    theme === 'dark'
+                      ? 'bg-gray-700 border-gray-600 text-white'
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                />
+                <svg className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <label className={`block text-sm font-semibold transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}>End Date</label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={filters.endDate}
+                  onChange={(e) => handleFilterChange('endDate', e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
+                    theme === 'dark'
+                      ? 'bg-gray-700 border-gray-600 text-white'
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                />
+                <svg className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <label className={`block text-sm font-semibold transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}>Class/Section</label>
+              <select 
+                value={filters.classSection}
+                onChange={(e) => handleFilterChange('classSection', e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300'
+                    : 'bg-white border-gray-300 text-gray-900'
                 }`}
-              />
-              <svg className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
+              >
+                <option>All Classes</option>
+                <option>Class 10A</option>
+                <option>Class 10B</option>
+                <option>Class 11A</option>
+                <option>Class 11B</option>
+              </select>
             </div>
-          </div>
-          
-          <div className="space-y-2">
-            <label className={`block text-sm font-medium transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-            }`}>Class/Section</label>
-            <select 
-              value={filters.classSection}
-              onChange={(e) => handleFilterChange('classSection', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
-                theme === 'dark'
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'border-gray-300'
-              }`}
-            >
-              <option>All Classes</option>
-              <option>Class 10A</option>
-              <option>Class 10B</option>
-              <option>Class 11A</option>
-              <option>Class 11B</option>
-            </select>
           </div>
         </div>
       </div>
 
-      {/* Attendance Trends Section */}
-      <div className={`mx-3 sm:mx-6 mb-4 sm:mb-6 p-3 sm:p-6 rounded-lg shadow-sm border transition-colors duration-200 ${
+      {/* Trends Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* Attendance Trends */}
+        <div className={`rounded-lg shadow-sm border transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className={`px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
+            theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+          }`}>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+              <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+              }`}>
+                Attendance Trends
+              </h2>
+              <div className="flex items-center space-x-2">
+                <button 
+                  onClick={() => handleExport('PDF')}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                >
+                  <FaFileAlt className="w-3 h-3" />
+                  <span>PDF</span>
+                </button>
+                <button 
+                  onClick={() => handleExport('Excel')}
+                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                >
+                  <FaFileAlt className="w-3 h-3" />
+                  <span>Excel</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+           <div className="p-3 sm:p-4 lg:p-6">
+             {/* Chart placeholder */}
+             <div className="h-48 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-8">
+               <p className={`text-sm transition-colors duration-200 ${
+                 theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+               }`}>Chart placeholder</p>
+             </div>
+             
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+               {/* Average Attendance Card */}
+               <div className="bg-green-100 dark:bg-green-900/20 p-6 rounded-lg flex items-center space-x-3 min-h-[120px]">
+                 <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
+                   <FaCheck className="w-6 h-6 text-white" />
+                 </div>
+                 <div>
+                   <p className={`text-base font-medium transition-colors duration-200 ${
+                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                   }`}>Average Attendance</p>
+                   <p className="text-3xl font-bold text-green-600">87.5%</p>
+                 </div>
+               </div>
+               
+               {/* Total Absences Card */}
+               <div className="bg-red-100 dark:bg-red-900/20 p-6 rounded-lg flex items-center space-x-3 min-h-[120px]">
+                 <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
+                   <FaTimes className="w-8 h-8 text-white" />
+                 </div>
+                 <div>
+                   <p className={`text-base font-medium transition-colors duration-200 ${
+                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                   }`}>Total Absences</p>
+                   <p className="text-3xl font-bold text-red-600">234</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+        </div>
+
+        {/* Performance Trends */}
+        <div className={`rounded-lg shadow-sm border transition-colors duration-200 ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className={`px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
+            theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+          }`}>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+              <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+              }`}>
+                Performance Trends
+              </h2>
+              <div className="flex items-center space-x-2">
+                <button 
+                  onClick={() => handleExport('PDF')}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                >
+                  <FaFileAlt className="w-3 h-3" />
+                  <span>PDF</span>
+                </button>
+                <button 
+                  onClick={() => handleExport('Excel')}
+                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200"
+                >
+                  <FaFileAlt className="w-3 h-3" />
+                  <span>Excel</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="p-3 sm:p-4 lg:p-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <FaStar className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className={`text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                    }`}>Average GPA</p>
+                    <p className="text-2xl font-bold text-blue-600">3.2</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <FaArrowUp className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className={`text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                    }`}>Highest Score</p>
+                    <p className="text-2xl font-bold text-green-600">98%</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                    <FaArrowDown className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <p className={`text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                    }`}>Lowest Score</p>
+                    <p className="text-2xl font-bold text-orange-600">45%</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Chart placeholder */}
+              <div className="h-32 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                <p className={`text-sm transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                }`}>Chart placeholder</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Automated Alerts Section */}
+      <div className={`rounded-lg shadow-sm border transition-colors duration-200 ${
         theme === 'dark' 
           ? 'bg-gray-800 border-gray-700' 
           : 'bg-white border-gray-200'
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
-          <h2 className={`text-base sm:text-lg font-semibold transition-colors duration-200 ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>Attendance Trends</h2>
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-            <button className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors text-sm sm:text-base" onClick={() => handleExport('PDF')}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14,2 14,8 20,8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10,9 9,9 8,9"/>
-              </svg>
-              <span>PDF</span>
-            </button>
-            <button className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-700 transition-colors text-sm sm:text-base" onClick={() => handleExport('Excel')}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <line x1="9" y1="3" x2="9" y2="21"/>
-                <line x1="3" y1="9" x2="21" y2="9"/>
-              </svg>
-              <span>Excel</span>
+        <div className={`px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b transition-colors duration-200 ${
+          theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+        }`}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+            <h2 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-200 ${
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
+            }`}>
+              Automated Alerts
+            </h2>
+            <button className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors duration-200">
+              View All
             </button>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <div className="bg-blue-100 p-4 sm:p-6 rounded-lg flex items-center justify-between transition-colors duration-200 dark:bg-blue-900">
-            <div className="flex items-center">
-              <div className="bg-blue-500 text-white p-2 sm:p-3 rounded-full mr-3">
-                <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 12l2 2 4-4"/>
-                  <path d="M21 12c-1 0-2-1-2-2s1-2 2-2 2 1 2 2-1 2-2 2z"/>
-                  <path d="M3 12c1 0 2-1 2-2s-1-2-2-2-2 1-2 2 1 2 2 2z"/>
-                  <path d="M12 2c0 1-1 2-2 2s-2 1-2 2 1 2 2 2 2-1 2-2z"/>
-                  <path d="M12 22c0-1 1-2 2-2s2-1 2-2-1-2-2-2-2 1-2 2z"/>
-                </svg>
+        <div className="p-3 sm:p-4 lg:p-6">
+          <div className="space-y-4">
+            {/* High Risk Alert */}
+            <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center">
+                  <FaExclamationTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                </div>
+                <div>
+                  <p className={`text-sm font-medium transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Sarah Johnson - 5 unexcused absences this week
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-sm sm:text-lg font-semibold transition-colors duration-200">Average Attendance</h3>
-                <div className="text-lg sm:text-2xl font-bold transition-colors duration-200">87.5%</div>
+              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                Action
+              </button>
+            </div>
+            
+            {/* Tardiness Pattern */}
+            <div className="flex items-center justify-between p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center">
+                  <FaClock className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div>
+                  <p className={`text-sm font-medium transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Mike Chen - Late 4 times this week
+                  </p>
+                </div>
               </div>
+              <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                Review
+              </button>
+            </div>
+            
+            {/* Attendance Improvement */}
+            <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
+                  <FaInfoCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className={`text-sm font-medium transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Class 10A - 98% attendance this week
+                  </p>
+                </div>
+              </div>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                View
+              </button>
             </div>
           </div>
-          
-          <div className="bg-red-100 p-4 sm:p-6 rounded-lg flex items-center justify-between transition-colors duration-200 dark:bg-red-900">
-            <div className="flex items-center">
-              <div className="bg-red-500 text-white p-2 sm:p-3 rounded-full mr-3">
-                <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="15" y1="9" x2="9" y2="15"/>
-                  <line x1="9" y1="9" x2="15" y2="15"/>
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-sm sm:text-lg font-semibold transition-colors duration-200">Total Absences</h3>
-                <div className="text-lg sm:text-2xl font-bold transition-colors duration-200">234</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-green-100 p-4 sm:p-6 rounded-lg flex items-center justify-between transition-colors duration-200 dark:bg-green-900 sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center">
-              <div className="bg-green-500 text-white p-2 sm:p-3 rounded-full mr-3">
-                <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 12l2 2 4-4"/>
-                  <path d="M21 12c-1 0-2-1-2-2s1-2 2-2 2 1 2 2-1 2-2 2z"/>
-                  <path d="M3 12c1 0 2-1 2-2s-1-2-2-2-2 1-2 2 1 2 2 2z"/>
-                  <path d="M12 2c0 1-1 2-2 2s-2 1-2 2 1 2 2 2 2-1 2-2z"/>
-                  <path d="M12 22c0-1 1-2 2-2s2-1 2-2-1-2-2-2-2 1-2 2z"/>
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-sm sm:text-lg font-semibold transition-colors duration-200">Present Today</h3>
-                <div className="text-lg sm:text-2xl font-bold transition-colors duration-200">156</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Performance Trends Section */}
-      <div className={`mx-3 sm:mx-6 mb-4 sm:mb-6 p-3 sm:p-6 rounded-lg shadow-sm border transition-colors duration-200 ${
-        theme === 'dark' 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'
-      }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
-          <h2 className={`text-base sm:text-lg font-semibold transition-colors duration-200 ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>Performance Trends</h2>
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-            <button className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors text-sm sm:text-base" onClick={() => handleExport('PDF')}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14,2 14,8 20,8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10,9 9,9 8,9"/>
-              </svg>
-              <span>PDF</span>
-            </button>
-            <button className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-700 transition-colors text-sm sm:text-base" onClick={() => handleExport('Excel')}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <line x1="9" y1="3" x2="9" y2="21"/>
-                <line x1="3" y1="9" x2="21" y2="9"/>
-              </svg>
-              <span>Excel</span>
-            </button>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <div className="bg-purple-100 p-4 sm:p-6 rounded-lg flex items-center justify-between transition-colors duration-200 dark:bg-purple-900">
-            <div className="flex items-center">
-              <div className="bg-purple-500 text-white p-2 sm:p-3 rounded-full mr-3">
-                <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-sm sm:text-lg font-semibold transition-colors duration-200">Average GPA</h3>
-                <div className="text-lg sm:text-2xl font-bold transition-colors duration-200">3.2</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-yellow-100 p-4 sm:p-6 rounded-lg flex items-center justify-between transition-colors duration-200 dark:bg-yellow-900">
-            <div className="flex items-center">
-              <div className="bg-yellow-500 text-white p-2 sm:p-3 rounded-full mr-3">
-                <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="12" y1="19" x2="12" y2="5"/>
-                  <polyline points="5,12 12,5 19,12"/>
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-sm sm:text-lg font-semibold transition-colors duration-200">Highest Score</h3>
-                <div className="text-lg sm:text-2xl font-bold transition-colors duration-200">98%</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-indigo-100 p-4 sm:p-6 rounded-lg flex items-center justify-between transition-colors duration-200 dark:bg-indigo-900 sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center">
-              <div className="bg-indigo-500 text-white p-2 sm:p-3 rounded-full mr-3">
-                <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="12" y1="5" x2="12" y2="19"/>
-                  <polyline points="19,12 12,19 5,12"/>
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-sm sm:text-lg font-semibold transition-colors duration-200">Lowest Score</h3>
-                <div className="text-lg sm:text-2xl font-bold transition-colors duration-200">45%</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Export Options Section */}
-      <div className={`mx-3 sm:mx-6 mb-4 sm:mb-6 p-3 sm:p-6 rounded-lg shadow-sm border transition-colors duration-200 ${
-        theme === 'dark' 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'
-      }`}>
-        <h2 className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 transition-colors duration-200 ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}>Export Options</h2>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-          <button className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors text-sm sm:text-base" onClick={() => handleExport('PDF')}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14,2 14,8 20,8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10,9 9,9 8,9"/>
-            </svg>
-            <span>Export as PDF</span>
-          </button>
-          
-          <button className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-700 transition-colors text-sm sm:text-base" onClick={() => handleExport('Excel')}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              <line x1="9" y1="3" x2="9" y2="21"/>
-              <line x1="3" y1="9" x2="21" y2="9"/>
-            </svg>
-            <span>Export as Excel</span>
-          </button>
-          
-          <button className="bg-gray-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-700 transition-colors text-sm sm:text-base" onClick={() => handleExport('Raw Data')}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7,10 12,15 17,10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            <span>Download Raw Data</span>
-          </button>
         </div>
       </div>
     </div>

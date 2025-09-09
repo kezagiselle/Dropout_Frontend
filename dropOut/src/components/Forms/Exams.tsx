@@ -9,6 +9,7 @@ interface Event {
   subject: string;
   room: string;
   color: string;
+  accentColor: string;
 }
 
 interface DaySchedule {
@@ -28,21 +29,21 @@ function Exams({ onBack }: ExamsProps) {
 
   const schedule: Schedule = {
     'Mon 18': {
-      '8:00 AM': { subject: 'Mathematics', room: 'Room 201', color: 'bg-blue-100' },
-      '2:00 PM': { subject: 'Physics', room: 'Room 401', color: 'bg-purple-100' }
+      '8:00 AM': { subject: 'Mathematics', room: 'Room 201', color: 'bg-blue-100', accentColor: 'bg-blue-600' },
+      '2:00 PM': { subject: 'Physics', room: 'Room 401', color: 'bg-purple-100', accentColor: 'bg-purple-600' }
     },
     'Tue 19': {
-      '10:00 AM': { subject: 'Chemistry', room: 'Lab 203', color: 'bg-yellow-100' }
+      '10:00 AM': { subject: 'Chemistry', room: 'Lab 203', color: 'bg-yellow-100', accentColor: 'bg-yellow-600' }
     },
     'Wed 20': {
-      '8:00 AM': { subject: 'Biology', room: 'Lab 101', color: 'bg-green-100' },
-      '2:00 PM': { subject: 'Art', room: 'Studio A', color: 'bg-pink-100' }
+      '8:00 AM': { subject: 'Biology', room: 'Lab 101', color: 'bg-green-100', accentColor: 'bg-green-600' },
+      '2:00 PM': { subject: 'Art', room: 'Studio A', color: 'bg-pink-100', accentColor: 'bg-pink-600' }
     },
     'Thu 21': {
-      '10:00 AM': { subject: 'English', room: 'Room 102', color: 'bg-red-100' }
+      '10:00 AM': { subject: 'English', room: 'Room 102', color: 'bg-red-100', accentColor: 'bg-red-600' }
     },
     'Fri 22': {
-      '8:00 AM': { subject: 'History', room: 'Room 305', color: 'bg-purple-100' }
+      '8:00 AM': { subject: 'History', room: 'Room 305', color: 'bg-purple-100', accentColor: 'bg-purple-600' }
     }
   };
 
@@ -104,7 +105,7 @@ function Exams({ onBack }: ExamsProps) {
             <div className="flex gap-2 sm:gap-3">
               <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 text-sm">
                 <FaDownload className="text-sm" />
-                <span className="hidden xs:inline">Export</span>
+                <span>Export</span>
               </button>
               <button 
                 onClick={onBack}
@@ -167,7 +168,7 @@ function Exams({ onBack }: ExamsProps) {
             </div>
 
             {/* Time Slots and Events */}
-            <div>
+    <div>
               {timeSlots.map((time, timeIndex) => (
                 <div key={time} className="grid grid-cols-8 border-b border-gray-300 last:border-b-0">
                   {/* Time Column */}
@@ -184,11 +185,12 @@ function Exams({ onBack }: ExamsProps) {
                     return (
                       <div key={`${day}-${time}`} className="min-h-[60px] sm:min-h-[80px] border-r border-gray-300 last:border-r-0">
                         {event ? (
-                          <div className={`${event.color} text-gray-800 p-2 h-full flex flex-col justify-center`}>
-                            <div className="font-bold text-xs mb-1">
+                          <div className={`${event.color} text-gray-800 p-2 h-full flex flex-col justify-center relative`}>
+                            <div className={`absolute left-0 top-2 bottom-2 w-1 ${event.accentColor} rounded-l`}></div>
+                            <div className="font-bold text-xs mb-1 ml-2">
                               {event.subject}
                             </div>
-                            <div className="font-semibold text-xs opacity-90">
+                            <div className="font-semibold text-xs opacity-90 ml-2">
                               {event.room}
                             </div>
                           </div>

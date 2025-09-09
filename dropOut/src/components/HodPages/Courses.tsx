@@ -4,6 +4,7 @@ import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'reac
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt, FaUser, FaClipboardCheck, FaChartLine, FaFile, FaTimes, FaFire, FaSync, FaBook } from 'react-icons/fa'
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia'
 import { MdCancel } from 'react-icons/md'
+import Course from '../Forms/Course'
 
 interface Course {
   id: number
@@ -30,6 +31,7 @@ interface TimetableSlot {
 const Courses = () => {
   const { theme } = useTheme()
   const [searchTerm, setSearchTerm] = useState('')
+  const [showCourseForm, setShowCourseForm] = useState(false)
   const [courses] = useState<Course[]>([
     {
       id: 1,
@@ -109,6 +111,10 @@ const Courses = () => {
     }
   ])
 
+  if (showCourseForm) {
+    return <Course onBack={() => setShowCourseForm(false)} />;
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Active':
@@ -152,7 +158,10 @@ const Courses = () => {
           </p>
         </div>
         
-        <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
+        <button 
+          onClick={() => setShowCourseForm(true)}
+          className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base"
+        >
           <span className="text-sm sm:text-base">+</span>
           <span>Add Course</span>
         </button>

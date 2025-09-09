@@ -85,53 +85,53 @@ function Exams({ onBack }: ExamsProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-2 sm:p-4 pt-8 sm:pt-12">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-2 sm:p-4 pt-12 sm:pt-16 md:pt-20">
       {/* Main Content Card */}
-      <div className="w-full max-w-full bg-gray-50 rounded-lg border border-gray-200 p-6 sm:p-8 lg:p-12">
+      <div className="w-full max-w-full bg-gray-50 rounded-lg border border-gray-200 p-3 sm:p-6 lg:p-8 xl:p-12">
         {/* Title Section - Inside Gray Div */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-8">
-          <div className="flex items-center justify-between">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             {/* Title Section - Left Side */}
-            <div className="flex-1">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                 Exams & Grades Management
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Monitor and manage student's grades to dropout risk factors
               </p>
             </div>
             
             {/* Action Buttons - Right Side */}
-            <div className="flex gap-2 sm:gap-3">
-              <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 text-sm">
-                <FaDownload className="text-sm" />
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
+              <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 text-xs sm:text-sm w-full sm:w-auto">
+                <FaDownload className="text-xs sm:text-sm" />
                 <span>Export</span>
               </button>
               <button 
                 onClick={onBack}
-                className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 text-sm"
+                className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 text-xs sm:text-sm w-full sm:w-auto"
               >
-                <FaArrowLeft className="text-sm" />
+                <FaArrowLeft className="text-xs sm:text-sm" />
                 Back
               </button>
             </div>
           </div>
         </div>
         {/* Week Navigation */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 sm:mb-10 gap-6">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 lg:mb-10 gap-4 sm:gap-6">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">
             {weekRange}
           </h2>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <button 
               onClick={goToPreviousWeek}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
             >
-              <FaChevronLeft className="text-gray-600" />
+              <FaChevronLeft className="text-gray-600 text-sm sm:text-base" />
             </button>
             <button 
               onClick={goToToday}
-              className="px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200 text-sm sm:text-base"
+              className="px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200 text-xs sm:text-sm md:text-base"
             >
               Today
             </button>
@@ -139,40 +139,40 @@ function Exams({ onBack }: ExamsProps) {
               onClick={goToNextWeek}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
             >
-              <FaChevronRight className="text-gray-600" />
+              <FaChevronRight className="text-gray-600 text-sm sm:text-base" />
             </button>
           </div>
         </div>
 
         {/* Calendar Grid */}
-        <div className="overflow-x-auto">
-          <div className="min-w-[600px] border border-gray-300 rounded-lg">
+        <div className="overflow-x-auto -mx-2 sm:mx-0">
+          <div className="min-w-[500px] sm:min-w-[600px] md:min-w-[700px] border border-gray-300 rounded-lg">
             {/* Days Header */}
             <div className="grid grid-cols-8">
-              <div className="p-2 text-center font-semibold text-gray-600 text-sm bg-gray-200 border-r border-gray-300 border-b border-gray-300">
+              <div className="p-1.5 sm:p-2 text-center font-semibold text-gray-600 text-xs sm:text-sm bg-gray-200 border-r border-gray-300 border-b border-gray-300">
                 Time
               </div>
               {days.map((day, index) => (
                 <div 
                   key={day}
-                  className={`p-2 text-center font-semibold text-sm border-r border-gray-300 border-b border-gray-300 last:border-r-0 ${
+                  className={`p-1.5 sm:p-2 text-center font-semibold text-xs sm:text-sm border-r border-gray-300 border-b border-gray-300 last:border-r-0 ${
                     isToday(index) 
                       ? 'bg-blue-100 text-blue-800' 
                       : 'bg-gray-200 text-gray-600'
                   }`}
                 >
-                  <div>{day}</div>
+                  <div className="text-xs sm:text-sm">{day}</div>
                   <div className="text-xs font-normal">{dates[index]}</div>
                 </div>
               ))}
             </div>
 
             {/* Time Slots and Events */}
-    <div>
-              {timeSlots.map((time, timeIndex) => (
+            <div>
+              {timeSlots.map((time) => (
                 <div key={time} className="grid grid-cols-8 border-b border-gray-300 last:border-b-0">
                   {/* Time Column */}
-                  <div className="p-2 text-center text-sm font-medium text-gray-600 bg-gray-200 border-r border-gray-300">
+                  <div className="p-1.5 sm:p-2 text-center text-xs sm:text-sm font-medium text-gray-600 bg-gray-200 border-r border-gray-300">
                     {time}
                   </div>
                   
@@ -183,10 +183,10 @@ function Exams({ onBack }: ExamsProps) {
                     const event = daySchedule?.[time];
                     
                     return (
-                      <div key={`${day}-${time}`} className="min-h-[60px] sm:min-h-[80px] border-r border-gray-300 last:border-r-0">
+                      <div key={`${day}-${time}`} className="min-h-[50px] sm:min-h-[60px] md:min-h-[80px] border-r border-gray-300 last:border-r-0">
                         {event ? (
-                          <div className={`${event.color} text-gray-800 p-2 h-full flex flex-col justify-center relative`}>
-                            <div className={`absolute left-0 top-2 bottom-2 w-1 ${event.accentColor} rounded-l`}></div>
+                          <div className={`${event.color} text-gray-800 p-1.5 sm:p-2 h-full flex flex-col justify-center relative`}>
+                            <div className={`absolute left-0 top-0 bottom-0 w-1 ${event.accentColor} rounded-l`}></div>
                             <div className="font-bold text-xs mb-1 ml-2">
                               {event.subject}
                             </div>
@@ -195,7 +195,7 @@ function Exams({ onBack }: ExamsProps) {
                             </div>
                           </div>
                         ) : time === '12:00 PM' && dayIndex < 5 ? (
-                          <div className="bg-gray-200 text-gray-600 p-2 h-full flex items-center justify-center text-xs font-medium">
+                          <div className="bg-gray-200 text-gray-600 p-1.5 sm:p-2 h-full flex items-center justify-center text-xs font-medium">
                             Lunch Break
                           </div>
                         ) : (
@@ -211,11 +211,11 @@ function Exams({ onBack }: ExamsProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-end mt-8 sm:mt-10">
-          <button className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm sm:text-base font-medium">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-end mt-6 sm:mt-8 lg:mt-10">
+          <button className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-xs sm:text-sm md:text-base font-medium w-full sm:w-auto">
             Cancel
           </button>
-          <button className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-200 text-sm sm:text-base font-medium">
+          <button className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-200 text-xs sm:text-sm md:text-base font-medium w-full sm:w-auto">
             Save Changes
           </button>
         </div>

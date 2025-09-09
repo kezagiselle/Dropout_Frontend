@@ -4,6 +4,7 @@ import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'reac
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt } from 'react-icons/fa'
 import { FaClipboardCheck } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
+import Teacher from '../Forms/Teacher';
 
 
 interface Teacher {
@@ -20,6 +21,7 @@ const Teachers = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDepartment, setSelectedDepartment] = useState('All Departments')
   const [selectedStatus, setSelectedStatus] = useState('All')
+  const [showTeacherForm, setShowTeacherForm] = useState(false)
   const [teachers] = useState<Teacher[]>([
     {
       id: 1,
@@ -70,6 +72,10 @@ const Teachers = () => {
     return 'bg-blue-100 text-blue-800'
   }
 
+  if (showTeacherForm) {
+    return <Teacher onBack={() => setShowTeacherForm(false)} />;
+  }
+
   return (
     <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Header Section */}
@@ -105,7 +111,10 @@ const Teachers = () => {
           </div>
           
           {/* Add Teacher Button */}
-          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
+          <button 
+            onClick={() => setShowTeacherForm(true)}
+            className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base"
+          >
             <span className="text-sm sm:text-base">+</span>
             <span>Add Teacher</span>
           </button>
@@ -160,7 +169,7 @@ const Teachers = () => {
                 <span className="text-xs text-orange-400 font-medium">-8.1% vs last term</span>
               </div>
             </div>
-            <IoIosWarning className="w-4 h-4 text-orange-600 ml-4" />
+            <IoIosWarning className="w-6 h-6 text-orange-600 ml-4" />
           </div>
         </div>
 
@@ -179,7 +188,7 @@ const Teachers = () => {
               </p>
               <p className="text-xl sm:text-2xl font-bold mt-1 text-green-600">28</p>
             </div>
-            <FaClipboardCheck className="w-4 h-4 text-green-600 ml-4" />
+            <FaClipboardCheck className="w-6 h-6 text-green-600 ml-4" />
           </div>
         </div>
 
@@ -199,7 +208,7 @@ const Teachers = () => {
               <p className="text-xl sm:text-2xl font-bold mt-1 text-red-600">2</p>
               <p className="text-xs text-gray-500 mt-1">8 registrations, 4 timetable</p>
             </div>
-            <IoIosTime className="w-4 h-4 text-red-600 ml-4" />
+            <IoIosTime className="w-6 h-6 text-red-600 ml-4" />
           </div>
         </div>
       </div>

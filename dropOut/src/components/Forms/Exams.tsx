@@ -168,7 +168,7 @@ function Exams({ onBack }: ExamsProps) {
             </div>
 
             {/* Time Slots and Events */}
-            <div>
+    <div>
               {timeSlots.map((time) => (
                 <div key={time} className="grid grid-cols-8 border-b border-gray-300 last:border-b-0">
                   {/* Time Column */}

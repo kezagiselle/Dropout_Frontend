@@ -69,7 +69,7 @@ function Profile({ onBack }: ProfileProps) {
         <div className="absolute -bottom-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 bg-orange-500 rounded-lg flex items-center justify-center">
           <FaCamera className="text-white text-xs sm:text-sm" />
         </div>
-      </div>
+    </div>
 
       {/* Title and Description */}
       <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 text-center px-4">

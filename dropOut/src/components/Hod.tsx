@@ -7,6 +7,8 @@ import Attendance from './HodPages/Attendance';
 import Exams from './HodPages/Exams';
 import Communication from './HodPages/Communication';
 import Settings from './HodPages/Settings';
+import TeacherForm from './Forms/Teacher';
+import StudentForm from './Forms/Student';
 import userr from "../../src/img/userr.png";
 import dashlast from "../../src/img/dashlast.png";
 import das from "../../src/img/das.png";
@@ -42,6 +44,8 @@ const Hod = () => {
   const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'communication' | 'settings'>('dashboard')
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showTeacherForm, setShowTeacherForm] = useState(false);
+  const [showStudentForm, setShowStudentForm] = useState(false);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
@@ -156,11 +160,11 @@ const Hod = () => {
 
           {/* Filters Bar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-3 sm:mt-4">
-            <span className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+            <span className={`text-xs sm:text-sm font-bold transition-colors duration-200 ${
               theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
             }`}>Filters:</span>
             
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -172,7 +176,7 @@ const Hod = () => {
               <option>Grade 12</option>
             </select>
 
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -183,7 +187,7 @@ const Hod = () => {
               <option>Class C</option>
             </select>
 
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 ${
+            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
               theme === 'dark' 
                 ? 'bg-gray-700 border-gray-600 text-white' 
                 : 'bg-white border-gray-300 text-gray-900'
@@ -194,7 +198,7 @@ const Hod = () => {
               <option>Term 3</option>
             </select>
 
-            <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium flex items-center space-x-2">
+            <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold flex items-center space-x-2">
               <FaSave className="w-4 h-4" />
               <span>Save Filter</span>
             </button>
@@ -517,11 +521,23 @@ const Hod = () => {
                         }`}>Quick Actions</h3>
                         
                         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                          <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm">
+                          <button 
+                            onClick={() => {
+                              console.log('Add Teacher button clicked');
+                              setShowTeacherForm(true);
+                            }}
+                            className="px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm"
+                          >
                             <span className="text-xs sm:text-sm">+</span>
                             <span>Add Teacher</span>
                           </button>
-                          <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm">
+                          <button 
+                            onClick={() => {
+                              console.log('Add Student button clicked');
+                              setShowStudentForm(true);
+                            }}
+                            className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm"
+                          >
                             <span className="text-xs sm:text-sm">+</span>
                             <span>Add Student</span>
                           </button>
@@ -645,6 +661,29 @@ const Hod = () => {
             {activeView === 'exams' && <Exams />}
             {activeView === 'communication' && <Communication />}
             {activeView === 'settings' && <Settings />}
+            
+            {/* Form Components */}
+            {showTeacherForm && (
+              <div className="fixed inset-0 bg-white z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg">
+                  <TeacherForm onBack={() => setShowTeacherForm(false)} />
+                </div>
+              </div>
+            )}
+            {showStudentForm && (
+              <div className="fixed inset-0 bg-white z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg">
+                  <StudentForm onBack={() => setShowStudentForm(false)} />
+                </div>
+              </div>
+            )}
+            
+            {/* Debug Info */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="fixed bottom-4 right-4 bg-black text-white p-2 rounded text-xs">
+                Teacher Form: {showTeacherForm ? 'true' : 'false'}, Student Form: {showStudentForm ? 'true' : 'false'}
+              </div>
+            )}
           </main>
         </div>
       </div>

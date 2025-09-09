@@ -231,7 +231,7 @@ const Courses = () => {
                 <span className="text-sm text-blue-400 font-medium">+3%</span>
               </div>
             </div>
-            <FaBook className="w-6 h-6 text-blue-400 ml-4" />
+            <FaBook className="w-5 h-5 text-blue-400 ml-4" />
           </div>
         </div>
 

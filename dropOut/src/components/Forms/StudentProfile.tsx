@@ -1,32 +1,39 @@
+import { useState } from 'react'
 import { FaArrowLeft, FaCalendarAlt, FaUser, FaPrint, FaPlus, FaExclamationTriangle, FaBook, FaExclamationTriangle as FaWarning } from 'react-icons/fa'
 import { FaHouse } from 'react-icons/fa6'
+import StudentRepo from './StudentRepo';
 
 interface StudentProfileProps {
   onBack: () => void;
 }
 
 function StudentProfile({ onBack }: StudentProfileProps) {
+  const [showStudentRepo, setShowStudentRepo] = useState(false);
+
+  if (showStudentRepo) {
+    return <StudentRepo onBack={() => setShowStudentRepo(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Header Section */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Student Profile</h1>
-            <p className="text-gray-600 mt-1">Watch Student information to monitor dropout risk and academic progress</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Student Profile</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">Watch Student information to monitor dropout risk and academic progress</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button 
-              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-xs sm:text-sm font-medium"
             >
               Historic
             </button>
             <button 
               onClick={onBack}
-              className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm"
+              className="bg-gray-800 hover:bg-gray-900 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-xs sm:text-sm"
             >
-              <FaArrowLeft className="text-sm" />
+              <FaArrowLeft className="text-xs sm:text-sm" />
               Back
             </button>
           </div>
@@ -189,7 +196,7 @@ function StudentProfile({ onBack }: StudentProfileProps) {
               </div>
               <div className="flex items-center justify-between bg-orange-50 p-3 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <FaBook className="text-orange-500" />
+                  <FaBook className="text-orange-500 text-sm" />
                   <span className="text-gray-900">Failing Math</span>
                 </div>
                 <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">High</span>
@@ -273,7 +280,10 @@ function StudentProfile({ onBack }: StudentProfileProps) {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-900">Intervention Log</h3>
-            <button className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
+            <button 
+              onClick={() => setShowStudentRepo(true)}
+              className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium"
+            >
               <FaPlus className="text-sm" />
               Add Note
             </button>

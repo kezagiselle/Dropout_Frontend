@@ -67,7 +67,7 @@ const Attendance = () => {
                 <span className="text-sm text-green-600 font-medium">+2.3% from yesterday</span>
               </div>
             </div>
-            <FaCheck className="w-4 h-4 text-green-600 ml-4" />
+            <FaCheck className="w-5 h-5 text-green-600 ml-4" />
           </div>
         </div>
 
@@ -89,7 +89,7 @@ const Attendance = () => {
                 <span className="text-sm text-red-600 font-medium">+5 from yesterday</span>
               </div>
             </div>
-            <FaTimes className="w-4 h-4 text-red-600 ml-4" />
+            <FaTimes className="w-5 h-5 text-red-600 ml-4" />
           </div>
         </div>
 
@@ -111,7 +111,7 @@ const Attendance = () => {
                 <span className="text-sm text-orange-600 font-medium">-3 from yesterday</span>
               </div>
             </div>
-            <FaClock className="w-4 h-4 text-orange-600 ml-4" />
+            <FaClock className="w-5 h-5 text-orange-600 ml-4" />
           </div>
         </div>
 
@@ -133,7 +133,7 @@ const Attendance = () => {
                 <span className="text-sm text-red-600 font-medium">Needs attention</span>
               </div>
             </div>
-            <FaExclamationTriangle className="w-4 h-4 text-red-600 ml-4" />
+            <FaExclamationTriangle className="w-5 h-5 text-red-600 ml-4" />
           </div>
         </div>
       </div>

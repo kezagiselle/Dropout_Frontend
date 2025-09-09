@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { FaArrowLeft, FaCalendarAlt, FaUserPlus, FaPrint, FaPlus, FaTrash } from 'react-icons/fa'
 import { IoIosPeople, IoIosCheckmarkCircle, IoIosWarning } from 'react-icons/io'
 import { FaUser } from "react-icons/fa";
+import TeacherProfile from './TeacherProfile';
 
 interface EditProfileProps {
   onBack: () => void;
 }
 
 function EditProfile({ onBack }: EditProfileProps) {
+  const [showTeacherProfile, setShowTeacherProfile] = useState(false);
   const [interventionLog] = useState([
     {
       id: 1,
@@ -37,6 +39,10 @@ function EditProfile({ onBack }: EditProfileProps) {
         return 'border-l-gray-500 bg-gray-50';
     }
   };
+
+  if (showTeacherProfile) {
+    return <TeacherProfile onBack={() => setShowTeacherProfile(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-2 sm:p-4 pt-12 sm:pt-16 md:pt-20">
@@ -168,7 +174,10 @@ function EditProfile({ onBack }: EditProfileProps) {
         <div className="bg-white rounded-lg border border-gray-200 p-6 flex-1">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900">Intervention Log</h3>
-            <button className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm">
+            <button 
+              onClick={() => setShowTeacherProfile(true)}
+              className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm"
+            >
               <FaPlus className="text-sm" />
               Add Note
             </button>

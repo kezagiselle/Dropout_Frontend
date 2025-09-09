@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaDownload, FaPlus, FaUsers, FaExclamationTriangle, FaChartLine, FaHeart, FaChevronDown, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { FaHandHoldingHeart } from "react-icons/fa6";
 import { useTheme } from '../Hod';
+import Report from '../Forms/Report';
 
 
 const Reports = () => {
@@ -10,6 +11,11 @@ const Reports = () => {
   const [gradeLevel, setGradeLevel] = useState("All Grades");
   const [riskLevel, setRiskLevel] = useState("All Risk Levels");
   const [department, setDepartment] = useState("All Departments");
+  const [showReport, setShowReport] = useState(false);
+
+  if (showReport) {
+    return <Report onBack={() => setShowReport(false)} />;
+  }
 
   const highRiskStudents = [
     {
@@ -90,12 +96,15 @@ const Reports = () => {
           </p>
         </div>
         
-        <div className="flex flex-col xs:flex-row items-stretch xs:items-center space-y-2 xs:space-y-0 xs:space-x-2 sm:space-x-3 mt-2 lg:mt-0">
-          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm w-full xs:w-auto">
+        <div className="flex flex-row items-center space-x-2 sm:space-x-3 mt-2 lg:mt-0">
+          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
             <FaDownload className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>Export</span>
           </button>
-          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm w-full xs:w-auto">
+          <button 
+            onClick={() => setShowReport(true)}
+            className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm"
+          >
             <FaPlus className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>Add Report</span>
           </button>

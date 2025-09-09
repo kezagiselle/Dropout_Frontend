@@ -40,9 +40,9 @@ const Reports = () => {
 
   const riskFactors = [
     { name: "Attendance Rate", percentage: 78, color: "red" },
-    { name: "Grade Performance", percentage: 65, color: "orange" },
+    { name: "Grade Performance", percentage: 65, color: "yellow" },
     { name: "Behavioral Issues", percentage: 45, color: "red" },
-    { name: "Family Engagement", percentage: 52, color: "orange" }
+    { name: "Family Engagement", percentage: 52, color: "yellow" }
   ];
 
   const getStatusBadgeColor = (statusColor: string) => {
@@ -64,6 +64,8 @@ const Reports = () => {
         return "bg-red-500";
       case "orange":
         return "bg-orange-500";
+      case "yellow":
+        return "bg-yellow-600";
       case "green":
         return "bg-green-500";
       default:
@@ -116,14 +118,14 @@ const Reports = () => {
               theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
             }`}>
               Time Period
-            </label>
-            <div className="relative">
-              <select
+              </label>
+              <div className="relative">
+                <select
                 value={timePeriod}
                 onChange={(e) => setTimePeriod(e.target.value)}
                 className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white'
+                    theme === 'dark'
+                      ? 'bg-gray-700 border-gray-600 text-white'
                     : 'border-gray-300 bg-white text-gray-900'
                 }`}
               >
@@ -131,24 +133,24 @@ const Reports = () => {
                 <option>Last 3 Months</option>
                 <option>Last 6 Months</option>
                 <option>Last Year</option>
-              </select>
+                </select>
               <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
             </div>
           </div>
 
-          <div>
-            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+              <div>
+                <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
               theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
-            }`}>
+                }`}>
               Grade Level
-            </label>
-            <div className="relative">
+                </label>
+                <div className="relative">
               <select
                 value={gradeLevel}
                 onChange={(e) => setGradeLevel(e.target.value)}
                 className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white'
+                      theme === 'dark'
+                        ? 'bg-gray-700 border-gray-600 text-white'
                     : 'border-gray-300 bg-white text-gray-900'
                 }`}
               >
@@ -159,22 +161,22 @@ const Reports = () => {
                 <option>Grade 12</option>
               </select>
               <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
-            </div>
-          </div>
-
-          <div>
-            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+                </div>
+              </div>
+              
+              <div>
+                <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
               theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
-            }`}>
+                }`}>
               Risk Level
-            </label>
-            <div className="relative">
+                </label>
+                <div className="relative">
               <select
                 value={riskLevel}
                 onChange={(e) => setRiskLevel(e.target.value)}
                 className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white'
+                      theme === 'dark'
+                        ? 'bg-gray-700 border-gray-600 text-white'
                     : 'border-gray-300 bg-white text-gray-900'
                 }`}
               >
@@ -185,38 +187,38 @@ const Reports = () => {
                 <option>Critical Risk</option>
               </select>
               <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
-            </div>
-          </div>
-
-          <div>
-            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+                </div>
+              </div>
+              
+              <div>
+                <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
               theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
-            }`}>
-              Department
-            </label>
-            <div className="relative">
-              <select
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
+                }`}>
+                  Department
+                </label>
+                <div className="relative">
+                  <select
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
                 className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white'
+                      theme === 'dark'
+                        ? 'bg-gray-700 border-gray-600 text-white'
                     : 'border-gray-300 bg-white text-gray-900'
-                }`}
-              >
-                <option>All Departments</option>
-                <option>Mathematics</option>
-                <option>Science</option>
-                <option>English</option>
-                <option>History</option>
-                <option>Art</option>
-              </select>
+                    }`}
+                  >
+                    <option>All Departments</option>
+                    <option>Mathematics</option>
+                    <option>Science</option>
+                    <option>English</option>
+                    <option>History</option>
+                    <option>Art</option>
+                  </select>
               <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
             </div>
           </div>
-        </div>
-      </div>
-
+                </div>
+              </div>
+              
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Total Students Card */}
@@ -224,7 +226,7 @@ const Reports = () => {
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
           <div className="flex items-start justify-between">
-            <div>
+              <div>
               <p className={`text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
@@ -242,7 +244,7 @@ const Reports = () => {
             </div>
             <FaUsers className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-0.5" />
           </div>
-        </div>
+                </div>
 
         {/* High Risk Students Card */}
         <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
@@ -264,9 +266,9 @@ const Reports = () => {
               </div>
             </div>
             <FaExclamationTriangle className="w-6 h-6 text-red-600 dark:text-red-400 mt-0.5" />
-          </div>
-        </div>
-
+              </div>
+            </div>
+            
         {/* Dropout Rate Card */}
         <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
@@ -287,8 +289,8 @@ const Reports = () => {
               </div>
             </div>
             <FaChartLine className="w-6 h-6 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+            </div>
           </div>
-        </div>
 
         {/* Interventions Active Card */}
         <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
@@ -301,7 +303,7 @@ const Reports = () => {
               }`}>
                 Interventions Active
               </p>
-              <p className="text-2xl sm:text-3xl font-bold mt-1 text-green-900 dark:text-green-300">
+              <p className="text-2xl sm:text-3xl font-bold mt-1" style={{ color: '#16a34a' }}>
                 156
               </p>
               <div className="flex items-center mt-2">
@@ -309,7 +311,7 @@ const Reports = () => {
                 <span className="text-xs text-green-600 font-medium">+18% from last month</span>
               </div>
             </div>
-            <FaHandHoldingHeart className="w-6 h-6 text-green-600 dark:text-green-400 mt-0.5" />
+            <FaHandHoldingHeart className="w-6 h-6 mt-0.5" style={{ color: '#166534' }} />
           </div>
         </div>
       </div>
@@ -327,34 +329,34 @@ const Reports = () => {
               High Risk Students
             </h2>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
               <thead>
                 <tr className={`border-b transition-colors duration-200 ${
                   theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
                 }`}>
-                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Student
                   </th>
-                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Grade
                   </th>
-                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Risk Score
                   </th>
-                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Last Intervention
                   </th>
-                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Status
@@ -421,7 +423,7 @@ const Reports = () => {
                     {factor.percentage}%
                   </span>
                 </div>
-                <div className={`w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 transition-colors duration-200`}>
+                <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(factor.color)}`}
                     style={{ width: `${factor.percentage}%` }}

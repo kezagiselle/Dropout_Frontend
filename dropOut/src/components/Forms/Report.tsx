@@ -27,26 +27,26 @@ function Report({ onBack }: ReportProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 pt-20">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-2 sm:p-4 pt-16 sm:pt-20">
       {/* Header */}
-      <div className="w-full max-w-4xl mb-8">
-        <div className="flex justify-between items-start">
+      <div className="w-full max-w-4xl mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
               Reports Management
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               Comprehensive analytics on student dropout risks and trends
             </p>
           </div>
-          <div className="flex gap-3">
-            <button className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 text-sm sm:text-base">
               <FaDownload className="text-sm" />
-              Export
+              <span className="hidden xs:inline">Export</span>
             </button>
             <button 
               onClick={onBack}
-              className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200"
+              className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 text-sm sm:text-base"
             >
               <FaArrowLeft className="text-sm" />
               Back
@@ -56,13 +56,13 @@ function Report({ onBack }: ReportProps) {
       </div>
 
       {/* Main Content Card */}
-      <div className="w-full max-w-4xl bg-white rounded-lg border border-gray-200 p-8">
+      <div className="w-full max-w-4xl bg-white rounded-lg border border-gray-200 p-4 sm:p-6 lg:p-8">
         {/* Report Generation Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
             Report Generation
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
             Configure your report parameters and generate comprehensive reports
           </p>
           
@@ -88,24 +88,24 @@ function Report({ onBack }: ReportProps) {
         </div>
 
         {/* Filters Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
             Filters
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {/* Start Date */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Start Date
-              </label>
+            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+              Start Date
+            </label>
               <div className="relative">
                 <input
                   type="text"
                   placeholder="mm/dd/yyyy"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-orange-300 focus:border-orange-500"
+                  className="w-full px-2 sm:px-3 py-2 pr-8 sm:pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-orange-300 focus:border-orange-500 text-sm sm:text-base"
                 />
                 <input
                   type="date"
@@ -119,16 +119,16 @@ function Report({ onBack }: ReportProps) {
 
             {/* End Date */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                End Date
-              </label>
+            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+              End Date
+            </label>
               <div className="relative">
                 <input
                   type="text"
                   placeholder="mm/dd/yyyy"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-orange-300 focus:border-orange-500"
+                  className="w-full px-2 sm:px-3 py-2 pr-8 sm:pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-orange-300 focus:border-orange-500 text-sm sm:text-base"
                 />
                 <input
                   type="date"
@@ -142,14 +142,14 @@ function Report({ onBack }: ReportProps) {
 
             {/* Department */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Department
-              </label>
+            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+              Department
+            </label>
               <div className="relative">
                 <select
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white"
+                  className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white text-sm sm:text-base"
                 >
                   <option value="All Departments">All Departments</option>
                   <option value="Mathematics">Mathematics</option>
@@ -162,15 +162,15 @@ function Report({ onBack }: ReportProps) {
             </div>
 
             {/* Grade/Class */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Grade/Class
-              </label>
+    <div>
+            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+              Grade/Class
+            </label>
               <div className="relative">
                 <select
                   value={gradeClass}
                   onChange={(e) => setGradeClass(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white"
+                  className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white text-sm sm:text-base"
                 >
                   <option value="All Grades">All Grades</option>
                   <option value="Grade 9">Grade 9</option>
@@ -185,15 +185,15 @@ function Report({ onBack }: ReportProps) {
         </div>
 
         {/* Report Preview Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <FaEye className="text-gray-700 text-lg" />
-            <h2 className="text-xl font-bold text-gray-900">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
+            <FaEye className="text-gray-700 text-base sm:text-lg" />
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">
               Report Preview
             </h2>
           </div>
           
-          <div className="border border-gray-200 rounded-lg p-12 text-center bg-gray-50">
+          <div className="border border-gray-200 rounded-lg p-6 sm:p-8 lg:p-12 text-center bg-gray-50">
             <div className="flex flex-col items-center">
               <div className="w-16 h-16 bg-gray-300 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-8 h-8 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
@@ -208,16 +208,16 @@ function Report({ onBack }: ReportProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 justify-end">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
           <button 
             onClick={handleClearFilters}
-            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+            className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm sm:text-base font-medium"
           >
             Clear Filters
           </button>
           <button 
             onClick={handleGenerateReport}
-            className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 transition-colors duration-200 font-semibold"
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 font-semibold text-sm sm:text-base"
           >
             <FaChartBar className="text-sm" />
             Generate Report

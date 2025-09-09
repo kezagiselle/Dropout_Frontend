@@ -1,8 +1,15 @@
+import { useState } from 'react';
 import { useTheme } from '../Hod';
 import { FaDownload, FaPlus, FaEye, FaBell, FaEdit, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
+import ExamsForm from '../Forms/Exams';
 
 const Exams = () => {
   const { theme } = useTheme();
+  const [showExamsForm, setShowExamsForm] = useState(false);
+
+  if (showExamsForm) {
+    return <ExamsForm onBack={() => setShowExamsForm(false)} />;
+  }
 
   return (
     <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
@@ -26,7 +33,10 @@ const Exams = () => {
             <FaDownload className="w-4 h-4" />
             <span>Export</span>
           </button>
-          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base w-full sm:w-auto">
+          <button 
+            onClick={() => setShowExamsForm(true)}
+            className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base w-full sm:w-auto"
+          >
             <FaPlus className="w-4 h-4" />
             <span>New Exam</span>
           </button>

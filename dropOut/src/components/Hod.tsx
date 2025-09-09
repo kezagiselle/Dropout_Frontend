@@ -237,8 +237,8 @@ const Hod = () => {
                   activeView === 'dashboard' 
                     ? 'bg-orange-500 text-white' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('dashboard'); closeMobileMenu(); }}
               >
@@ -252,8 +252,8 @@ const Hod = () => {
                   activeView === 'students' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('students'); closeMobileMenu(); }}
               >
@@ -265,8 +265,8 @@ const Hod = () => {
                   activeView === 'teachers' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('teachers'); closeMobileMenu(); }}
               >
@@ -278,8 +278,8 @@ const Hod = () => {
                   activeView === 'courses' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('courses'); closeMobileMenu(); }}
               >
@@ -291,8 +291,8 @@ const Hod = () => {
                   activeView === 'attendance' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('attendance'); closeMobileMenu(); }}
               >
@@ -304,8 +304,8 @@ const Hod = () => {
                   activeView === 'exams' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('exams'); closeMobileMenu(); }}
               >
@@ -320,8 +320,8 @@ const Hod = () => {
                   activeView === 'reports' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('reports'); closeMobileMenu(); }}
               >
@@ -333,8 +333,8 @@ const Hod = () => {
                   activeView === 'communication' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('communication'); closeMobileMenu(); }}
               >
@@ -346,8 +346,8 @@ const Hod = () => {
                   activeView === 'settings' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-gray-700 hover:text-orange-400'
-                      : 'text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
                 }`}
                 onClick={() => { setActiveView('settings'); closeMobileMenu(); }}
               >

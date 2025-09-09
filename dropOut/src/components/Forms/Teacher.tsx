@@ -3,12 +3,14 @@ import { FaHouseChimney } from "react-icons/fa6";
 import { FaStickyNote } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt } from 'react-icons/fa';
+import EditProfile from './EditProfile';
 
 interface TeacherProps {
   onBack: () => void;
 }
 
 function Teacher({ onBack }: TeacherProps) {
+  const [showEditProfile, setShowEditProfile] = useState(false);
   const [formData, setFormData] = useState({
     // Personal Information
     teacherId: 'STU001',
@@ -43,19 +45,26 @@ function Teacher({ onBack }: TeacherProps) {
     }));
   };
 
+  if (showEditProfile) {
+    console.log('Showing EditProfile component');
+    return <EditProfile onBack={() => setShowEditProfile(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-2 sm:p-4 pt-12 sm:pt-16 md:pt-20">
       {/* Main Content Card */}
       <div className="w-full max-w-6xl bg-white rounded-lg border border-gray-200 p-6 sm:p-8 lg:p-12 min-h-[600px] sm:min-h-[700px] flex flex-col">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8">
-    <div>
+          <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
               Add New Teacher
             </h1>
             <p className="text-sm text-gray-600">
               Manage Teachers Activities
             </p>
+            {/* Debug info */}
+            <p className="text-xs text-red-500">Debug: showEditProfile = {showEditProfile.toString()}</p>
           </div>
           
           {/* Back Button */}
@@ -73,7 +82,7 @@ function Teacher({ onBack }: TeacherProps) {
           {/* Personal Information Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
-              <FaUser className="text-orange-600 text-lg" />
+              <FaUser className="text-blue-600 text-lg" />
               <h2 className="text-lg font-semibold text-gray-900">Personal Information</h2>
             </div>
             
@@ -172,7 +181,7 @@ function Teacher({ onBack }: TeacherProps) {
           {/* Academic Information Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
-              <FaBook className="text-orange-600 text-lg" />
+              <FaBook className="text-blue-600 text-lg" />
               <h2 className="text-lg font-semibold text-gray-900">Academic Information</h2>
             </div>
             
@@ -265,7 +274,7 @@ function Teacher({ onBack }: TeacherProps) {
           {/* Family & Social Information Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
-              <FaHouseChimney className="text-orange-600 text-lg" />
+              <FaHouseChimney className="text-blue-600 text-lg" />
               <h2 className="text-lg font-semibold text-gray-900">Family & Social Information</h2>
             </div>
             
@@ -350,7 +359,7 @@ function Teacher({ onBack }: TeacherProps) {
           {/* Additional Notes Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
-              <FaStickyNote className="text-orange-600 text-lg" />
+              <FaStickyNote className="text-blue-600 text-lg" />
               <h2 className="text-lg font-semibold text-gray-900">Additional Notes</h2>
             </div>
             
@@ -371,6 +380,15 @@ function Teacher({ onBack }: TeacherProps) {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end mt-8">
           <button className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium w-full sm:w-auto">
             Cancel
+          </button>
+          <button 
+            onClick={() => {
+              console.log('Edit Profile button clicked');
+              setShowEditProfile(true);
+            }}
+            className="px-4 sm:px-6 py-2 sm:py-3 border border-orange-500 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors duration-200 text-sm font-medium w-full sm:w-auto"
+          >
+            Edit Profile
           </button>
           <button className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium w-full sm:w-auto">
             Save Teacher

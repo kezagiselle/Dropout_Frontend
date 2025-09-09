@@ -131,7 +131,7 @@ const Teachers = () => {
       }`}>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className={`text-sm font-medium text-gray-600 transition-colors duration-200 ${
+              <p className={`text-sm font-bold text-gray-600 transition-colors duration-200 ${
               theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Total Teachers
@@ -156,7 +156,7 @@ const Teachers = () => {
         }`}>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+              <p className={`text-xs sm:text-sm font-bold transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 On leave
@@ -181,7 +181,7 @@ const Teachers = () => {
         }`}>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+              <p className={`text-xs sm:text-sm font-bold transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Available
@@ -200,7 +200,7 @@ const Teachers = () => {
         }`}>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
+              <p className={`text-xs sm:text-sm font-bold transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Substitutes Needed

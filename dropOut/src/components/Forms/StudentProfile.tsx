@@ -47,8 +47,8 @@ function StudentProfile({ onBack }: StudentProfileProps) {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
-                <FaUser className="text-purple-600 text-2xl" />
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <FaUser className="text-blue-600 text-2xl" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Marcus Johnson</h2>
@@ -77,7 +77,7 @@ function StudentProfile({ onBack }: StudentProfileProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Risk Assessment Card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Risk Assessment</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Risk Assessment</h3>
             <div className="flex flex-col items-center">
               <div className="relative w-32 h-32 mb-4">
                 <div className="w-32 h-32 rounded-full bg-red-500 flex items-center justify-center">
@@ -93,7 +93,7 @@ function StudentProfile({ onBack }: StudentProfileProps) {
 
           {/* Performance Timeline Card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Timeline</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Performance Timeline</h3>
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="relative w-20 h-20 mx-auto mb-2">
@@ -178,7 +178,7 @@ function StudentProfile({ onBack }: StudentProfileProps) {
 
           {/* Key Risk Factors Card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Risk Factors</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Key Risk Factors</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between bg-red-50 p-3 rounded-lg">
                 <div className="flex items-center gap-3">
@@ -213,7 +213,7 @@ function StudentProfile({ onBack }: StudentProfileProps) {
 
           {/* Attendance Overview Card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Attendance Overview</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Attendance Overview</h3>
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-1">
@@ -248,7 +248,7 @@ function StudentProfile({ onBack }: StudentProfileProps) {
 
         {/* Current Grades Card */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Grades</h3>
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Current Grades</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-gray-50 rounded-lg">
               <div className="text-2xl font-bold text-gray-900">15</div>
@@ -272,7 +272,7 @@ function StudentProfile({ onBack }: StudentProfileProps) {
         {/* Intervention Log Card */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Intervention Log</h3>
+            <h3 className="text-lg font-bold text-gray-900">Intervention Log</h3>
             <button className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
               <FaPlus className="text-sm" />
               Add Note

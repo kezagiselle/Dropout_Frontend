@@ -95,7 +95,7 @@ const Reports = () => {
             <FaDownload className="w-4 h-4" />
             <span>Export</span>
           </button>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base w-full sm:w-auto">
+          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base w-full sm:w-auto">
             <FaPlus className="w-4 h-4" />
             <span>Add Report</span>
           </button>
@@ -123,10 +123,10 @@ const Reports = () => {
                 <select
                 value={timePeriod}
                 onChange={(e) => setTimePeriod(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                    theme === 'dark'
-                      ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-900'
+                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                  theme === 'dark'
+                    ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
+                    : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
                 }`}
               >
                 <option>Last 30 Days</option>
@@ -148,10 +148,10 @@ const Reports = () => {
               <select
                 value={gradeLevel}
                 onChange={(e) => setGradeLevel(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                      theme === 'dark'
-                        ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-900'
+                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                  theme === 'dark'
+                    ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
+                    : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
                 }`}
               >
                 <option>All Grades</option>
@@ -174,10 +174,10 @@ const Reports = () => {
               <select
                 value={riskLevel}
                 onChange={(e) => setRiskLevel(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                      theme === 'dark'
-                        ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-900'
+                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                  theme === 'dark'
+                    ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
+                    : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
                 }`}
               >
                 <option>All Risk Levels</option>
@@ -200,11 +200,11 @@ const Reports = () => {
                   <select
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none transition-colors duration-200 ${
-                      theme === 'dark'
-                        ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-900'
-                    }`}
+                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                  theme === 'dark'
+                    ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
+                    : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
+                }`}
                   >
                     <option>All Departments</option>
                     <option>Mathematics</option>
@@ -311,7 +311,7 @@ const Reports = () => {
                 <span className="text-xs text-green-600 font-medium">+18% from last month</span>
               </div>
             </div>
-            <FaHandHoldingHeart className="w-6 h-6 mt-0.5" style={{ color: '#166534' }} />
+            <FaHandHoldingHeart className="w-6 h-6 mt-0.5" style={{ color: '#16a34a' }} />
           </div>
         </div>
       </div>

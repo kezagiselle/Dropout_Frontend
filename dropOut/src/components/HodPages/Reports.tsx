@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaDownload, FaPlus, FaUsers, FaExclamationTriangle, FaChartLine, FaHeart, FaChevronDown, FaArrowUp, FaArrowDown } from "react-icons/fa";
-import { useTheme } from '../Hod';
 import { FaHandHoldingHeart } from "react-icons/fa6";
+import { useTheme } from '../Hod';
 
 
 const Reports = () => {
@@ -248,16 +248,14 @@ const Reports = () => {
         <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div>
               <p className={`text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 High Risk Students
               </p>
-              <p className={`text-2xl sm:text-3xl font-bold mt-1 transition-colors duration-200 ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>
+              <p className="text-2xl sm:text-3xl font-bold mt-1 text-red-800 dark:text-red-400">
                 89
               </p>
               <div className="flex items-center mt-2">
@@ -265,9 +263,7 @@ const Reports = () => {
                 <span className="text-xs text-red-600 font-medium">+12% from last month</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-lg flex items-center justify-center">
-              <FaExclamationTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
-            </div>
+            <FaExclamationTriangle className="w-6 h-6 text-red-600 dark:text-red-400 mt-0.5" />
           </div>
         </div>
 
@@ -275,7 +271,7 @@ const Reports = () => {
         <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div>
               <p className={`text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
@@ -292,9 +288,7 @@ const Reports = () => {
                 <span className="text-xs text-green-600 font-medium">-0.8% from last month</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
-              <FaChartLine className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-            </div>
+            <FaChartLine className="w-6 h-6 text-yellow-600 dark:text-yellow-400 mt-0.5" />
           </div>
         </div>
 
@@ -302,7 +296,7 @@ const Reports = () => {
         <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div>
               <p className={`text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
@@ -319,9 +313,7 @@ const Reports = () => {
                 <span className="text-xs text-green-600 font-medium">+18% from last month</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
-              <FaHeart className="w-6 h-6 text-green-600 dark:text-green-400" />
-            </div>
+            <FaHandHoldingHeart className="w-6 h-6 text-green-600 dark:text-green-400 mt-0.5" />
           </div>
         </div>
       </div>

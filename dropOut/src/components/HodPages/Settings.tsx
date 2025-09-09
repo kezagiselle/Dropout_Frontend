@@ -2,12 +2,18 @@ import { useState } from 'react';
 import { FaUser, FaCog, FaEdit, FaChevronDown } from 'react-icons/fa';
 import { useTheme } from '../Hod';
 import pe3 from "../../img/pe3.png";
+import Profile from '../Forms/Profile';
 
 const Settings = () => {
   const { theme } = useTheme();
   const [timezone, setTimezone] = useState('UTC-5');
   const [language, setLanguage] = useState('English');
   const [selectedTheme, setSelectedTheme] = useState('light');
+  const [showProfile, setShowProfile] = useState(false);
+
+  if (showProfile) {
+    return <Profile onBack={() => setShowProfile(false)} />;
+  }
 
   return (
     <div className={`min-h-screen transition-colors duration-200 ${
@@ -75,7 +81,10 @@ const Settings = () => {
                   }`}>
                     HoD of Wesfield High School
                   </p>
-                  <button className="text-orange-600 hover:text-orange-700 font-medium text-sm mt-2">
+                  <button 
+                    onClick={() => setShowProfile(true)}
+                    className="text-orange-600 hover:text-orange-700 font-medium text-sm mt-2"
+                  >
                     Change Photo
                   </button>
                 </div>

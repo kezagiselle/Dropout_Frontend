@@ -455,7 +455,7 @@ const Hod = () => {
                   {/* Left Column - Charts and Teacher Info */}
                   <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                     {/* Risk Level Trends Chart */}
-                    <div className="h-64 sm:h-80 flex items-center justify-center px-2 sm:px-0 mt-4 sm:mt-8 -ml-0 sm:-ml-80 mb-4">
+                    <div className="h-64 sm:h-80 flex items-center justify-center px-2 sm:px-0 mt-4 sm:mt-8 -ml-0 sm:-ml-[28rem] mb-4">
                       <img 
                         src={dashlast} 
                         alt="Risk Level Trends Chart" 

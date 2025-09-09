@@ -41,7 +41,7 @@ const Attendance = () => {
           </p>
         </div>
         
-        <button className="bg-gray-600 hover:bg-gray-700 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
+        <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
           <FaDownload className="w-4 h-4" />
           <span>Export</span>
         </button>
@@ -62,14 +62,12 @@ const Attendance = () => {
               }`}>
                 Present Today
               </p>
-              <p className="text-3xl font-bold mt-2 text-green-600">847</p>
+              <p className="text-3xl font-bold mt-2 text-green-400">847</p>
               <div className="flex items-center mt-2">
                 <span className="text-sm text-green-600 font-medium">+2.3% from yesterday</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center ml-4">
-              <FaCheck className="w-6 h-6 text-green-600" />
-            </div>
+            <FaCheck className="w-4 h-4 text-green-600 ml-4" />
           </div>
         </div>
 
@@ -86,14 +84,12 @@ const Attendance = () => {
               }`}>
                 Absent Today
               </p>
-              <p className="text-3xl font-bold mt-2 text-red-600">23</p>
+              <p className="text-3xl font-bold mt-2 text-red-400">23</p>
               <div className="flex items-center mt-2">
                 <span className="text-sm text-red-600 font-medium">+5 from yesterday</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center ml-4">
-              <FaTimes className="w-6 h-6 text-red-600" />
-            </div>
+            <FaTimes className="w-4 h-4 text-red-600 ml-4" />
           </div>
         </div>
 
@@ -110,14 +106,12 @@ const Attendance = () => {
               }`}>
                 Late Arrivals
               </p>
-              <p className="text-3xl font-bold mt-2 text-orange-600">12</p>
+              <p className="text-3xl font-bold mt-2 text-orange-400">12</p>
               <div className="flex items-center mt-2">
                 <span className="text-sm text-orange-600 font-medium">-3 from yesterday</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center ml-4">
-              <FaClock className="w-6 h-6 text-orange-600" />
-            </div>
+            <FaClock className="w-4 h-4 text-orange-600 ml-4" />
           </div>
         </div>
 
@@ -134,14 +128,12 @@ const Attendance = () => {
               }`}>
                 At Risk Students
               </p>
-              <p className="text-3xl font-bold mt-2 text-red-600">8</p>
+              <p className="text-3xl font-bold mt-2 text-red-400">8</p>
               <div className="flex items-center mt-2">
                 <span className="text-sm text-red-600 font-medium">Needs attention</span>
               </div>
             </div>
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center ml-4">
-              <FaExclamationTriangle className="w-6 h-6 text-red-600" />
-            </div>
+            <FaExclamationTriangle className="w-4 h-4 text-red-600 ml-4" />
           </div>
         </div>
       </div>
@@ -299,8 +291,8 @@ const Attendance = () => {
                {/* Average Attendance Card */}
                <div className="bg-green-50 dark:bg-green-900/10 p-6 rounded-lg min-h-[120px]">
                  <div className="flex items-center space-x-3 mb-3">
-                   <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                     <FaCheck className="w-4 h-4 text-white" />
+                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                     <FaCheck className="w-3 h-3 text-white" />
                    </div>
                    <p className={`text-base font-medium transition-colors duration-200 ${
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
@@ -312,8 +304,8 @@ const Attendance = () => {
                {/* Total Absences Card */}
                <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-lg min-h-[120px]">
                  <div className="flex items-center space-x-3 mb-3">
-                   <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                     <FaTimes className="w-4 h-4 text-white" />
+                   <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                     <FaTimes className="w-3 h-3 text-white" />
                    </div>
                    <p className={`text-base font-medium transition-colors duration-200 ${
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
@@ -363,12 +355,12 @@ const Attendance = () => {
              {/* White space where chart was */}
              <div className="h-48 mb-8"></div>
              
-             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-16">
                {/* Average GPA Card */}
-               <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg">
+               <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg">
                  <div className="flex items-center space-x-3 mb-3">
-                   <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                     <FaStar className="w-4 h-4 text-white" />
+                   <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                     <FaStar className="w-3 h-3 text-white" />
                    </div>
                    <p className={`text-sm font-medium transition-colors duration-200 ${
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
@@ -378,10 +370,10 @@ const Attendance = () => {
                </div>
                
                {/* Highest Score Card */}
-               <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-lg">
+               <div className="bg-green-50 dark:bg-green-900/10 p-3 rounded-lg">
                  <div className="flex items-center space-x-3 mb-3">
-                   <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                     <FaArrowUp className="w-4 h-4 text-white" />
+                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                     <FaArrowUp className="w-3 h-3 text-white" />
                    </div>
                    <p className={`text-sm font-medium transition-colors duration-200 ${
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
@@ -391,10 +383,10 @@ const Attendance = () => {
                </div>
                
                {/* Lowest Score Card */}
-               <div className="bg-orange-50 dark:bg-orange-900/10 p-4 rounded-lg">
+               <div className="bg-orange-50 dark:bg-orange-900/10 p-3 rounded-lg">
                  <div className="flex items-center space-x-3 mb-3">
-                   <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                     <FaArrowDown className="w-4 h-4 text-white" />
+                   <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                     <FaArrowDown className="w-3 h-3 text-white" />
                    </div>
                    <p className={`text-sm font-medium transition-colors duration-200 ${
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
@@ -463,7 +455,7 @@ const Attendance = () => {
                   </p>
                 </div>
               </div>
-              <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+              <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                 Review
               </button>
             </div>

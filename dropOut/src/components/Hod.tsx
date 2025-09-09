@@ -4,6 +4,7 @@ import Teachers from './HodPages/Teachers';
 import Courses from './HodPages/Courses';
 import Reports from './HodPages/Reports';
 import Attendance from './HodPages/Attendance';
+import Exams from './HodPages/Exams';
 import Communication from './HodPages/Communication';
 import Settings from './HodPages/Settings';
 import userr from "../../src/img/userr.png";
@@ -641,6 +642,7 @@ const Hod = () => {
             {activeView === 'courses' && <Courses />}
             {activeView === 'reports' && <Reports />}
             {activeView === 'attendance' && <Attendance />}
+            {activeView === 'exams' && <Exams />}
             {activeView === 'communication' && <Communication />}
             {activeView === 'settings' && <Settings />}
           </main>

@@ -56,7 +56,7 @@ function Teacher({ onBack }: TeacherProps) {
       <div className="w-full max-w-6xl bg-white rounded-lg border border-gray-200 p-6 sm:p-8 lg:p-12 min-h-[600px] sm:min-h-[700px] flex flex-col">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8">
-          <div>
+    <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
               Add New Teacher
             </h1>

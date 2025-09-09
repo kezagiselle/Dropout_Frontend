@@ -73,7 +73,7 @@ function TeacherProfile({ onBack }: TeacherProfileProps) {
               </div>
               
               {/* Teacher Details */}
-              <div>
+    <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Robert Smith</h2>
                 <p className="text-gray-600 mb-1">Mathematical • Teacher ID: #TC-2024-0847</p>
                 <p className="text-gray-600">Westfield High School</p>

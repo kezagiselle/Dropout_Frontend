@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt, FaGraduationCap, FaExclamationTriangle, FaStickyNote, FaPlus } from 'react-icons/fa'
 import { FaHouseChimney } from "react-icons/fa6";
+import StudentProfile from './StudentProfile';
 
 interface StudentProps {
   onBack: () => void;
 }
 
 function Student({ onBack }: StudentProps) {
+  const [showStudentProfile, setShowStudentProfile] = useState(false);
   const [formData, setFormData] = useState({
     // Personal Information
     studentId: 'STU001',
@@ -66,13 +68,17 @@ function Student({ onBack }: StudentProps) {
     }));
   };
 
+  if (showStudentProfile) {
+    return <StudentProfile onBack={() => setShowStudentProfile(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-2 sm:p-4 pt-12 sm:pt-16 md:pt-20">
       {/* Main Content Card */}
       <div className="w-full max-w-6xl bg-white rounded-lg border border-gray-200 p-6 sm:p-8 lg:p-12 min-h-[600px] sm:min-h-[700px] flex flex-col">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8">
-          <div>
+    <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
               Add New Student
             </h1>
@@ -97,7 +103,7 @@ function Student({ onBack }: StudentProps) {
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
               <FaUser className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-semibold text-gray-900">Personal Information</h2>
+              <h2 className="text-lg font-bold text-gray-900">Personal Information</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -196,7 +202,7 @@ function Student({ onBack }: StudentProps) {
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
               <FaGraduationCap className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-semibold text-gray-900">Academic Information</h2>
+              <h2 className="text-lg font-bold text-gray-900">Academic Information</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -312,7 +318,7 @@ function Student({ onBack }: StudentProps) {
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
               <FaHouseChimney className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-semibold text-gray-900">Family & Social Information</h2>
+              <h2 className="text-lg font-bold text-gray-900">Family & Social Information</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -397,9 +403,12 @@ function Student({ onBack }: StudentProps) {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <FaExclamationTriangle className="text-blue-600 text-lg" />
-                <h2 className="text-lg font-semibold text-gray-900">Risk Factors Assessment</h2>
+                <h2 className="text-lg font-bold text-gray-900">Risk Factors Assessment</h2>
               </div>
-              <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
+              <button 
+                onClick={() => setShowStudentProfile(true)}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium"
+              >
                 <FaPlus className="text-sm" />
                 Add Historic
               </button>
@@ -504,7 +513,7 @@ function Student({ onBack }: StudentProps) {
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
               <FaStickyNote className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-semibold text-gray-900">Additional Notes</h2>
+              <h2 className="text-lg font-bold text-gray-900">Additional Notes</h2>
             </div>
             
             <div className="space-y-2">

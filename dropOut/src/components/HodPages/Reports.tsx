@@ -76,7 +76,7 @@ const Reports = () => {
   return (
     <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Header Section */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0">
         <div className="flex-1 min-w-0">
           <h1 className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold transition-colors duration-200 ${
             theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -90,13 +90,13 @@ const Reports = () => {
           </p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base w-full sm:w-auto">
-            <FaDownload className="w-4 h-4" />
+        <div className="flex flex-col xs:flex-row items-stretch xs:items-center space-y-2 xs:space-y-0 xs:space-x-2 sm:space-x-3 mt-2 lg:mt-0">
+          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm w-full xs:w-auto">
+            <FaDownload className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>Export</span>
           </button>
-          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base w-full sm:w-auto">
-            <FaPlus className="w-4 h-4" />
+          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm w-full xs:w-auto">
+            <FaPlus className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>Add Report</span>
           </button>
         </div>
@@ -112,9 +112,9 @@ const Reports = () => {
           Report Filters
         </h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div>
-            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+            <label className={`block text-xs sm:text-sm font-semibold mb-1 sm:mb-2 transition-colors duration-200 ${
               theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
             }`}>
               Time Period
@@ -123,8 +123,8 @@ const Reports = () => {
                 <select
                 value={timePeriod}
                 onChange={(e) => setTimePeriod(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
+                className={`w-full border rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 pr-8 sm:pr-10 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                    theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
                     : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
                 }`}
@@ -134,7 +134,7 @@ const Reports = () => {
                 <option>Last 6 Months</option>
                 <option>Last Year</option>
                 </select>
-              <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
             </div>
           </div>
 
@@ -148,8 +148,8 @@ const Reports = () => {
               <select
                 value={gradeLevel}
                 onChange={(e) => setGradeLevel(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
+                className={`w-full border rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 pr-8 sm:pr-10 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                      theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
                     : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
                 }`}
@@ -160,7 +160,7 @@ const Reports = () => {
                 <option>Grade 11</option>
                 <option>Grade 12</option>
               </select>
-              <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
                 </div>
               </div>
               
@@ -174,8 +174,8 @@ const Reports = () => {
               <select
                 value={riskLevel}
                 onChange={(e) => setRiskLevel(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
+                className={`w-full border rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 pr-8 sm:pr-10 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                      theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
                     : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
                 }`}
@@ -186,7 +186,7 @@ const Reports = () => {
                 <option>High Risk</option>
                 <option>Critical Risk</option>
               </select>
-              <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
                 </div>
               </div>
               
@@ -200,11 +200,11 @@ const Reports = () => {
                   <select
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
-                  theme === 'dark'
+                className={`w-full border rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 pr-8 sm:pr-10 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 hover:border-orange-200 appearance-none transition-colors duration-200 ${
+                      theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white hover:border-orange-400'
                     : 'border-gray-300 bg-white text-gray-900 hover:border-orange-300'
-                }`}
+                    }`}
                   >
                     <option>All Departments</option>
                     <option>Mathematics</option>
@@ -213,46 +213,46 @@ const Reports = () => {
                     <option>History</option>
                     <option>Art</option>
                   </select>
-              <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
             </div>
           </div>
                 </div>
               </div>
               
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {/* Total Students Card */}
-        <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
+        <div className={`rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
           <div className="flex items-start justify-between">
               <div>
-              <p className={`text-sm font-medium transition-colors duration-200 ${
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Total Students
               </p>
-              <p className={`text-2xl sm:text-3xl font-bold mt-1 transition-colors duration-200 ${
+              <p className={`text-xl sm:text-2xl lg:text-3xl font-bold mt-1 transition-colors duration-200 ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
               }`}>
                 1,247
               </p>
-              <div className="flex items-center mt-2">
-                <FaArrowUp className="w-3 h-3 text-green-500 mr-1" />
+              <div className="flex items-center mt-1 sm:mt-2">
+                <FaArrowUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-500 mr-1" />
                 <span className="text-xs text-green-600 font-medium">+2.5% from last month</span>
               </div>
             </div>
             <FaUsers className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-0.5" />
-          </div>
                 </div>
-
+              </div>
+              
         {/* High Risk Students Card */}
-        <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
+        <div className={`rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
           <div className="flex items-start justify-between">
-            <div>
-              <p className={`text-sm font-medium transition-colors duration-200 ${
+              <div>
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 High Risk Students
@@ -260,22 +260,22 @@ const Reports = () => {
               <p className="text-2xl sm:text-3xl font-bold mt-1 text-red-800 dark:text-red-400">
                 89
               </p>
-              <div className="flex items-center mt-2">
-                <FaArrowUp className="w-3 h-3 text-red-500 mr-1" />
+              <div className="flex items-center mt-1 sm:mt-2">
+                <FaArrowUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-500 mr-1" />
                 <span className="text-xs text-red-600 font-medium">+12% from last month</span>
-              </div>
+                </div>
             </div>
             <FaExclamationTriangle className="w-6 h-6 text-red-600 dark:text-red-400 mt-0.5" />
               </div>
             </div>
             
         {/* Dropout Rate Card */}
-        <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
+        <div className={`rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className={`text-sm font-medium transition-colors duration-200 ${
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Dropout Rate
@@ -283,8 +283,8 @@ const Reports = () => {
               <p className="text-2xl sm:text-3xl font-bold mt-1 text-yellow-800 dark:text-yellow-400">
                 7.2%
               </p>
-              <div className="flex items-center mt-2">
-                <FaArrowDown className="w-3 h-3 text-green-500 mr-1" />
+              <div className="flex items-center mt-1 sm:mt-2">
+                <FaArrowDown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-500 mr-1" />
                 <span className="text-xs text-green-600 font-medium">-0.8% from last month</span>
               </div>
             </div>
@@ -293,12 +293,12 @@ const Reports = () => {
           </div>
 
         {/* Interventions Active Card */}
-        <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
+        <div className={`rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className={`text-sm font-medium transition-colors duration-200 ${
+              <p className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Interventions Active
@@ -306,8 +306,8 @@ const Reports = () => {
               <p className="text-2xl sm:text-3xl font-bold mt-1" style={{ color: '#16a34a' }}>
                 156
               </p>
-              <div className="flex items-center mt-2">
-                <FaArrowUp className="w-3 h-3 text-green-500 mr-1" />
+              <div className="flex items-center mt-1 sm:mt-2">
+                <FaArrowUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-500 mr-1" />
                 <span className="text-xs text-green-600 font-medium">+18% from last month</span>
               </div>
             </div>
@@ -317,7 +317,7 @@ const Reports = () => {
       </div>
 
       {/* High Risk Students and Key Risk Factors Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* High Risk Students Section */}
         <div className={`rounded-lg shadow-sm transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
@@ -330,33 +330,33 @@ const Reports = () => {
             </h2>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[500px]">
+          <div className="overflow-x-auto -mx-2 sm:mx-0">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className={`border-b transition-colors duration-200 ${
                   theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
                 }`}>
-                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-2 sm:py-3 px-2 sm:px-4 font-bold text-xs sm:text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Student
                   </th>
-                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-2 sm:py-3 px-2 sm:px-4 font-bold text-xs sm:text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Grade
                   </th>
-                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-2 sm:py-3 px-2 sm:px-4 font-bold text-xs sm:text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Risk Score
                   </th>
-                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-2 sm:py-3 px-2 sm:px-4 font-bold text-xs sm:text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Last Intervention
                   </th>
-                  <th className={`text-left py-3 px-4 font-bold text-sm transition-colors duration-200 ${
+                  <th className={`text-left py-2 sm:py-3 px-2 sm:px-4 font-bold text-xs sm:text-sm transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Status
@@ -368,26 +368,26 @@ const Reports = () => {
                   <tr key={index} className={`border-b transition-colors duration-200 ${
                     theme === 'dark' ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'
                   }`}>
-                    <td className={`py-3 px-4 text-sm font-medium transition-colors duration-200 ${
+                    <td className={`py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm font-medium transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>
                       {student.name}
                     </td>
-                    <td className={`py-3 px-4 text-sm transition-colors duration-200 ${
+                    <td className={`py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                     }`}>
                       {student.grade}
                     </td>
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">
                       <span className="text-red-600 font-semibold">{student.riskScore}%</span>
                     </td>
-                    <td className={`py-3 px-4 text-sm transition-colors duration-200 ${
+                    <td className={`py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                     }`}>
                       {student.lastIntervention}
                     </td>
-                    <td className="py-3 px-4 text-sm">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(student.statusColor)}`}>
+                    <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">
+                      <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(student.statusColor)}`}>
                         {student.status}
                       </span>
                     </td>
@@ -395,11 +395,11 @@ const Reports = () => {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
-        </div>
 
         {/* Key Risk Factors Section */}
-        <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
+        <div className={`rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 transition-colors duration-200 ${
           theme === 'dark' ? 'bg-gray-800' : 'bg-white'
         }`}>
           <h2 className={`text-base sm:text-lg font-bold mb-4 transition-colors duration-200 ${
@@ -408,24 +408,24 @@ const Reports = () => {
             Key Risk Factors
           </h2>
           
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {riskFactors.map((factor, index) => (
               <div key={index}>
-                <div className="flex justify-between items-center mb-2">
-                  <span className={`text-sm font-medium transition-colors duration-200 ${
+                <div className="flex justify-between items-center mb-1 sm:mb-2">
+                  <span className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     {factor.name}
                   </span>
-                  <span className={`text-sm font-semibold transition-colors duration-200 ${
+                  <span className={`text-xs sm:text-sm font-semibold transition-colors duration-200 ${
                     theme === 'dark' ? 'text-white' : 'text-gray-900'
                   }`}>
                     {factor.percentage}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
                   <div 
-                    className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(factor.color)}`}
+                    className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${getProgressBarColor(factor.color)}`}
                     style={{ width: `${factor.percentage}%` }}
                   ></div>
                 </div>

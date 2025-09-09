@@ -317,7 +317,7 @@ const Exams = () => {
               {/* Emma Davis */}
               <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-lg">
                 <div className="flex items-center justify-between">
-                  <div>
+    <div>
                     <p className={`font-semibold text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>

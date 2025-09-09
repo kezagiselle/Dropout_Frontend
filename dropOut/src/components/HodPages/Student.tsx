@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt, FaUser, FaClipboardCheck } from 'react-icons/fa'
+import StudentForm from '../Forms/Student';
 
 
 interface Student {
@@ -18,6 +19,7 @@ const Student = () => {
   const { theme } = useTheme()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedGrade, setSelectedGrade] = useState('All Grades')
+  const [showStudentForm, setShowStudentForm] = useState(false)
   const [selectedRisk, setSelectedRisk] = useState('All Risk Levels')
   const [selectedAttendance, setSelectedAttendance] = useState('All Attendance')
   const [selectedGPA, setSelectedGPA] = useState('All GPA')
@@ -96,6 +98,10 @@ const Student = () => {
     return 'text-red-600'
   }
 
+  if (showStudentForm) {
+    return <StudentForm onBack={() => setShowStudentForm(false)} />;
+  }
+
   return (
     <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Header Section */}
@@ -131,7 +137,10 @@ const Student = () => {
             </div>
           
           {/* Add Student Button */}
-          <button className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base">
+          <button 
+            onClick={() => setShowStudentForm(true)}
+            className="bg-black hover:bg-gray-800 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2 text-sm sm:text-base"
+          >
             <span className="text-sm sm:text-base">+</span>
             <span className="hidden sm:inline">Add Student</span>
             <span className="sm:hidden">Add</span>

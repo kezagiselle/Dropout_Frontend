@@ -1,19 +1,15 @@
 import React, { useState } from 'react'
+import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt, FaGraduationCap, FaExclamationTriangle, FaStickyNote, FaPlus } from 'react-icons/fa'
 import { FaHouseChimney } from "react-icons/fa6";
-import { FaStickyNote } from "react-icons/fa";
-import { FaBook } from "react-icons/fa";
-import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt } from 'react-icons/fa';
-import EditProfile from './EditProfile';
 
-interface TeacherProps {
+interface StudentProps {
   onBack: () => void;
 }
 
-function Teacher({ onBack }: TeacherProps) {
-  const [showEditProfile, setShowEditProfile] = useState(false);
+function Student({ onBack }: StudentProps) {
   const [formData, setFormData] = useState({
     // Personal Information
-    teacherId: 'STU001',
+    studentId: 'STU001',
     firstName: 'John',
     lastName: 'Doe',
     dateOfBirth: '',
@@ -21,17 +17,31 @@ function Teacher({ onBack }: TeacherProps) {
     phoneNumber: '+1 (555) 123-4567',
     
     // Academic Information
-    studiesLevel: '',
-    diploma: '',
+    gradeLevel: '',
+    school: '',
     enrollmentDate: '',
+    currentGPA: '3.5',
+    attendanceRate: '95',
     department: '',
     
     // Family & Social Information
-    socialStatus: 'Jane Doe',
-    partnerNumber: '+1 (555) 987-6543',
-    partnerName: '',
+    guardianName: 'Jane Doe',
+    guardianPhone: '+1 (555) 987-6543',
+    guardianId: '',
     familyStructure: '',
-    homeAddress: '',
+    homeAddress: '123 Main Street, City, State, ZIP Code',
+    
+    // Risk Factors
+    riskFactors: {
+      frequentAbsences: false,
+      belowGradeLevel: false,
+      behavioralIssues: false,
+      economicHardship: false,
+      limitedFamilySupport: false,
+      peerPressureIssues: false,
+      mentalHealthConcerns: false,
+      previousSchoolTransfers: false
+    },
     
     // Additional Notes
     additionalNotes: ''
@@ -45,10 +55,16 @@ function Teacher({ onBack }: TeacherProps) {
     }));
   };
 
-  if (showEditProfile) {
-    console.log('Showing EditProfile component');
-    return <EditProfile onBack={() => setShowEditProfile(false)} />;
-  }
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      riskFactors: {
+        ...prev.riskFactors,
+        [name]: checked
+      }
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-2 sm:p-4 pt-12 sm:pt-16 md:pt-20">
@@ -58,10 +74,10 @@ function Teacher({ onBack }: TeacherProps) {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
-              Add New Teacher
+              Add New Student
             </h1>
             <p className="text-sm text-gray-600">
-              Manage Teachers Activities
+              Enter student information to monitor dropout risk and academic progress
             </p>
           </div>
           
@@ -87,12 +103,12 @@ function Teacher({ onBack }: TeacherProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Teacher ID
+                  Student ID
                 </label>
                 <input
                   type="text"
-                  name="teacherId"
-                  value={formData.teacherId}
+                  name="studentId"
+                  value={formData.studentId}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
@@ -179,27 +195,27 @@ function Teacher({ onBack }: TeacherProps) {
           {/* Academic Information Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
-              <FaBook className="text-blue-600 text-lg" />
+              <FaGraduationCap className="text-blue-600 text-lg" />
               <h2 className="text-lg font-semibold text-gray-900">Academic Information</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Studies Level
+                  Grade Level
                 </label>
                 <div className="relative">
                   <select
-                    name="studiesLevel"
-                    value={formData.studiesLevel}
+                    name="gradeLevel"
+                    value={formData.gradeLevel}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
                   >
                     <option value="">Select Grade</option>
-                    <option value="bachelor">Bachelor's Degree</option>
-                    <option value="master">Master's Degree</option>
-                    <option value="phd">PhD</option>
-                    <option value="diploma">Diploma</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    <option value="11">Grade 11</option>
+                    <option value="12">Grade 12</option>
                   </select>
                   <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
                 </div>
@@ -207,21 +223,20 @@ function Teacher({ onBack }: TeacherProps) {
               
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Diploma
+                  School
                 </label>
                 <div className="relative">
                   <select
-                    name="diploma"
-                    value={formData.diploma}
+                    name="school"
+                    value={formData.school}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
                   >
                     <option value="">Select School</option>
-                    <option value="harvard">Harvard University</option>
-                    <option value="mit">MIT</option>
-                    <option value="stanford">Stanford University</option>
-                    <option value="berkeley">UC Berkeley</option>
-                    <option value="other">Other</option>
+                    <option value="westfield">Westfield High School</option>
+                    <option value="central">Central High School</option>
+                    <option value="north">North High School</option>
+                    <option value="south">South High School</option>
                   </select>
                   <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
                 </div>
@@ -246,6 +261,32 @@ function Teacher({ onBack }: TeacherProps) {
               
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
+                  Current GPA
+                </label>
+                <input
+                  type="text"
+                  name="currentGPA"
+                  value={formData.currentGPA}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Attendance Rate (%)
+                </label>
+                <input
+                  type="text"
+                  name="attendanceRate"
+                  value={formData.attendanceRate}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
                   Department
                 </label>
                 <div className="relative">
@@ -256,12 +297,10 @@ function Teacher({ onBack }: TeacherProps) {
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
                   >
                     <option value="">Select Status</option>
-                    <option value="mathematics">Mathematics</option>
                     <option value="science">Science</option>
-                    <option value="english">English</option>
-                    <option value="history">History</option>
-                    <option value="art">Art</option>
-                    <option value="music">Music</option>
+                    <option value="arts">Arts</option>
+                    <option value="commerce">Commerce</option>
+                    <option value="technology">Technology</option>
                   </select>
                   <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
                 </div>
@@ -279,12 +318,12 @@ function Teacher({ onBack }: TeacherProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Social Status
+                  Guardian Name
                 </label>
                 <input
                   type="text"
-                  name="socialStatus"
-                  value={formData.socialStatus}
+                  name="guardianName"
+                  value={formData.guardianName}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
@@ -292,12 +331,12 @@ function Teacher({ onBack }: TeacherProps) {
               
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Partner's Number
+                  Guardian Phone
                 </label>
                 <input
                   type="tel"
-                  name="partnerNumber"
-                  value={formData.partnerNumber}
+                  name="guardianPhone"
+                  value={formData.guardianPhone}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
@@ -305,12 +344,12 @@ function Teacher({ onBack }: TeacherProps) {
               
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Partner's Name
+                  Guardian ID
                 </label>
                 <input
                   type="text"
-                  name="partnerName"
-                  value={formData.partnerName}
+                  name="guardianId"
+                  value={formData.guardianId}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
@@ -346,10 +385,117 @@ function Teacher({ onBack }: TeacherProps) {
                   name="homeAddress"
                   value={formData.homeAddress}
                   onChange={handleInputChange}
-                  placeholder="123 Main Street, City, State, ZIP Code"
                   rows={3}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 resize-none"
                 />
+              </div>
+            </div>
+          </div>
+
+          {/* Risk Factors Assessment Section */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <FaExclamationTriangle className="text-blue-600 text-lg" />
+                <h2 className="text-lg font-semibold text-gray-900">Risk Factors Assessment</h2>
+              </div>
+              <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
+                <FaPlus className="text-sm" />
+                Add Historic
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="frequentAbsences"
+                    checked={formData.riskFactors.frequentAbsences}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Frequent absences (&gt;10 days/semester)</span>
+                </label>
+                
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="belowGradeLevel"
+                    checked={formData.riskFactors.belowGradeLevel}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Below grade level performance</span>
+                </label>
+                
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="behavioralIssues"
+                    checked={formData.riskFactors.behavioralIssues}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Behavioral issues</span>
+                </label>
+                
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="economicHardship"
+                    checked={formData.riskFactors.economicHardship}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Economic hardship</span>
+                </label>
+              </div>
+              
+              <div className="space-y-4">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="limitedFamilySupport"
+                    checked={formData.riskFactors.limitedFamilySupport}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Limited family support</span>
+                </label>
+                
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="peerPressureIssues"
+                    checked={formData.riskFactors.peerPressureIssues}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Peer pressure issues</span>
+                </label>
+                
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="mentalHealthConcerns"
+                    checked={formData.riskFactors.mentalHealthConcerns}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Mental health concerns</span>
+                </label>
+                
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    name="previousSchoolTransfers"
+                    checked={formData.riskFactors.previousSchoolTransfers}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">Previous school transfers</span>
+                </label>
               </div>
             </div>
           </div>
@@ -366,7 +512,7 @@ function Teacher({ onBack }: TeacherProps) {
                 name="additionalNotes"
                 value={formData.additionalNotes}
                 onChange={handleInputChange}
-                placeholder="Enter any additional information about the teacher's situation, special circumstances, or intervention recommendations..."
+                placeholder="Enter any additional information about the student's situation, special circumstances, or intervention recommendations..."
                 rows={4}
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 resize-none"
               />
@@ -379,17 +525,8 @@ function Teacher({ onBack }: TeacherProps) {
           <button className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium w-full sm:w-auto">
             Cancel
           </button>
-          <button 
-            onClick={() => {
-              console.log('Edit Profile button clicked');
-              setShowEditProfile(true);
-            }}
-            className="px-4 sm:px-6 py-2 sm:py-3 border border-orange-500 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors duration-200 text-sm font-medium w-full sm:w-auto"
-          >
-            Edit Profile
-          </button>
           <button className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium w-full sm:w-auto">
-            Save Teacher
+            Approve
           </button>
         </div>
       </div>
@@ -397,4 +534,4 @@ function Teacher({ onBack }: TeacherProps) {
   )
 }
 
-export default Teacher
+export default Student

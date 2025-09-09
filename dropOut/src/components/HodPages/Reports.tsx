@@ -112,8 +112,8 @@ const Reports = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+              theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
             }`}>
               Time Period
             </label>
@@ -137,8 +137,8 @@ const Reports = () => {
           </div>
 
           <div>
-            <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+              theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
             }`}>
               Grade Level
             </label>
@@ -163,8 +163,8 @@ const Reports = () => {
           </div>
 
           <div>
-            <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+              theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
             }`}>
               Risk Level
             </label>
@@ -189,8 +189,8 @@ const Reports = () => {
           </div>
 
           <div>
-            <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+            <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
+              theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
             }`}>
               Department
             </label>
@@ -278,9 +278,7 @@ const Reports = () => {
               }`}>
                 Dropout Rate
               </p>
-              <p className={`text-2xl sm:text-3xl font-bold mt-1 transition-colors duration-200 ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>
+              <p className="text-2xl sm:text-3xl font-bold mt-1 text-yellow-800 dark:text-yellow-400">
                 7.2%
               </p>
               <div className="flex items-center mt-2">
@@ -303,9 +301,7 @@ const Reports = () => {
               }`}>
                 Interventions Active
               </p>
-              <p className={`text-2xl sm:text-3xl font-bold mt-1 transition-colors duration-200 ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>
+              <p className="text-2xl sm:text-3xl font-bold mt-1 text-green-900 dark:text-green-300">
                 156
               </p>
               <div className="flex items-center mt-2">
@@ -318,119 +314,122 @@ const Reports = () => {
         </div>
       </div>
 
-      {/* High Risk Students Section */}
-      <div className={`rounded-lg shadow-sm transition-colors duration-200 ${
-        theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-      }`}>
-        <div className="px-4 sm:px-6 py-4">
-          <h2 className={`text-base sm:text-lg font-semibold mb-4 transition-colors duration-200 ${
+      {/* High Risk Students and Key Risk Factors Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* High Risk Students Section */}
+        <div className={`rounded-lg shadow-sm transition-colors duration-200 ${
+          theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+        }`}>
+          <div className="px-4 sm:px-6 py-4">
+            <h2 className={`text-base sm:text-lg font-bold mb-4 transition-colors duration-200 ${
+              theme === 'dark' ? 'text-white' : 'text-gray-900'
+            }`}>
+              High Risk Students
+            </h2>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[500px]">
+              <thead>
+                <tr className={`border-b transition-colors duration-200 ${
+                  theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                }`}>
+                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Student
+                  </th>
+                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Grade
+                  </th>
+                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Risk Score
+                  </th>
+                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Last Intervention
+                  </th>
+                  <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {highRiskStudents.map((student, index) => (
+                  <tr key={index} className={`border-b transition-colors duration-200 ${
+                    theme === 'dark' ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'
+                  }`}>
+                    <td className={`py-3 px-4 text-sm font-medium transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      {student.name}
+                    </td>
+                    <td className={`py-3 px-4 text-sm transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                    }`}>
+                      {student.grade}
+                    </td>
+                    <td className="py-3 px-4 text-sm">
+                      <span className="text-red-600 font-semibold">{student.riskScore}%</span>
+                    </td>
+                    <td className={`py-3 px-4 text-sm transition-colors duration-200 ${
+                      theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                    }`}>
+                      {student.lastIntervention}
+                    </td>
+                    <td className="py-3 px-4 text-sm">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(student.statusColor)}`}>
+                        {student.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Key Risk Factors Section */}
+        <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
+          theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+        }`}>
+          <h2 className={`text-base sm:text-lg font-bold mb-4 transition-colors duration-200 ${
             theme === 'dark' ? 'text-white' : 'text-gray-900'
           }`}>
-            High Risk Students
+            Key Risk Factors
           </h2>
-        </div>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px]">
-            <thead>
-              <tr className={`border-b transition-colors duration-200 ${
-                theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
-              }`}>
-                <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Student
-                </th>
-                <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Grade
-                </th>
-                <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Risk Score
-                </th>
-                <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Last Intervention
-                </th>
-                <th className={`text-left py-3 px-4 font-semibold text-sm transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {highRiskStudents.map((student, index) => (
-                <tr key={index} className={`border-b transition-colors duration-200 ${
-                  theme === 'dark' ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'
-                }`}>
-                  <td className={`py-3 px-4 text-sm font-medium transition-colors duration-200 ${
+          
+          <div className="space-y-4">
+            {riskFactors.map((factor, index) => (
+              <div key={index}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`text-sm font-medium transition-colors duration-200 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    {factor.name}
+                  </span>
+                  <span className={`text-sm font-semibold transition-colors duration-200 ${
                     theme === 'dark' ? 'text-white' : 'text-gray-900'
                   }`}>
-                    {student.name}
-                  </td>
-                  <td className={`py-3 px-4 text-sm transition-colors duration-200 ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
-                    {student.grade}
-                  </td>
-                  <td className="py-3 px-4 text-sm">
-                    <span className="text-red-600 font-semibold">{student.riskScore}%</span>
-                  </td>
-                  <td className={`py-3 px-4 text-sm transition-colors duration-200 ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
-                    {student.lastIntervention}
-                  </td>
-                  <td className="py-3 px-4 text-sm">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(student.statusColor)}`}>
-                      {student.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Key Risk Factors Section */}
-      <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
-        theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-      }`}>
-        <h2 className={`text-base sm:text-lg font-semibold mb-4 transition-colors duration-200 ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}>
-          Key Risk Factors
-        </h2>
-        
-        <div className="space-y-4">
-          {riskFactors.map((factor, index) => (
-            <div key={index}>
-              <div className="flex justify-between items-center mb-2">
-                <span className={`text-sm font-medium transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  {factor.name}
-                </span>
-                <span className={`text-sm font-semibold transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>
-                  {factor.percentage}%
-                </span>
+                    {factor.percentage}%
+                  </span>
+                </div>
+                <div className={`w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 transition-colors duration-200`}>
+                  <div 
+                    className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(factor.color)}`}
+                    style={{ width: `${factor.percentage}%` }}
+                  ></div>
+                </div>
               </div>
-              <div className={`w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 transition-colors duration-200`}>
-                <div 
-                  className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(factor.color)}`}
-                  style={{ width: `${factor.percentage}%` }}
-                ></div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

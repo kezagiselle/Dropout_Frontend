@@ -37,11 +37,11 @@ const Settings = () => {
           <div className={`rounded-lg border transition-colors duration-200 ${
             theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
           }`}>
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-6">
               <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <FaUser className="text-blue-600 text-xl" />
-                <h2 className={`text-xl font-semibold transition-colors duration-200 ${
+                <h2 className={`text-xl font-bold transition-colors duration-200 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>
                   Profile Settings
@@ -84,7 +84,7 @@ const Settings = () => {
               {/* Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     First Name
@@ -101,7 +101,7 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Last Name
@@ -118,7 +118,7 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Email
@@ -135,7 +135,7 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Phone
@@ -152,7 +152,7 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Current Password
@@ -169,7 +169,7 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     New Password
@@ -192,13 +192,11 @@ const Settings = () => {
           <div className={`rounded-lg border transition-colors duration-200 ${
             theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
           }`}>
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <FaCog className="text-white text-sm" />
-                </div>
+                <FaCog className="text-blue-600 text-xl" />
                 <div>
-                  <h2 className={`text-xl font-semibold transition-colors duration-200 ${
+                  <h2 className={`text-xl font-bold transition-colors duration-200 ${
                     theme === 'dark' ? 'text-white' : 'text-gray-900'
                   }`}>
                     System Preferences
@@ -215,7 +213,7 @@ const Settings = () => {
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Timezone
@@ -242,7 +240,7 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Language
@@ -269,7 +267,7 @@ const Settings = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className={`block text-sm font-medium mb-3 transition-colors duration-200 ${
+                  <label className={`block text-sm font-semibold mb-3 transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Theme
@@ -282,7 +280,7 @@ const Settings = () => {
                         value="light"
                         checked={selectedTheme === 'light'}
                         onChange={(e) => setSelectedTheme(e.target.value)}
-                        className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500"
+                        className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500 accent-orange-600"
                       />
                       <span className={`text-sm transition-colors duration-200 ${
                         theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
@@ -297,7 +295,7 @@ const Settings = () => {
                         value="dark"
                         checked={selectedTheme === 'dark'}
                         onChange={(e) => setSelectedTheme(e.target.value)}
-                        className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500"
+                        className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500 accent-orange-600"
                       />
                       <span className={`text-sm transition-colors duration-200 ${
                         theme === 'dark' ? 'text-gray-300' : 'text-gray-700'

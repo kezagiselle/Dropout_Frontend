@@ -10,7 +10,6 @@ import TeacherForm from './Forms/Teacher';
 import StudentForm from './Forms/Student';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import userr from "../../src/img/userr.png";
-import das from "../../src/img/das.png";
 import pe1 from "../../src/img/pe1.png";
 import pe2 from "../../src/img/pe2.png";
 import pe3 from "../../src/img/pe3.png";
@@ -124,11 +123,17 @@ const Hod = () => {
             {/* Left Side - School Selector and Search */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 lg:space-x-6 w-full lg:w-auto">
               {/* School Selector */}
-              <div className="flex items-center space-x-2 cursor-pointer bg-gray-50 hover:bg-gray-100 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 transition-colors">
+              <div className={`flex items-center space-x-2 cursor-pointer px-3 sm:px-4 py-2 rounded-lg border transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
+                  : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+              }`}>
                 <h1 className={`text-sm sm:text-base lg:text-lg font-semibold transition-colors duration-200 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>Westfield High School</h1>
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -153,35 +158,49 @@ const Hod = () => {
             {/* Right Side - Date Picker, Notifications and User Profile */}
             <div className="flex items-center space-x-2 sm:space-x-4">
               {/* Date Range Picker - Hidden on mobile */}
-              <div className="hidden sm:flex items-center space-x-2 cursor-pointer bg-gray-50 hover:bg-gray-100 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 transition-colors">
+              <div className={`hidden sm:flex items-center space-x-2 cursor-pointer px-3 sm:px-4 py-2 rounded-lg border transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
+                  : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+              }`}>
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>Jan 15 - Feb 15, 2024</span>
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
 
               {/* Notifications */}
               <div className="relative cursor-pointer">
-                <IoIosNotifications className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+                <IoIosNotifications className={`w-5 h-5 sm:w-6 sm:h-6 transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                }`} />
                 <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-orange-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
                   3
                 </div>
               </div>
 
               {/* User Profile */}
-              <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer bg-gray-50 hover:bg-gray-100 px-2 sm:px-3 py-2 rounded-lg border border-gray-200 transition-colors">
+              <div className={`flex items-center space-x-2 sm:space-x-3 cursor-pointer px-2 sm:px-3 py-2 rounded-lg border transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
+                  : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+              }`}>
                 <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center overflow-hidden">
                   <img src={userr} alt="Sarah Wilson" className="w-full h-full object-cover rounded-full" />
                 </div>
                 <span className={`text-xs sm:text-sm font-medium transition-colors duration-200 hidden sm:block ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>Sarah Wilson</span>
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-4 h-4 sm:w-5 sm:h-5 hidden sm:block transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -595,14 +614,22 @@ const Hod = () => {
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-200 pt-4 sm:pt-6">
+                      <div className={`border-t pt-4 sm:pt-6 transition-colors duration-200 ${
+                        theme === 'dark' ? 'border-gray-600' : 'border-gray-200'
+                      }`}>
                         <h4 className={`text-sm sm:text-base font-bold mb-3 sm:mb-4 transition-colors duration-200 ${
                           theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                         }`}>Free Periods Now</h4>
                         <div className="space-y-1 sm:space-y-2">
-                          <p className="text-sm sm:text-base text-gray-600">Ms. Rodriguez</p>
-                          <p className="text-sm sm:text-base text-gray-600">Mr. Thompson</p>
-                          <p className="text-sm sm:text-base text-gray-600">Dr. Kim</p>
+                          <p className={`text-sm sm:text-base transition-colors duration-200 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                          }`}>Ms. Rodriguez</p>
+                          <p className={`text-sm sm:text-base transition-colors duration-200 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                          }`}>Mr. Thompson</p>
+                          <p className={`text-sm sm:text-base transition-colors duration-200 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                          }`}>Dr. Kim</p>
                         </div>
                       </div>
                       </div>
@@ -660,8 +687,12 @@ const Hod = () => {
                             <img src={pe1} alt="Alex Johnson" className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Alex Johnson</p>
-                            <p className="text-xs text-gray-600">Grade 10A</p>
+                            <p className={`text-xs sm:text-sm font-medium truncate transition-colors duration-200 ${
+                              theme === 'dark' ? 'text-white' : 'text-gray-900'
+                            }`}>Alex Johnson</p>
+                            <p className={`text-xs transition-colors duration-200 ${
+                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                            }`}>Grade 10A</p>
                           </div>
                           <span className="px-2 sm:px-3 py-1 bg-orange-400 text-white rounded-full text-xs font-medium">High Risk</span>
                         </div>
@@ -671,8 +702,12 @@ const Hod = () => {
                             <img src={pe2} alt="Emma Davis" className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1">
-                            <p className="font-medium text-gray-900">Emma Davis</p>
-                            <p className="text-sm text-gray-600">Grade 9B</p>
+                            <p className={`font-medium transition-colors duration-200 ${
+                              theme === 'dark' ? 'text-white' : 'text-gray-900'
+                            }`}>Emma Davis</p>
+                            <p className={`text-sm transition-colors duration-200 ${
+                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                            }`}>Grade 9B</p>
                           </div>
                           <span className="px-3 py-1 bg-orange-400 text-white rounded-full text-xs font-medium">Med Risk</span>
                         </div>
@@ -682,14 +717,22 @@ const Hod = () => {
                             <img src={pe3} alt="Michael Chen" className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1">
-                            <p className="font-medium text-gray-900">Michael Chen</p>
-                            <p className="text-sm text-gray-600">Grade 11A</p>
+                            <p className={`font-medium transition-colors duration-200 ${
+                              theme === 'dark' ? 'text-white' : 'text-gray-900'
+                            }`}>Michael Chen</p>
+                            <p className={`text-sm transition-colors duration-200 ${
+                              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                            }`}>Grade 11A</p>
                           </div>
                           <span className="px-3 py-1 bg-orange-400 text-white rounded-full text-xs font-medium">High Risk</span>
                         </div>
                       </div>
 
-                      <button className="w-full mt-4 px-4 py-2 bg-blue-300 text-white rounded-lg hover:bg-blue-400 transition-colors text-sm font-medium">
+                      <button className={`w-full mt-4 px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium ${
+                        theme === 'dark' 
+                          ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                          : 'bg-blue-300 text-white hover:bg-blue-400'
+                      }`}>
                         View All Flagged Students
                       </button>
                     </div>

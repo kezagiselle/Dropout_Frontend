@@ -5,10 +5,9 @@ import pe3 from "../../img/pe3.png";
 import Profile from '../Forms/Profile';
 
 const Settings = () => {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const [timezone, setTimezone] = useState('UTC-5');
   const [language, setLanguage] = useState('English');
-  const [selectedTheme, setSelectedTheme] = useState('light');
   const [showProfile, setShowProfile] = useState(false);
 
   if (showProfile) {
@@ -287,8 +286,12 @@ const Settings = () => {
                         type="radio"
                         name="theme"
                         value="light"
-                        checked={selectedTheme === 'light'}
-                        onChange={(e) => setSelectedTheme(e.target.value)}
+                        checked={theme === 'light'}
+                        onChange={() => {
+                          if (theme === 'dark') {
+                            toggleTheme();
+                          }
+                        }}
                         className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500 accent-orange-600"
                       />
                       <span className={`text-sm transition-colors duration-200 ${
@@ -302,8 +305,12 @@ const Settings = () => {
                         type="radio"
                         name="theme"
                         value="dark"
-                        checked={selectedTheme === 'dark'}
-                        onChange={(e) => setSelectedTheme(e.target.value)}
+                        checked={theme === 'dark'}
+                        onChange={() => {
+                          if (theme === 'light') {
+                            toggleTheme();
+                          }
+                        }}
                         className="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500 accent-orange-600"
                       />
                       <span className={`text-sm transition-colors duration-200 ${

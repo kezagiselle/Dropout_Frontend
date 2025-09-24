@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTheme } from '../Hod'
-import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
-import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt, FaUser, FaClipboardCheck, FaChartLine, FaFile, FaTimes, FaFire, FaSync, FaBook } from 'react-icons/fa'
+import { IoIosPeople } from 'react-icons/io'
+import { FaSearch, FaDownload, FaFilter, FaPlus, FaBook, FaFileAlt, FaFire, FaSync } from 'react-icons/fa'
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia'
 import { MdCancel } from 'react-icons/md'
 import Course from '../Forms/Course'
@@ -273,7 +273,9 @@ const Courses = () => {
             </h2>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none sm:w-64">
-                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <FaSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+                }`} />
                 <input
                   type="text"
                   placeholder="Search courses..."
@@ -300,10 +302,6 @@ const Courses = () => {
             <thead className="bg-orange-500 transition-colors duration-200">
               <tr>
                 <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
-                  <span className="hidden sm:inline">Course Code</span>
-                  <span className="sm:hidden">Code</span>
-                </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
                   <span className="hidden sm:inline">Course Name</span>
                   <span className="sm:hidden">Course</span>
                 </th>
@@ -312,9 +310,6 @@ const Courses = () => {
                 </th>
                 <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
                   Teacher
-                </th>
-                <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
-                  Section
                 </th>
                 <th className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold uppercase tracking-wider text-white !important" style={{color: 'white'}}>
                   <span className="hidden sm:inline">Credit Hours</span>
@@ -339,11 +334,6 @@ const Courses = () => {
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-white' : 'text-gray-900'
-                    }`}>{course.courseCode}</div>
-                  </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className={`text-xs sm:text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>{course.courseName}</div>
@@ -357,11 +347,6 @@ const Courses = () => {
                     <div className={`text-xs sm:text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>{course.teacher}</div>
-                  </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
-                    <div className={`text-xs sm:text-sm transition-colors duration-200 ${
-                      theme === 'dark' ? 'text-white' : 'text-gray-900'
-                    }`}>{course.section}</div>
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className={`text-xs sm:text-sm transition-colors duration-200 ${
@@ -464,7 +449,9 @@ const Courses = () => {
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
                   <td className="px-0.5 sm:px-1 py-1 sm:py-2">
-                    <div className="w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex flex-col items-center justify-center bg-gray-200 text-gray-900">
+                    <div className={`w-full px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-center min-h-[50px] sm:min-h-[60px] flex flex-col items-center justify-center transition-colors duration-200 ${
+                      theme === 'dark' ? 'bg-gray-600 text-white' : 'bg-gray-200 text-gray-900'
+                    }`}>
                       <div className="text-xs sm:text-sm font-bold">{slot.period}</div>
                       <div className="text-xs font-semibold mt-1 hidden sm:block">{slot.time}</div>
                     </div>

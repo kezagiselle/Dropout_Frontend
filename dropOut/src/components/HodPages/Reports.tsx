@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaDownload, FaPlus, FaUsers, FaExclamationTriangle, FaChartLine, FaHeart, FaChevronDown, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaDownload, FaPlus, FaUsers, FaExclamationTriangle, FaChartLine, FaChevronDown, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { FaHandHoldingHeart } from "react-icons/fa6";
 import { useTheme } from '../Hod';
 import Report from '../Forms/Report';
@@ -143,7 +143,9 @@ const Reports = () => {
                 <option>Last 6 Months</option>
                 <option>Last Year</option>
                 </select>
-              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className={`absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-xs transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+              }`} />
             </div>
           </div>
 
@@ -169,7 +171,9 @@ const Reports = () => {
                 <option>Grade 11</option>
                 <option>Grade 12</option>
               </select>
-              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className={`absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-xs transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+              }`} />
                 </div>
               </div>
               
@@ -195,7 +199,9 @@ const Reports = () => {
                 <option>High Risk</option>
                 <option>Critical Risk</option>
               </select>
-              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className={`absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-xs transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+              }`} />
                 </div>
               </div>
               
@@ -222,7 +228,9 @@ const Reports = () => {
                     <option>History</option>
                     <option>Art</option>
                   </select>
-              <FaChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
+              <FaChevronDown className={`absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-xs transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+              }`} />
             </div>
           </div>
                 </div>

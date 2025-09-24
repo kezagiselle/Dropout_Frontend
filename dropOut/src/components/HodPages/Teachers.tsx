@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTheme } from '../Hod'
-import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
+import { IoIosPeople, IoIosWarning, IoIosTime } from 'react-icons/io'
 import { FaSearch, FaDownload, FaFilter } from 'react-icons/fa'
 import { FaClipboardCheck } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
@@ -92,7 +92,9 @@ const Teachers = () => {
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-4">
           {/* Search Bar */}
           <div className="relative flex-1 sm:flex-none sm:w-64 lg:w-80">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
+            <FaSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 transition-colors duration-200 ${
+              theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+            }`} />
             <input
               type="text"
               placeholder="Search Teacher"
@@ -202,7 +204,9 @@ const Teachers = () => {
                 Substitutes Needed
               </p>
               <p className="text-xl sm:text-2xl font-bold mt-1 text-red-600">2</p>
-              <p className="text-xs text-gray-500 mt-1">8 registrations, 4 timetable</p>
+              <p className={`text-xs mt-1 transition-colors duration-200 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+              }`}>8 registrations, 4 timetable</p>
             </div>
             <IoIosTime className="w-6 h-6 text-red-600 ml-4" />
           </div>
@@ -415,13 +419,21 @@ const Teachers = () => {
           </div>
           <div>
             <nav className="flex items-center justify-center sm:justify-start space-x-1 sm:space-x-2">
-              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+              <button className={`px-2 sm:px-3 py-1 text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'text-gray-400 hover:text-gray-200' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}>
                 &lt; Previous
               </button>
               <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-orange-400 text-white rounded-md font-medium">
                  1
                </button>
-              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+              <button className={`px-2 sm:px-3 py-1 text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 ${
+                theme === 'dark' 
+                  ? 'text-gray-400 hover:text-gray-200' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}>
                 Next &gt;
               </button>
             </nav>

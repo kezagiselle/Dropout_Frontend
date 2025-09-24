@@ -1,6 +1,5 @@
 import landing from "../../src/img/landing.png";
 import landing22 from "../../src/img/landing22.png";
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaGraduationCap, FaBrain, FaClipboardList, FaChartLine, FaComments, FaStar, FaEnvelope, FaPhone, FaWhatsapp, FaMapMarkerAlt, FaTwitter, FaLinkedin, FaInstagram, FaFacebook } from 'react-icons/fa';
 

@@ -6,34 +6,20 @@ interface CourseProps {
 }
 
 function Course({ onBack }: CourseProps) {
-  const [selectedCourse, setSelectedCourse] = useState('');
-  const [selectedTeacher, setSelectedTeacher] = useState('');
+  const [formData, setFormData] = useState({
+    courseName: '',
+    credit: '',
+    grade: '',
+    description: ''
+  });
 
-  const courses = [
-    'Mathematics',
-    'Physics',
-    'Chemistry',
-    'Biology',
-    'English',
-    'History',
-    'Geography',
-    'Computer Science',
-    'Art',
-    'Music'
-  ];
-
-  const teachers = [
-    'Mr. Johnson',
-    'Ms. Wilson',
-    'Dr. Smith',
-    'Mr. Davis',
-    'Ms. Rodriguez',
-    'Dr. Brown',
-    'Mr. Thompson',
-    'Ms. Garcia',
-    'Dr. Lee',
-    'Mr. Anderson'
-  ];
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-2 sm:p-4 pt-12 sm:pt-16 md:pt-20">
@@ -70,47 +56,75 @@ function Course({ onBack }: CourseProps) {
               </h2>
             </div>
 
-            {/* Course Selection */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Choose the Course
-              </label>
-              <div className="relative">
-                <select
-                  value={selectedCourse}
-                  onChange={(e) => setSelectedCourse(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
-                >
-                  <option value="">Select a course</option>
-                  {courses.map((course) => (
-                    <option key={course} value={course}>
-                      {course}
-                    </option>
-                  ))}
-                </select>
-                <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            {/* Form Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Course Name */}
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Course Name
+                </label>
+                <input
+                  type="text"
+                  name="courseName"
+                  value={formData.courseName}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
+                  placeholder="Enter course name"
+                />
               </div>
-            </div>
 
-            {/* Teacher Selection */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Choose the Teacher
-              </label>
-              <div className="relative">
-                <select
-                  value={selectedTeacher}
-                  onChange={(e) => setSelectedTeacher(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
-                >
-                  <option value="">Select a Teacher</option>
-                  {teachers.map((teacher) => (
-                    <option key={teacher} value={teacher}>
-                      {teacher}
-                    </option>
-                  ))}
-                </select>
-                <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              {/* Credit Hours */}
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Credit Hours
+                </label>
+                <input
+                  type="number"
+                  name="credit"
+                  value={formData.credit}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
+                  placeholder="Enter credit hours"
+                  min="1"
+                  max="6"
+                />
+              </div>
+
+              {/* Grade Level */}
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Grade Level
+                </label>
+                <div className="relative">
+                  <select
+                    name="grade"
+                    value={formData.grade}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
+                  >
+                    <option value="">Select grade level</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    <option value="11">Grade 11</option>
+                    <option value="12">Grade 12</option>
+                  </select>
+                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="space-y-2 md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows={4}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 resize-none"
+                  placeholder="Enter course description"
+                />
               </div>
             </div>
 

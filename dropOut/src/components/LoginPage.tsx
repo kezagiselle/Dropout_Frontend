@@ -8,11 +8,7 @@ interface LoginForm {
   email: string;
   password: string;
   remember: boolean;
-  isStudent: boolean;
-  isHod: boolean;
-  isGovernment: boolean;
-  isTeacher: boolean;
-  isParent: boolean;
+  userType: string;
 }
 
 const LoginPage: React.FC = () => {
@@ -20,42 +16,27 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
     remember: false,
-    isStudent: false,
-    isHod: false,
-    isGovernment: false,
-    isTeacher: false,
-    isParent: false,
+    userType: "",
   });
 
   const navigate = useNavigate();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+    const { name, value, type } = e.target;
     
     if (type === "checkbox") {
-                   // For user type checkboxes, ensure only one can be selected
-             if (["isStudent", "isHod", "isGovernment", "isTeacher", "isParent"].includes(name)) {
-               setFormData((prev) => ({
-                 ...prev,
-                 isStudent: name === "isStudent" ? checked : false,
-                 isHod: name === "isHod" ? checked : false,
-                 isGovernment: name === "isGovernment" ? checked : false,
-                 isTeacher: name === "isTeacher" ? checked : false,
-                 isParent: name === "isParent" ? checked : false,
-               }));
-             } else {
-        // For other checkboxes like "remember me"
-        setFormData((prev) => ({
-          ...prev,
-          [name]: checked,
-        }));
-      }
+      // For checkboxes like "remember me"
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
     } else {
-      // For text inputs
-    setFormData((prev) => ({
-      ...prev,
+      // For text inputs and select dropdowns
+      setFormData((prev) => ({
+        ...prev,
         [name]: value,
-    }));
+      }));
     }
   };
 
@@ -64,7 +45,7 @@ const LoginPage: React.FC = () => {
     console.log("Form submitted:", formData);
     
     // Temporary login functionality
-    if (formData.isHod) {
+    if (formData.userType === "hod") {
       // For temporary testing - allow any email/password when HoD is selected
       if (formData.email && formData.password) {
         console.log("Temporary HoD login successful - navigating to dashboard");
@@ -150,6 +131,49 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
+          {/* User Type Selection */}
+          <div className="space-y-3">
+            {/* Temporary Login Message */}
+            {formData.userType === "hod" && (
+              <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                <p className="text-sm text-orange-800">
+                  <strong>Temporary Login:</strong> As a HoD, you can use any email and password to access the dashboard for testing purposes.
+                </p>
+              </div>
+            )}
+            
+            <div>
+              <div className="relative">
+                <select
+                  name="userType"
+                  value={formData.userType}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200 appearance-none bg-white"
+                  required
+                >
+                  <option value="" disabled>Select your role</option>
+                  <option value="student">Student</option>
+                  <option value="hod">Head of Department (HoD)</option>
+                  <option value="government">Government</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="parent">Parent</option>
+                </select>
+                <svg
+                  className="absolute right-3 top-3.5 h-5 w-5 text-gray-500 pointer-events-none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
           {/* Remember Me & Forgot Password */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm space-y-2 sm:space-y-0">
             <label className="flex items-center space-x-2">
@@ -165,71 +189,6 @@ const LoginPage: React.FC = () => {
                          <Link to="/reset-password" className="text-black font-bold hover:text-gray-800 transition-colors">
                Forgot Password?
              </Link>
-          </div>
-
-          {/* User Type Checkboxes */}
-          <div className="space-y-3">
-            {/* Temporary Login Message */}
-            {formData.isHod && (
-              <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                <p className="text-sm text-orange-800">
-                  <strong>Temporary Login:</strong> As a HoD, you can use any email and password to access the dashboard for testing purposes.
-                </p>
-              </div>
-            )}
-            
-                               <div className="grid grid-cols-2 gap-3">
-                     <label className="flex items-center space-x-2 text-sm">
-                       <input
-                         type="checkbox"
-                         name="isStudent"
-                         checked={formData.isStudent}
-                         onChange={handleChange}
-                         className="accent-orange-400 rounded"
-                       />
-                       <span className="text-gray-700">Student</span>
-                     </label>
-                     <label className="flex items-center space-x-2 text-sm">
-                       <input
-                         type="checkbox"
-                         name="isHod"
-                         checked={formData.isHod}
-                         onChange={handleChange}
-                         className="accent-orange-400 rounded"
-                       />
-                       <span className="text-gray-700">HoD</span>
-                     </label>
-                     <label className="flex items-center space-x-2 text-sm">
-                       <input
-                         type="checkbox"
-                         name="isGovernment"
-                         checked={formData.isGovernment}
-                         onChange={handleChange}
-                         className="accent-orange-400 rounded"
-                       />
-                       <span className="text-gray-700">Government</span>
-                     </label>
-                     <label className="flex items-center space-x-2 text-sm">
-                       <input
-                         type="checkbox"
-                         name="isTeacher"
-                         checked={formData.isTeacher}
-                         onChange={handleChange}
-                         className="accent-orange-400 rounded"
-                       />
-                       <span className="text-gray-700">Teacher</span>
-                     </label>
-                     <label className="flex items-center space-x-2 text-sm">
-                       <input
-                         type="checkbox"
-                         name="isParent"
-                         checked={formData.isParent}
-                         onChange={handleChange}
-                         className="accent-orange-400 rounded"
-                       />
-                       <span className="text-gray-700">Parent</span>
-                     </label>
-                   </div>
           </div>
 
           {/* Login Button */}

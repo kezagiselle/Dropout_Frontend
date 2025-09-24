@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FaArrowLeft, FaCalendarAlt, FaUser, FaPrint, FaPlus, FaExclamationTriangle, FaBook, FaExclamationTriangle as FaWarning } from 'react-icons/fa'
+import { FaArrowLeft, FaUser, FaPrint, FaPlus, FaExclamationTriangle, FaBook, FaExclamationTriangle as FaWarning } from 'react-icons/fa'
 import { FaHouse } from 'react-icons/fa6'
 import StudentRepo from './StudentRepo';
 
@@ -64,14 +64,6 @@ function StudentProfile({ onBack }: StudentProfileProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
-                <FaCalendarAlt className="text-sm" />
-                Schedule Meeting
-              </button>
-              <button className="bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
-                <FaUser className="text-sm" />
-                Assign a Mentor
-              </button>
               <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
                 <FaPrint className="text-sm" />
                 Print Report

@@ -3,6 +3,7 @@ import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt, FaUser, FaClipboardCheck } from 'react-icons/fa'
 import StudentForm from '../Forms/Student';
+import StudentProfile from '../Forms/StudentProfile';
 
 
 interface Student {
@@ -20,6 +21,8 @@ const Student = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedGrade, setSelectedGrade] = useState('All Grades')
   const [showStudentForm, setShowStudentForm] = useState(false)
+  const [showStudentProfile, setShowStudentProfile] = useState(false)
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [selectedRisk, setSelectedRisk] = useState('All Risk Levels')
   const [selectedAttendance, setSelectedAttendance] = useState('All Attendance')
   const [selectedGPA, setSelectedGPA] = useState('All GPA')
@@ -98,8 +101,17 @@ const Student = () => {
     return 'text-red-600'
   }
 
+  const handleViewProfile = (student: Student) => {
+    setSelectedStudent(student)
+    setShowStudentProfile(true)
+  }
+
   if (showStudentForm) {
     return <StudentForm onBack={() => setShowStudentForm(false)} />;
+  }
+
+  if (showStudentProfile && selectedStudent) {
+    return <StudentProfile onBack={() => setShowStudentProfile(false)} />;
   }
 
   return (
@@ -478,7 +490,10 @@ const Student = () => {
                     </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 lg:space-x-24">
-                      <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                      <button 
+                        onClick={() => handleViewProfile(student)}
+                        className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm"
+                      >
                         <FaExternalLinkAlt className="w-3 h-3" />
                         <span className="hidden sm:inline">View Profile</span>
                         <span className="sm:hidden">View</span>

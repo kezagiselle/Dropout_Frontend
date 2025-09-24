@@ -5,12 +5,11 @@ import Courses from './HodPages/Courses';
 import Reports from './HodPages/Reports';
 import Attendance from './HodPages/Attendance';
 import Exams from './HodPages/Exams';
-import Communication from './HodPages/Communication';
 import Settings from './HodPages/Settings';
 import TeacherForm from './Forms/Teacher';
 import StudentForm from './Forms/Student';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import userr from "../../src/img/userr.png";
-import dashlast from "../../src/img/dashlast.png";
 import das from "../../src/img/das.png";
 import pe1 from "../../src/img/pe1.png";
 import pe2 from "../../src/img/pe2.png";
@@ -22,7 +21,6 @@ import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaClipboardCheck } from "react-icons/fa";
 
-import { FaComments } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { TbReport } from "react-icons/tb";
 
@@ -41,11 +39,57 @@ const ThemeContext = createContext({
 export const useTheme = () => useContext(ThemeContext);
 
 const Hod = () => {
-  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'communication' | 'settings'>('dashboard')
+  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'settings'>('dashboard')
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showTeacherForm, setShowTeacherForm] = useState(false);
   const [showStudentForm, setShowStudentForm] = useState(false);
+
+  // Chart data for risk level trends
+  const riskTrendData = [
+    {
+      name: 'Week 1',
+      highRisk: 12,
+      mediumRisk: 25,
+      lowRisk: 45,
+    },
+    {
+      name: 'Week 2',
+      highRisk: 15,
+      mediumRisk: 28,
+      lowRisk: 42,
+    },
+    {
+      name: 'Week 3',
+      highRisk: 18,
+      mediumRisk: 32,
+      lowRisk: 38,
+    },
+    {
+      name: 'Week 4',
+      highRisk: 22,
+      mediumRisk: 35,
+      lowRisk: 35,
+    },
+    {
+      name: 'Week 5',
+      highRisk: 19,
+      mediumRisk: 30,
+      lowRisk: 40,
+    },
+    {
+      name: 'Week 6',
+      highRisk: 16,
+      mediumRisk: 28,
+      lowRisk: 43,
+    },
+    {
+      name: 'Week 7',
+      highRisk: 14,
+      mediumRisk: 26,
+      lowRisk: 45,
+    },
+  ];
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
@@ -334,19 +378,6 @@ const Hod = () => {
               </div>
               <div 
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'communication' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('communication'); closeMobileMenu(); }}
-              >
-                <FaComments className="w-5 h-5" />
-                <span className="font-medium">Communications</span>
-              </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                   activeView === 'settings' 
                     ? 'bg-orange-100 text-orange-700' 
                     : theme === 'dark'
@@ -459,12 +490,78 @@ const Hod = () => {
                   {/* Left Column - Charts and Teacher Info */}
                   <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                     {/* Risk Level Trends Chart */}
-                    <div className="h-64 sm:h-80 flex items-center justify-center px-2 sm:px-0 mt-4 sm:mt-8 -ml-0 sm:-ml-[28rem] mb-4">
-                      <img 
-                        src={dashlast} 
-                        alt="Risk Level Trends Chart" 
-                        className="w-full h-full object-contain rounded-lg scale-100 sm:scale-125"
-                      />
+                    <div className={`rounded-lg shadow-sm border p-4 sm:p-6 transition-colors duration-200 ${
+                      theme === 'dark' 
+                        ? 'bg-gray-800 border-gray-700' 
+                        : 'bg-white border-gray-200'
+                    }`}>
+                      <h3 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 transition-colors duration-200 ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>Risk Level Trends</h3>
+                      <div className="h-80 sm:h-96 lg:h-[28rem]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart
+                            width={500}
+                            height={300}
+                            data={riskTrendData}
+                            margin={{
+                              top: 5,
+                              right: 30,
+                              left: 20,
+                              bottom: 5,
+                            }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                            <XAxis 
+                              dataKey="name" 
+                              stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                              fontSize={12}
+                            />
+                            <YAxis 
+                              yAxisId="left" 
+                              stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                              fontSize={12}
+                            />
+                            <YAxis 
+                              yAxisId="right" 
+                              orientation="right" 
+                              stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                              fontSize={12}
+                            />
+                            <Tooltip 
+                              contentStyle={{
+                                backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff',
+                                border: theme === 'dark' ? '1px solid #374151' : '1px solid #e5e7eb',
+                                borderRadius: '8px',
+                                color: theme === 'dark' ? '#ffffff' : '#000000'
+                              }}
+                            />
+                            <Legend />
+                            <Line 
+                              yAxisId="left" 
+                              type="monotone" 
+                              dataKey="highRisk" 
+                              stroke="#ef4444" 
+                              activeDot={{ r: 8 }}
+                              name="High Risk"
+                            />
+                            <Line 
+                              yAxisId="right" 
+                              type="monotone" 
+                              dataKey="mediumRisk" 
+                              stroke="#f59e0b" 
+                              name="Medium Risk"
+                            />
+                            <Line 
+                              yAxisId="left" 
+                              type="monotone" 
+                              dataKey="lowRisk" 
+                              stroke="#10b981" 
+                              name="Low Risk"
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
                     </div>
 
                     {/* Teacher Roster Today */}
@@ -659,7 +756,6 @@ const Hod = () => {
             {activeView === 'reports' && <Reports />}
             {activeView === 'attendance' && <Attendance />}
             {activeView === 'exams' && <Exams />}
-            {activeView === 'communication' && <Communication />}
             {activeView === 'settings' && <Settings />}
             
             {/* Form Components */}
@@ -679,7 +775,7 @@ const Hod = () => {
             )}
             
             {/* Debug Info */}
-            {process.env.NODE_ENV === 'development' && (
+            {import.meta.env.DEV && (
               <div className="fixed bottom-4 right-4 bg-black text-white p-2 rounded text-xs">
                 Teacher Form: {showTeacherForm ? 'true' : 'false'}, Student Form: {showStudentForm ? 'true' : 'false'}
               </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosCheckmarkCircle, IoIosTime } from 'react-icons/io'
-import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt } from 'react-icons/fa'
+import { FaSearch, FaDownload, FaFilter } from 'react-icons/fa'
 import { FaClipboardCheck } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import Teacher from '../Forms/Teacher';
@@ -10,9 +10,8 @@ import Teacher from '../Forms/Teacher';
 interface Teacher {
   id: number
   name: string
-  email: string
-  department: string
-  assignedCourses: string[]
+  specialisation: string
+  courses: string[]
   status: 'Active' | 'On Leave' | 'Inactive'
 }
 
@@ -26,25 +25,22 @@ const Teachers = () => {
     {
       id: 1,
       name: 'Alice Johnson',
-      email: 'alice.johnson@school.edu',
-      department: 'Mathematics',
-      assignedCourses: ['Algebra', 'Calculus'],
+      specialisation: 'Mathematics',
+      courses: ['Algebra', 'Calculus'],
       status: 'Active'
     },
     {
       id: 2,
       name: 'David Smith',
-      email: 'david.smith@school.edu',
-      department: 'Science',
-      assignedCourses: ['Biology', 'Chemistry'],
+      specialisation: 'Science',
+      courses: ['Biology', 'Chemistry'],
       status: 'Active'
     },
     {
       id: 3,
       name: 'Sarah Lee',
-      email: 'sarah.lee@school.edu',
-      department: 'English',
-      assignedCourses: ['Literature', 'Writing'],
+      specialisation: 'English',
+      courses: ['Literature', 'Writing'],
       status: 'On Leave'
     }
   ])
@@ -342,22 +338,17 @@ const Teachers = () => {
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
-                  Department
+                  Specialisation
                 </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
-                  Assigned Courses
+                  Courses
                  </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                 }`}>
                   Status
-                </th>
-                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  Actions
                 </th>
               </tr>
             </thead>
@@ -379,20 +370,17 @@ const Teachers = () => {
                         <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 truncate ${
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                       }`}>{teacher.name}</div>
-                        <div className={`text-xs transition-colors duration-200 ${
-                        theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                      }`}>{teacher.email}</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className={`text-xs sm:text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
-                    }`}>{teacher.department}</div>
+                    }`}>{teacher.specialisation}</div>
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className="flex flex-wrap gap-1">
-                       {teacher.assignedCourses.map((course, index) => (
+                       {teacher.courses.map((course, index) => (
                          <span
                            key={course}
                           className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index, teacher.name)}`}
@@ -406,12 +394,6 @@ const Teachers = () => {
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(teacher.status)}`}>
                       {teacher.status}
                     </span>
-                  </td>
-                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center space-x-1 sm:space-x-2">
-                      <FaExternalLinkAlt className="w-3 h-3" />
-                      <span>View Profile</span>
-                       </button>
                   </td>
                 </tr>
               ))}

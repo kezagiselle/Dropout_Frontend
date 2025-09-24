@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FaArrowLeft, FaCalendarAlt, FaUserPlus, FaPrint, FaChevronDown } from 'react-icons/fa'
+import { FaArrowLeft, FaPrint, FaChevronDown } from 'react-icons/fa'
 import { FaUser } from "react-icons/fa";
 
 interface TeacherProfileProps {
@@ -82,14 +82,6 @@ function TeacherProfile({ onBack }: TeacherProfileProps) {
             
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <button className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
-                <FaCalendarAlt className="text-sm" />
-                Schedule Meeting
-              </button>
-              <button className="bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
-                <FaUserPlus className="text-sm" />
-                Assign as Mentor
-              </button>
               <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium">
                 <FaPrint className="text-sm" />
                 Print Report

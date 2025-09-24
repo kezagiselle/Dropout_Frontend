@@ -1,7 +1,42 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTheme } from '../Hod';
 import { FaFileAlt, FaCheck, FaTimes, FaClock, FaExclamationTriangle, FaInfoCircle, FaStar, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { FaDownload } from "react-icons/fa6";
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+
+// Chart data and colors
+const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink'];
+
+const attendanceData = [
+  { name: 'Mon', present: 95, absent: 5, late: 3 },
+  { name: 'Tue', present: 88, absent: 12, late: 7 },
+  { name: 'Wed', present: 92, absent: 8, late: 4 },
+  { name: 'Thu', present: 87, absent: 13, late: 6 },
+  { name: 'Fri', present: 90, absent: 10, late: 5 },
+  { name: 'Sat', present: 85, absent: 15, late: 8 },
+  { name: 'Sun', present: 78, absent: 22, late: 12 }
+];
+
+const performanceData = [
+  { name: 'Math', score: 85, average: 75, target: 90 },
+  { name: 'Science', score: 92, average: 80, target: 95 },
+  { name: 'English', score: 78, average: 85, target: 88 },
+  { name: 'History', score: 88, average: 82, target: 85 },
+  { name: 'Art', score: 95, average: 90, target: 92 },
+  { name: 'PE', score: 82, average: 78, target: 85 }
+];
+
+const getPath = (x: number, y: number, width: number, height: number) => {
+  return `M${x},${y + height}C${x + width / 3},${y + height} ${x + width / 2},${y + height / 3}
+  ${x + width / 2}, ${y}
+  C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${x + width}, ${y + height}
+  Z`;
+};
+
+const TriangleBar = (props: any) => {
+  const { fill, x, y, width, height } = props;
+  return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
+};
 
 const Attendance = () => {
   const { theme } = useTheme();
@@ -284,8 +319,36 @@ const Attendance = () => {
           </div>
           
            <div className="p-3 sm:p-4 lg:p-6">
-             {/* White space where chart was */}
-             <div className="h-48 mb-8"></div>
+             {/* Attendance Trends Chart */}
+             <div className="h-64 mb-6">
+               <ResponsiveContainer width="100%" height="100%">
+                 <BarChart
+                   data={attendanceData}
+                   margin={{
+                     top: 20,
+                     right: 30,
+                     left: 20,
+                     bottom: 5,
+                   }}
+                 >
+                   <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                   <XAxis 
+                     dataKey="name" 
+                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                     fontSize={12}
+                   />
+                   <YAxis 
+                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                     fontSize={12}
+                   />
+                   <Bar dataKey="present" fill="#10b981" shape={<TriangleBar />} label={{ position: 'top' }}>
+                     {attendanceData.map((_, index) => (
+                       <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                     ))}
+                   </Bar>
+                 </BarChart>
+               </ResponsiveContainer>
+             </div>
              
              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                {/* Average Attendance Card */}
@@ -352,8 +415,36 @@ const Attendance = () => {
           </div>
           
            <div className="p-3 sm:p-4 lg:p-6">
-             {/* White space where chart was */}
-             <div className="h-48 mb-8"></div>
+             {/* Performance Trends Chart */}
+             <div className="h-64 mb-6">
+               <ResponsiveContainer width="100%" height="100%">
+                 <BarChart
+                   data={performanceData}
+                   margin={{
+                     top: 20,
+                     right: 30,
+                     left: 20,
+                     bottom: 5,
+                   }}
+                 >
+                   <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                   <XAxis 
+                     dataKey="name" 
+                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                     fontSize={12}
+                   />
+                   <YAxis 
+                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                     fontSize={12}
+                   />
+                   <Bar dataKey="score" fill="#3b82f6" shape={<TriangleBar />} label={{ position: 'top' }}>
+                     {performanceData.map((_, index) => (
+                       <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                     ))}
+                   </Bar>
+                 </BarChart>
+               </ResponsiveContainer>
+             </div>
              
              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-16">
                {/* Average GPA Card */}

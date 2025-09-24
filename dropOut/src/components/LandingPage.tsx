@@ -310,24 +310,24 @@ const LandingPage = () => {
       </section>
 
                     {/* Statistics Bar */}
-        <section className="py-16 bg-blue-100">
+        <section className="py-16 bg-orange-100">
           <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
               <div className="animate-fade-in-up hover:scale-105 transition-transform duration-300">
-                <div className="text-4xl font-bold text-blue-800 mb-2">38%</div>
-                <div className="text-blue-700 text-sm">Average Dropout Reduction</div>
+                <div className="text-4xl font-bold text-orange-800 mb-2">38%</div>
+                <div className="text-orange-700 text-sm">Average Dropout Reduction</div>
               </div>
               <div className="animate-fade-in-up animate-delay-100 hover:scale-105 transition-transform duration-300">
-                <div className="text-4xl font-bold text-blue-800 mb-2">500+</div>
-                <div className="text-blue-700 text-sm">Schools Using Our Platform</div>
+                <div className="text-4xl font-bold text-orange-800 mb-2">500+</div>
+                <div className="text-orange-700 text-sm">Schools Using Our Platform</div>
               </div>
               <div className="animate-fade-in-up animate-delay-200 hover:scale-105 transition-transform duration-300">
-                <div className="text-4xl font-bold text-blue-800 mb-2">125K+</div>
-                <div className="text-blue-700 text-sm">Students Supported</div>
+                <div className="text-4xl font-bold text-orange-800 mb-2">125K+</div>
+                <div className="text-orange-700 text-sm">Students Supported</div>
               </div>
               <div className="animate-fade-in-up animate-delay-300 hover:scale-105 transition-transform duration-300">
-                <div className="text-4xl font-bold text-blue-800 mb-2">98%</div>
-                <div className="text-blue-700 text-sm">Customer Satisfaction</div>
+                <div className="text-4xl font-bold text-orange-800 mb-2">98%</div>
+                <div className="text-orange-700 text-sm">Customer Satisfaction</div>
               </div>
             </div>
           </div>

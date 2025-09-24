@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt, FaGraduationCap, FaExclamationTriangle, FaStickyNote, FaPlus } from 'react-icons/fa'
+import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt } from 'react-icons/fa'
 import { FaHouseChimney } from "react-icons/fa6";
 import StudentProfile from './StudentProfile';
 
@@ -10,43 +10,20 @@ interface StudentProps {
 function Student({ onBack }: StudentProps) {
   const [showStudentProfile, setShowStudentProfile] = useState(false);
   const [formData, setFormData] = useState({
-    // Personal Information
-    studentId: 'STU001',
-    firstName: 'John',
-    lastName: 'Doe',
+    // Student Information
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
     dateOfBirth: '',
     gender: '',
-    phoneNumber: '+1 (555) 123-4567',
+    enrollmentYear: '',
     
-    // Academic Information
-    gradeLevel: '',
-    school: '',
-    enrollmentDate: '',
-    currentGPA: '3.5',
-    attendanceRate: '95',
-    department: '',
-    
-    // Family & Social Information
-    guardianName: 'Jane Doe',
-    guardianPhone: '+1 (555) 987-6543',
-    guardianId: '',
-    familyStructure: '',
-    homeAddress: '123 Main Street, City, State, ZIP Code',
-    
-    // Risk Factors
-    riskFactors: {
-      frequentAbsences: false,
-      belowGradeLevel: false,
-      behavioralIssues: false,
-      economicHardship: false,
-      limitedFamilySupport: false,
-      peerPressureIssues: false,
-      mentalHealthConcerns: false,
-      previousSchoolTransfers: false
-    },
-    
-    // Additional Notes
-    additionalNotes: ''
+    // Parent Information
+    parentName: '',
+    parentEmail: '',
+    occupation: '',
+    parentPhoneNumber: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -54,17 +31,6 @@ function Student({ onBack }: StudentProps) {
     setFormData(prev => ({
       ...prev,
       [name]: value
-    }));
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      riskFactors: {
-        ...prev.riskFactors,
-        [name]: checked
-      }
     }));
   };
 
@@ -78,7 +44,7 @@ function Student({ onBack }: StudentProps) {
       <div className="w-full max-w-6xl bg-white rounded-lg border border-gray-200 p-6 sm:p-8 lg:p-12 min-h-[600px] sm:min-h-[700px] flex flex-col">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8">
-    <div>
+          <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
               Add New Student
             </h1>
@@ -99,49 +65,66 @@ function Student({ onBack }: StudentProps) {
 
         {/* Form Content */}
         <div className="flex-1 space-y-8">
-          {/* Personal Information Section */}
+          {/* Student Information Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
               <FaUser className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-bold text-gray-900">Personal Information</h2>
+              <h2 className="text-lg font-bold text-gray-900">Student Information</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Student ID
+                  Name
                 </label>
                 <input
                   type="text"
-                  name="studentId"
-                  value={formData.studentId}
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
+                  placeholder="Enter name"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
               </div>
               
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  First Name
+                  Email
                 </label>
                 <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleInputChange}
+                  placeholder="Enter email"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
               </div>
               
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Last Name
+                  Password
                 </label>
                 <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
+                  type="password"
+                  name="password"
+                  value={formData.password}
                   onChange={handleInputChange}
+                  placeholder="Enter password"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="Enter phone"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
               </div>
@@ -152,11 +135,10 @@ function Student({ onBack }: StudentProps) {
                 </label>
                 <div className="relative">
                   <input
-                    type="text"
+                    type="date"
                     name="dateOfBirth"
                     value={formData.dateOfBirth}
                     onChange={handleInputChange}
-                    placeholder="mm/dd/yyyy"
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 pr-10"
                   />
                   <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -185,346 +167,91 @@ function Student({ onBack }: StudentProps) {
               
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
+                  Enrollment Year
+                </label>
+                <div className="relative">
+                  <select
+                    name="enrollmentYear"
+                    value={formData.enrollmentYear}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
+                  >
+                    <option value="">Select Year</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                  </select>
+                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Parent Information Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 mb-4">
+              <FaHouseChimney className="text-blue-600 text-lg" />
+              <h2 className="text-lg font-bold text-gray-900">Parent Information</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="parentName"
+                  value={formData.parentName}
+                  onChange={handleInputChange}
+                  placeholder="Enter parent name"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="parentEmail"
+                  value={formData.parentEmail}
+                  onChange={handleInputChange}
+                  placeholder="Enter parent email"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Occupation
+                </label>
+                <input
+                  type="text"
+                  name="occupation"
+                  value={formData.occupation}
+                  onChange={handleInputChange}
+                  placeholder="Enter occupation"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
                   Phone Number
                 </label>
                 <input
                   type="tel"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
+                  name="parentPhoneNumber"
+                  value={formData.parentPhoneNumber}
                   onChange={handleInputChange}
+                  placeholder="Enter phone number"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
                 />
               </div>
-            </div>
-          </div>
-
-          {/* Academic Information Section */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-4">
-              <FaGraduationCap className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-bold text-gray-900">Academic Information</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Grade Level
-                </label>
-                <div className="relative">
-                  <select
-                    name="gradeLevel"
-                    value={formData.gradeLevel}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
-                  >
-                    <option value="">Select Grade</option>
-                    <option value="9">Grade 9</option>
-                    <option value="10">Grade 10</option>
-                    <option value="11">Grade 11</option>
-                    <option value="12">Grade 12</option>
-                  </select>
-                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  School
-                </label>
-                <div className="relative">
-                  <select
-                    name="school"
-                    value={formData.school}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
-                  >
-                    <option value="">Select School</option>
-                    <option value="westfield">Westfield High School</option>
-                    <option value="central">Central High School</option>
-                    <option value="north">North High School</option>
-                    <option value="south">South High School</option>
-                  </select>
-                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Enrollment Date
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="enrollmentDate"
-                    value={formData.enrollmentDate}
-                    onChange={handleInputChange}
-                    placeholder="mm/dd/yyyy"
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 pr-10"
-                  />
-                  <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Current GPA
-                </label>
-                <input
-                  type="text"
-                  name="currentGPA"
-                  value={formData.currentGPA}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Attendance Rate (%)
-                </label>
-                <input
-                  type="text"
-                  name="attendanceRate"
-                  value={formData.attendanceRate}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Department
-                </label>
-                <div className="relative">
-                  <select
-                    name="department"
-                    value={formData.department}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
-                  >
-                    <option value="">Select Status</option>
-                    <option value="science">Science</option>
-                    <option value="arts">Arts</option>
-                    <option value="commerce">Commerce</option>
-                    <option value="technology">Technology</option>
-                  </select>
-                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Family & Social Information Section */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-4">
-              <FaHouseChimney className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-bold text-gray-900">Family & Social Information</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Guardian Name
-                </label>
-                <input
-                  type="text"
-                  name="guardianName"
-                  value={formData.guardianName}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Guardian Phone
-                </label>
-                <input
-                  type="tel"
-                  name="guardianPhone"
-                  value={formData.guardianPhone}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Guardian ID
-                </label>
-                <input
-                  type="text"
-                  name="guardianId"
-                  value={formData.guardianId}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Family Structure
-                </label>
-                <div className="relative">
-                  <select
-                    name="familyStructure"
-                    value={formData.familyStructure}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
-                  >
-                    <option value="">Select Structure</option>
-                    <option value="nuclear">Nuclear Family</option>
-                    <option value="extended">Extended Family</option>
-                    <option value="single-parent">Single Parent</option>
-                    <option value="blended">Blended Family</option>
-                    <option value="other">Other</option>
-                  </select>
-                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-              
-              <div className="md:col-span-2 lg:col-span-3 space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Home Address
-                </label>
-                <textarea
-                  name="homeAddress"
-                  value={formData.homeAddress}
-                  onChange={handleInputChange}
-                  rows={3}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 resize-none"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Risk Factors Assessment Section */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <FaExclamationTriangle className="text-blue-600 text-lg" />
-                <h2 className="text-lg font-bold text-gray-900">Risk Factors Assessment</h2>
-              </div>
-              <button 
-                onClick={() => setShowStudentProfile(true)}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 text-sm font-medium"
-              >
-                <FaPlus className="text-sm" />
-                Add Historic
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="frequentAbsences"
-                    checked={formData.riskFactors.frequentAbsences}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Frequent absences (&gt;10 days/semester)</span>
-                </label>
-                
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="belowGradeLevel"
-                    checked={formData.riskFactors.belowGradeLevel}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Below grade level performance</span>
-                </label>
-                
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="behavioralIssues"
-                    checked={formData.riskFactors.behavioralIssues}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Behavioral issues</span>
-                </label>
-                
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="economicHardship"
-                    checked={formData.riskFactors.economicHardship}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Economic hardship</span>
-                </label>
-              </div>
-              
-              <div className="space-y-4">
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="limitedFamilySupport"
-                    checked={formData.riskFactors.limitedFamilySupport}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Limited family support</span>
-                </label>
-                
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="peerPressureIssues"
-                    checked={formData.riskFactors.peerPressureIssues}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Peer pressure issues</span>
-                </label>
-                
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="mentalHealthConcerns"
-                    checked={formData.riskFactors.mentalHealthConcerns}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Mental health concerns</span>
-                </label>
-                
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    name="previousSchoolTransfers"
-                    checked={formData.riskFactors.previousSchoolTransfers}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-                  />
-                  <span className="text-sm text-gray-700">Previous school transfers</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Notes Section */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-4">
-              <FaStickyNote className="text-blue-600 text-lg" />
-              <h2 className="text-lg font-bold text-gray-900">Additional Notes</h2>
-            </div>
-            
-            <div className="space-y-2">
-              <textarea
-                name="additionalNotes"
-                value={formData.additionalNotes}
-                onChange={handleInputChange}
-                placeholder="Enter any additional information about the student's situation, special circumstances, or intervention recommendations..."
-                rows={4}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 resize-none"
-              />
             </div>
           </div>
         </div>

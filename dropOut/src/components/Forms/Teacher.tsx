@@ -1,9 +1,19 @@
-import React, { useState } from 'react'
-import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt } from 'react-icons/fa'
+import React, { useState, useEffect } from 'react'
+import { FaArrowLeft, FaChevronDown, FaUser } from 'react-icons/fa'
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import EditProfile from './EditProfile';
 
 interface TeacherProps {
   onBack: () => void;
+}
+
+interface Course {
+  id: string;
+  name: string;
+  description: string;
+  credits: number;
+  grade: string;
 }
 
 function Teacher({ onBack }: TeacherProps) {
@@ -13,10 +23,13 @@ function Teacher({ onBack }: TeacherProps) {
     name: '',
     email: '',
     password: '',
-    dateOfBirth: '',
     phone: '',
-    specialization: ''
+    specialization: '',
+    courses: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loadingCourses, setLoadingCourses] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -24,6 +37,112 @@ function Teacher({ onBack }: TeacherProps) {
       ...prev,
       [name]: value
     }));
+  };
+
+  // Fetch courses when component mounts
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoadingCourses(true);
+      try {
+        const response = await axios.get('http://localhost:8080/api/courses');
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        toast.error('Failed to load courses. Please try again.');
+      } finally {
+        setLoadingCourses(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate form
+    if (!formData.name || !formData.email || !formData.password || !formData.phone || !formData.specialization) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    // Validate password length
+    if (formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        schoolId: "678f192d-07ba-4dc9-b834-4a9ca15c4380", // You can make this dynamic later
+        specialization: formData.specialization,
+        courses: formData.courses ? [formData.courses] : [] // Convert string to array if provided
+      };
+
+      console.log('Sending teacher payload:', payload); // Debug log
+
+      await axios.post('http://localhost:8080/api/teachers/create', payload);
+      
+      toast.success('Teacher created successfully!');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        phone: '',
+        specialization: '',
+        courses: ''
+      });
+      
+      // Optionally navigate back or show success message
+      setTimeout(() => {
+        onBack();
+      }, 1500);
+      
+    } catch (error: any) {
+      console.error('Error creating teacher:', error);
+      
+      // Handle specific error cases
+      if (error.response) {
+        // Server responded with error status
+        const status = error.response.status;
+        const message = error.response.data?.message || error.response.data?.error || 'Server error';
+        
+        if (status === 400) {
+          toast.error(`Validation error: ${message}`);
+        } else if (status === 401) {
+          toast.error('Unauthorized. Please check your credentials.');
+        } else if (status === 409) {
+          toast.error('Teacher with this email already exists.');
+        } else if (status === 500) {
+          toast.error('Server error. Please try again later.');
+        } else {
+          toast.error(`Error ${status}: ${message}`);
+        }
+      } else if (error.request) {
+        // Network error
+        toast.error('Network error. Please check your connection.');
+      } else {
+        // Other error
+        toast.error('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (showEditProfile) {
@@ -57,7 +176,7 @@ function Teacher({ onBack }: TeacherProps) {
         </div>
 
         {/* Form Content */}
-        <div className="flex-1 space-y-8">
+        <form id="teacher-form" onSubmit={handleSubmit} className="flex-1 space-y-8">
           {/* Teacher Information Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-4">
@@ -77,6 +196,7 @@ function Teacher({ onBack }: TeacherProps) {
                   onChange={handleInputChange}
                   placeholder="Enter name"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                  required
                 />
               </div>
               
@@ -91,6 +211,7 @@ function Teacher({ onBack }: TeacherProps) {
                   onChange={handleInputChange}
                   placeholder="Enter email"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                  required
                 />
               </div>
               
@@ -105,23 +226,8 @@ function Teacher({ onBack }: TeacherProps) {
                   onChange={handleInputChange}
                   placeholder="Enter password"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                  required
                 />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Date of Birth
-                </label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    name="dateOfBirth"
-                    value={formData.dateOfBirth}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900 pr-10"
-                  />
-                  <FaCalendarAlt className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
               </div>
               
               <div className="space-y-2">
@@ -133,8 +239,9 @@ function Teacher({ onBack }: TeacherProps) {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  placeholder="Enter phone"
+                  placeholder="Enter phone number"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                  required
                 />
               </div>
               
@@ -148,41 +255,77 @@ function Teacher({ onBack }: TeacherProps) {
                     value={formData.specialization}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
+                    required
                   >
                     <option value="">Select Specialization</option>
-                    <option value="mathematics">Mathematics</option>
-                    <option value="science">Science</option>
-                    <option value="english">English</option>
-                    <option value="history">History</option>
-                    <option value="art">Art</option>
-                    <option value="music">Music</option>
-                    <option value="physical-education">Physical Education</option>
-                    <option value="computer-science">Computer Science</option>
-                    <option value="foreign-languages">Foreign Languages</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="English">English</option>
+                    <option value="History">History</option>
+                    <option value="Art">Art</option>
+                    <option value="Music">Music</option>
+                    <option value="Physical Education">Physical Education</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Foreign Languages">Foreign Languages</option>
                   </select>
                   <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
                 </div>
               </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Course (Optional)
+                </label>
+                <div className="relative">
+                  <select
+                    name="courses"
+                    value={formData.courses}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
+                    disabled={loadingCourses}
+                  >
+                    <option value="">Select a course</option>
+                    {courses.map((course) => (
+                      <option key={course.id} value={course.id}>
+                        {course.name} - {course.grade} ({course.credits} credits)
+                      </option>
+                    ))}
+                  </select>
+                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  {loadingCourses && (
+                    <div className="absolute right-8 top-1/2 transform -translate-y-1/2">
+                      <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </form>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end mt-8">
-          <button className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium w-full sm:w-auto">
+          <button 
+            type="button"
+            onClick={onBack}
+            className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium w-full sm:w-auto"
+          >
             Cancel
           </button>
           <button 
-            onClick={() => {
-              console.log('Edit Profile button clicked');
-              setShowEditProfile(true);
-            }}
-            className="px-4 sm:px-6 py-2 sm:py-3 border border-orange-500 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors duration-200 text-sm font-medium w-full sm:w-auto"
+            type="submit"
+            form="teacher-form"
+            disabled={isSubmitting}
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 text-sm font-medium w-full sm:w-auto flex items-center justify-center gap-2"
           >
-            Edit Profile
-          </button>
-          <button className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium w-full sm:w-auto">
-            Save Teacher
+            {isSubmitting ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Creating...
+              </>
+            ) : (
+              'Create Teacher'
+            )}
           </button>
         </div>
       </div>

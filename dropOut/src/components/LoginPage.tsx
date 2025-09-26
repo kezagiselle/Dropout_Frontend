@@ -1,61 +1,78 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useUserAuth } from "../context/useUserAuth";
+import { jwtDecode } from "jwt-decode";
 import type { ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 import googleLogo from '../../src/img/light/googleIcon.png';
+import { toast } from "react-toastify";
 
 interface LoginForm {
   email: string;
   password: string;
   remember: boolean;
-  userType: string;
 }
 
 const LoginPage: React.FC = () => {
+  const { login } = useUserAuth();
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
     password: "",
     remember: false,
-    userType: "",
   });
 
   const navigate = useNavigate();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type } = e.target;
-    
     if (type === "checkbox") {
-      // For checkboxes like "remember me"
       const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: checked,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
-      // For text inputs and select dropdowns
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    
-    // Temporary login functionality
-    if (formData.userType === "hod") {
-      // For temporary testing - allow any email/password when HoD is selected
-      if (formData.email && formData.password) {
-        console.log("Temporary HoD login successful - navigating to dashboard");
-        navigate("/hod-dashboard");
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      const result = await response.json();
+      if (result.success && result.data?.token) {
+        login(result.data.token);
+        toast.success(result.message || "Login successful!");
+        const decoded = jwtDecode<{ role: string }>(result.data.token);
+        switch (decoded.role) {
+          case "PRINCIPAL":
+            navigate("/hod-dashboard");
+            break;
+          case "STUDENT":
+            navigate("/student-dashboard");
+            break;
+          case "TEACHER":
+            navigate("/teacher-dashboard");
+            break;
+          case "GOVERNMENT":
+            navigate("/government-dashboard");
+            break;
+          case "PARENT":
+            navigate("/parent-dashboard");
+            break;
+          default:
+            navigate("/");
+        }
       } else {
-        alert("Please enter both email and password for temporary HoD login");
+        toast.error(result.message || "Login failed");
       }
-    } else {
-      // For other user types, show normal login message
-      alert("Please select a user type and enter credentials");
+    } catch {
+      toast.error("Network error or server unavailable");
     }
   };
 
@@ -131,48 +148,7 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          {/* User Type Selection */}
-          <div className="space-y-3">
-            {/* Temporary Login Message */}
-            {formData.userType === "hod" && (
-              <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                <p className="text-sm text-orange-800">
-                  <strong>Temporary Login:</strong> As a HoD, you can use any email and password to access the dashboard for testing purposes.
-                </p>
-              </div>
-            )}
-            
-            <div>
-              <div className="relative">
-                <select
-                  name="userType"
-                  value={formData.userType}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200 appearance-none bg-white"
-                  required
-                >
-                  <option value="" disabled>Select your role</option>
-                  <option value="student">Student</option>
-                  <option value="hod">Head of Department (HoD)</option>
-                  <option value="government">Government</option>
-                  <option value="teacher">Teacher</option>
-                  <option value="parent">Parent</option>
-                </select>
-                <svg
-                  className="absolute right-3 top-3.5 h-5 w-5 text-gray-500 pointer-events-none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </div>
-            </div>
-          </div>
+          {/* ...removed userType selection... */}
 
           {/* Remember Me & Forgot Password */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm space-y-2 sm:space-y-0">

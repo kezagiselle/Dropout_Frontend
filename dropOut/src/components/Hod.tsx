@@ -1,4 +1,6 @@
-import { useState, createContext, useContext } from 'react'
+import { useState, useEffect, createContext, useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useUserAuth } from "../context/useUserAuth";
 import Student from './HodPages/Student';
 import Teachers from './HodPages/Teachers';
 import Courses from './HodPages/Courses';
@@ -38,7 +40,14 @@ const ThemeContext = createContext({
 export const useTheme = () => useContext(ThemeContext);
 
 const Hod = () => {
-  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'settings'>('dashboard')
+  const location = useLocation();
+  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'settings'>('dashboard');
+  // Set activeView from navigation state (e.g., after teacher registration)
+  useEffect(() => {
+    if (location.state && location.state.view) {
+      setActiveView(location.state.view);
+    }
+  }, [location.state]);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showTeacherForm, setShowTeacherForm] = useState(false);
@@ -108,6 +117,10 @@ const Hod = () => {
     toggleTheme,
   };
 
+
+  const { user, logout } = useUserAuth();
+  const navigate = useNavigate();
+
   return (
     <ThemeContext.Provider value={themeContextValue}>
       <div className={`min-h-screen transition-colors duration-200 ${
@@ -131,7 +144,7 @@ const Hod = () => {
               }`}>
                 <h1 className={`text-sm sm:text-base lg:text-lg font-semibold transition-colors duration-200 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>Westfield High School</h1>
+                }`}>{user?.schoolName ?? null}</h1>
                 <svg className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                 }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,11 +207,11 @@ const Hod = () => {
                   : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
               }`}>
                 <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center overflow-hidden">
-                  <img src={userr} alt="Sarah Wilson" className="w-full h-full object-cover rounded-full" />
+                  <img src={userr} alt={user?.name || "User"} className="w-full h-full object-cover rounded-full" />
                 </div>
                 <span className={`text-xs sm:text-sm font-medium transition-colors duration-200 hidden sm:block ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>Sarah Wilson</span>
+                }`}>{user?.name ?? null}</span>
                 <svg className={`w-4 h-4 sm:w-5 sm:h-5 hidden sm:block transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                 }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,137 +291,155 @@ const Hod = () => {
             />
           )}
 
-          {/* Sidebar */}
-          <nav className={`fixed lg:static inset-y-0 left-0 z-50 w-64 sm:w-72 lg:w-64 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          } lg:translate-x-0 shadow-lg lg:shadow-sm lg:min-h-screen p-3 sm:p-4 order-2 lg:order-1 transition-colors duration-200 ${
-            theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-          }`}>
-            {/* Mobile Close Button */}
-            <div className="flex justify-between items-center mb-4 sm:mb-6 lg:hidden">
-              <h3 className={`text-base sm:text-lg font-semibold transition-colors duration-200 ${
-                theme === 'dark' ? 'text-white' : 'text-gray-800'
-              }`}>Menu</h3>
-              <button
-                onClick={closeMobileMenu}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+          {/* Sidebar with pinned logout button */}
+          <nav
+            className={`fixed lg:static inset-y-0 left-0 z-50 w-64 sm:w-72 lg:w-64 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+              isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+            } lg:translate-x-0 shadow-lg lg:shadow-sm lg:min-h-screen p-3 sm:p-4 order-2 lg:order-1 transition-colors duration-200 ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            } flex flex-col justify-between`}
+          >
+            <div>
+              {/* Mobile Close Button */}
+              <div className="flex justify-between items-center mb-4 sm:mb-6 lg:hidden">
+                <h3 className={`text-base sm:text-lg font-semibold transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-white' : 'text-gray-800'
+                }`}>Menu</h3>
+                <button
+                  onClick={closeMobileMenu}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
 
-            <div className="space-y-1 sm:space-y-2">
-              <div 
-                className={`flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'dashboard' 
-                    ? 'bg-orange-500 text-white' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('dashboard'); closeMobileMenu(); }}
-              >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                <span className="text-sm sm:text-base font-medium">Dashboard</span>
+              <div className="space-y-1 sm:space-y-2">
+                {/* ...existing sidebar nav items... */}
+                <div 
+                  className={`flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'dashboard' 
+                      ? 'bg-orange-500 text-white' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('dashboard'); closeMobileMenu(); }}
+                >
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <span className="text-sm sm:text-base font-medium">Dashboard</span>
+                </div>
+                {/* ...other nav items... */}
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'students' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('students'); closeMobileMenu(); }}
+                >
+                  <IoIosPeople className="w-5 h-5" />
+                  <span className="font-medium">Students</span>
+                </div>
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'teachers' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('teachers'); closeMobileMenu(); }}
+                >
+                  <LiaChalkboardTeacherSolid className="w-6 h-6 font-bold" />
+                  <span className="font-medium">Teachers</span>
+                </div>
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'courses' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('courses'); closeMobileMenu(); }}
+                >
+                  <FaCalendarAlt className="w-5 h-5" />
+                  <span className="font-medium">Courses & Timetable</span>
+                </div>
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'attendance' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('attendance'); closeMobileMenu(); }}
+                >
+                  <FaClipboardCheck className="w-5 h-5" />
+                  <span className="font-medium">Attendance</span>
+                </div>
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'exams' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('exams'); closeMobileMenu(); }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  </svg>
+                  <span className="font-medium">Exams/Grades</span>
+                </div>
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'reports' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('reports'); closeMobileMenu(); }}
+                >
+                  <TbReport className="w-5 h-5" />
+                  <span className="font-medium">Reports</span>
+                </div>
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'settings' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('settings'); closeMobileMenu(); }}
+                >
+                  <IoMdSettings className="w-5 h-5" />
+                  <span className="font-medium">Settings</span>
+                </div>
               </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'students' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('students'); closeMobileMenu(); }}
+            </div>
+            {/* Logout Button pinned to sidebar bottom */}
+            <div className="mt-4 mb-2">
+              <button
+                onClick={() => {
+                  logout();
+                  navigate('/login');
+                }}
+                className="w-full px-4 py-2 rounded-lg font-semibold shadow transition-colors duration-200 text-base bg-orange-500 text-white hover:bg-orange-600"
               >
-                <IoIosPeople className="w-5 h-5" />
-                <span className="font-medium">Students</span>
-              </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'teachers' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('teachers'); closeMobileMenu(); }}
-              >
-                <LiaChalkboardTeacherSolid className="w-6 h-6 font-bold" />
-                <span className="font-medium">Teachers</span>
-              </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'courses' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('courses'); closeMobileMenu(); }}
-              >
-                <FaCalendarAlt className="w-5 h-5" />
-                <span className="font-medium">Courses & Timetable</span>
-              </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'attendance' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('attendance'); closeMobileMenu(); }}
-              >
-                <FaClipboardCheck className="w-5 h-5" />
-                <span className="font-medium">Attendance</span>
-              </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'exams' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('exams'); closeMobileMenu(); }}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                </svg>
-                <span className="font-medium">Exams/Grades</span>
-              </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'reports' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('reports'); closeMobileMenu(); }}
-              >
-                <TbReport className="w-5 h-5" />
-                <span className="font-medium">Reports</span>
-              </div>
-              <div 
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                  activeView === 'settings' 
-                    ? 'bg-orange-100 text-orange-700' 
-                    : theme === 'dark'
-                      ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                      : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                }`}
-                onClick={() => { setActiveView('settings'); closeMobileMenu(); }}
-              >
-                <IoMdSettings className="w-5 h-5" />
-                <span className="font-medium">Settings</span>
-              </div>
+                Logout
+              </button>
             </div>
           </nav>
 
@@ -818,12 +849,8 @@ const Hod = () => {
               </div>
             )}
             
-            {/* Debug Info */}
-            {import.meta.env.DEV && (
-              <div className="fixed bottom-4 right-4 bg-black text-white p-2 rounded text-xs">
-                Teacher Form: {showTeacherForm ? 'true' : 'false'}, Student Form: {showStudentForm ? 'true' : 'false'}
-              </div>
-            )}
+            
+              
           </main>
         </div>
       </div>

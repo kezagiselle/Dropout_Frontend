@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useUserAuth } from '../../context/useUserAuth';
 import { FaArrowLeft } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -9,6 +10,7 @@ interface CourseProps {
 }
 
 function Course({ onBack, onCourseCreated }: CourseProps) {
+  const { user, token } = useUserAuth();
   const [formData, setFormData] = useState({
     name: '',
     credits: '',
@@ -50,11 +52,10 @@ function Course({ onBack, onCourseCreated }: CourseProps) {
         description: formData.description,
         credits: creditsNumber,
         grade: formData.grade,
-        schoolId: "678f192d-07ba-4dc9-b834-4a9ca15c4380"
+        schoolId: user?.schoolId
       };
 
       const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      const token = localStorage.getItem('token');
       const response = await axios.post(`${baseUrl}/api/courses/create`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,

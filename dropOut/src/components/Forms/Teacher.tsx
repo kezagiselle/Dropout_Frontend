@@ -60,7 +60,7 @@ function Teacher({ onBack, onTeacherCreated }: TeacherProps) {
         setLoadingCourses(false);
       }
     };
-    fetchCourses();
+    fetchCourses(); 
   }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {

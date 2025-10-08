@@ -9,6 +9,7 @@ import NewPasswordReset from "./components/ResetInfo";
 import PasswordChangedConfirmation from "./components/PasswordChange";
 import LandingPage from "./components/LandingPage";
 import Hod from "./components/Hod";
+import Dashboard from "./components/TeacherPages/Dashboard";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/new-password-reset" element={<NewPasswordReset />} />
         <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
         <Route path="/hod-dashboard" element={<Hod />} />
+        <Route path="/teacher-dashboard" element={<Dashboard />} />
       </Routes>
       <ToastContainer 
         position="top-right"

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
-import googleLogo from '../../src/img/light/googleIcon.png';
+import googleLogo from "../../src/img/light/googleIcon.png";
 
 interface LoginForm {
   email: string;
@@ -21,18 +21,18 @@ const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value, type } = e.target;
-    
+
     if (type === "checkbox") {
-      // For checkboxes like "remember me"
       const checked = (e.target as HTMLInputElement).checked;
       setFormData((prev) => ({
         ...prev,
         [name]: checked,
       }));
     } else {
-      // For text inputs and select dropdowns
       setFormData((prev) => ({
         ...prev,
         [name]: value,
@@ -42,20 +42,28 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    
-    // Temporary login functionality
-    if (formData.userType === "hod") {
-      // For temporary testing - allow any email/password when HoD is selected
-      if (formData.email && formData.password) {
-        console.log("Temporary HoD login successful - navigating to dashboard");
-        navigate("/hod-dashboard");
-      } else {
-        alert("Please enter both email and password for temporary HoD login");
-      }
+
+    const { email, password, userType } = formData;
+
+    if (!userType) {
+      alert("Please select your role before signing in.");
+      return;
+    }
+
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    // Temporary login simulation
+    if (userType === "hod") {
+      console.log("Temporary HoD login successful");
+      navigate("/hod-dashboard");
+    } else if (userType === "teacher") {
+      console.log("Temporary Teacher login successful");
+      navigate("/teacher-dashboard");
     } else {
-      // For other user types, show normal login message
-      alert("Please select a user type and enter credentials");
+      alert(`Temporary login only works for HoD or Teacher right now.`);
     }
   };
 
@@ -66,14 +74,12 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-orange-50 p-4">
-      {/* Centered Form Container */}
       <motion.div
         className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
           <p className="text-gray-600">Sign in to your account</p>
@@ -82,7 +88,9 @@ const LoginPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-700">Email/Username</label>
+            <label className="block mb-2 font-semibold text-gray-700">
+              Email/Username
+            </label>
             <div className="relative">
               <input
                 type="email"
@@ -106,7 +114,9 @@ const LoginPage: React.FC = () => {
 
           {/* Password Field */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-700">Password</label>
+            <label className="block mb-2 font-semibold text-gray-700">
+              Password
+            </label>
             <div className="relative">
               <input
                 type="password"
@@ -133,48 +143,49 @@ const LoginPage: React.FC = () => {
 
           {/* User Type Selection */}
           <div className="space-y-3">
-            {/* Temporary Login Message */}
-            {formData.userType === "hod" && (
+            {(formData.userType === "hod" || formData.userType === "teacher") && (
               <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
                 <p className="text-sm text-orange-800">
-                  <strong>Temporary Login:</strong> As a HoD, you can use any email and password to access the dashboard for testing purposes.
+                  <strong>Temporary Login:</strong> As a{" "}
+                  {formData.userType === "hod" ? "HoD" : "Teacher"}, you can use
+                  any email and password to access your dashboard for testing.
                 </p>
               </div>
             )}
-            
-            <div>
-              <div className="relative">
-                <select
-                  name="userType"
-                  value={formData.userType}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200 appearance-none bg-white"
-                  required
-                >
-                  <option value="" disabled>Select your role</option>
-                  <option value="student">Student</option>
-                  <option value="hod">Head of Department (HoD)</option>
-                  <option value="government">Government</option>
-                  <option value="teacher">Teacher</option>
-                  <option value="parent">Parent</option>
-                </select>
-                <svg
-                  className="absolute right-3 top-3.5 h-5 w-5 text-gray-500 pointer-events-none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </div>
+
+            <div className="relative">
+              <select
+                name="userType"
+                value={formData.userType}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200 appearance-none bg-white"
+                required
+              >
+                <option value="" disabled>
+                  Select your role
+                </option>
+                <option value="student">Student</option>
+                <option value="hod">Head of Department (HoD)</option>
+                <option value="teacher">Teacher</option>
+                <option value="parent">Parent</option>
+                <option value="government">Government</option>
+              </select>
+              <svg
+                className="absolute right-3 top-3.5 h-5 w-5 text-gray-500 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </div>
           </div>
 
-          {/* Remember Me & Forgot Password */}
+          {/* Remember Me */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm space-y-2 sm:space-y-0">
             <label className="flex items-center space-x-2">
               <input
@@ -184,18 +195,21 @@ const LoginPage: React.FC = () => {
                 onChange={handleChange}
                 className="accent-orange-400 rounded"
               />
-                             <span className="text-gray-600 italic">Remember me</span>
+              <span className="text-gray-600 italic">Remember me</span>
             </label>
-                         <Link to="/reset-password" className="text-black font-bold hover:text-gray-800 transition-colors">
-               Forgot Password?
-             </Link>
+            <Link
+              to="/reset-password"
+              className="text-black font-bold hover:text-gray-800 transition-colors"
+            >
+              Forgot Password?
+            </Link>
           </div>
 
           {/* Login Button */}
-                     <button
-             type="submit"
-             className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-full mt-6 flex items-center justify-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg"
-           >
+          <button
+            type="submit"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-full mt-6 flex items-center justify-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg"
+          >
             <svg
               className="h-5 w-5 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -211,14 +225,14 @@ const LoginPage: React.FC = () => {
             <span>Sign In</span>
           </button>
 
-          {/* OR divider */}
+          {/* OR Divider */}
           <div className="flex items-center my-6">
             <div className="flex-1 h-px bg-gray-300"></div>
             <span className="px-4 text-gray-500 text-sm font-medium">OR</span>
             <div className="flex-1 h-px bg-gray-300"></div>
           </div>
 
-          {/* Social buttons */}
+          {/* Social Buttons */}
           <div className="flex flex-col gap-3">
             <button
               type="button"
@@ -242,10 +256,13 @@ const LoginPage: React.FC = () => {
 
           {/* Sign Up Link */}
           <p className="text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-                         <Link to="/signup" className="text-black font-bold hover:text-gray-800 transition-colors">
-               Sign up
-             </Link>
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-black font-bold hover:text-gray-800 transition-colors"
+            >
+              Sign up
+            </Link>
           </p>
         </form>
       </motion.div>

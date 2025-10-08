@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useUserAuth } from '../../context/useUserAuth'
 import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosTime } from 'react-icons/io'
 import { FaSearch, FaDownload, FaFilter } from 'react-icons/fa'
@@ -7,13 +8,12 @@ import { FaUser } from "react-icons/fa";
 import Teacher from '../Forms/Teacher';
 
 
-interface Teacher {
-  id: number
-  name: string
-  specialisation: string
-  courses: string[]
-  status: 'Active' | 'On Leave' | 'Inactive'
-}
+type TeacherType = {
+  name: string;
+  specialization: string;
+  courses: string[];
+  status: boolean;
+};
 
 const Teachers = () => {
   const { theme } = useTheme()
@@ -21,55 +21,83 @@ const Teachers = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('All Departments')
   const [selectedStatus, setSelectedStatus] = useState('All')
   const [showTeacherForm, setShowTeacherForm] = useState(false)
-  const [teachers] = useState<Teacher[]>([
-    {
-      id: 1,
-      name: 'Alice Johnson',
-      specialisation: 'Mathematics',
-      courses: ['Algebra', 'Calculus'],
-      status: 'Active'
-    },
-    {
-      id: 2,
-      name: 'David Smith',
-      specialisation: 'Science',
-      courses: ['Biology', 'Chemistry'],
-      status: 'Active'
-    },
-    {
-      id: 3,
-      name: 'Sarah Lee',
-      specialisation: 'English',
-      courses: ['Literature', 'Writing'],
-      status: 'On Leave'
-    }
-  ])
+  const { user, token } = useUserAuth();
+  const [teachers, setTeachers] = useState<TeacherType[]>([]);
+  const [totalTeachers, setTotalTeachers] = useState(0);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800'
-      case 'On Leave':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'Inactive':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const schoolId = user?.schoolId;
+        if (!schoolId || !token) return;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        const res = await fetch(`${baseUrl}/api/teachers/stats/by-school/${schoolId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setTotalTeachers(data.data.totalTeachers ?? 0);
+          setTeachers(data.data.teachers ?? []);
+        }
+      } catch {
+        // Swallow error
+      }
+    };
+    fetchTeachers();
+  }, [user, token]);
+
+  const getStatusColor = (status: boolean) => {
+    return status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
   }
 
-  const getCourseColor = (index: number, teacherName: string) => {
-    if (teacherName === 'Sarah Lee') {
-      return 'bg-purple-100 text-purple-800'
-    }
-    if (teacherName === 'David Smith') {
-      return 'bg-green-100 text-green-800'
-    }
-    return 'bg-blue-100 text-blue-800'
+  const getCourseColor = (index: number) => {
+    const colors = [
+      'bg-blue-100 text-blue-800',
+      'bg-green-100 text-green-800',
+      'bg-purple-100 text-purple-800',
+      'bg-yellow-100 text-yellow-800',
+      'bg-red-100 text-red-800'
+    ];
+    return colors[index % colors.length];
   }
+
+  // Move fetchTeachers outside useEffect for reuse
+  const fetchTeachers = useCallback(async () => {
+    try {
+      const schoolId = user?.schoolId;
+      if (!schoolId || !token) return;
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      const res = await fetch(`${baseUrl}/api/teachers/stats/by-school/${schoolId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        setTotalTeachers(data.data.totalTeachers ?? 0);
+        setTeachers(data.data.teachers ?? []);
+      }
+    } catch {
+      // Swallow error
+    }
+  }, [user, token]);
+
+  useEffect(() => {
+    fetchTeachers();
+  }, [fetchTeachers]);
+
+  // When teacher is created, close form and refresh list
+  const handleTeacherCreated = () => {
+    setShowTeacherForm(false);
+    fetchTeachers();
+  };
 
   if (showTeacherForm) {
-    return <Teacher onBack={() => setShowTeacherForm(false)} />;
+    return <Teacher onBack={() => setShowTeacherForm(false)} onTeacherCreated={handleTeacherCreated} />;
   }
 
   return (
@@ -134,7 +162,7 @@ const Teachers = () => {
               }`}>
                 Total Teachers
               </p>
-              <p className="text-3xl font-bold mt-2 text-black">72</p>
+              <p className="text-3xl font-bold mt-2 text-black">{totalTeachers}</p>
               <div className="flex items-center mt-2">
                 <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -361,8 +389,8 @@ const Teachers = () => {
                 ? 'bg-gray-800 divide-gray-700' 
                 : 'bg-white divide-gray-200'
             }`}>
-              {teachers.map((teacher) => (
-                <tr key={teacher.id} className={`hover:transition-colors duration-200 ${
+              {teachers.map((teacher: TeacherType, idx: number) => (
+                <tr key={idx} className={`hover:transition-colors duration-200 ${
                   theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                 }`}>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -380,14 +408,14 @@ const Teachers = () => {
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className={`text-xs sm:text-sm transition-colors duration-200 ${
                       theme === 'dark' ? 'text-white' : 'text-gray-900'
-                    }`}>{teacher.specialisation}</div>
+                    }`}>{teacher.specialization}</div>
                   </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <div className="flex flex-wrap gap-1">
-                       {teacher.courses.map((course, index) => (
+                       {teacher.courses.map((course: string, index: number) => (
                          <span
                            key={course}
-                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index, teacher.name)}`}
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCourseColor(index)}`}
                          >
                            {course}
                          </span>
@@ -396,7 +424,7 @@ const Teachers = () => {
                    </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(teacher.status)}`}>
-                      {teacher.status}
+                      {teacher.status ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                 </tr>

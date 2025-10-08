@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { FaArrowLeft, FaChevronDown } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 interface CourseProps {
   onBack: () => void;
+  onCourseCreated?: () => void;
 }
 
-function Course({ onBack }: CourseProps) {
+function Course({ onBack, onCourseCreated }: CourseProps) {
   const [formData, setFormData] = useState({
     name: '',
     credits: '',
@@ -49,27 +50,33 @@ function Course({ onBack }: CourseProps) {
         description: formData.description,
         credits: creditsNumber,
         grade: formData.grade,
-        schoolId: "678f192d-07ba-4dc9-b834-4a9ca15c4380" // You can make this dynamic later
+        schoolId: "678f192d-07ba-4dc9-b834-4a9ca15c4380"
       };
 
-      console.log('Sending payload:', payload); // Debug log
-
-      await axios.post('http://localhost:8080/api/courses/create', payload);
-      
-      toast.success('Course created successfully!');
-      
-      // Reset form
-      setFormData({
-        name: '',
-        credits: '',
-        grade: '',
-        description: ''
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${baseUrl}/api/courses/create`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
-      
-      // Optionally navigate back or show success message
-      setTimeout(() => {
-        onBack();
-      }, 1500);
+
+      if (response.data && response.data.success) {
+        toast.success(response.data.message || 'Course created successfully!');
+        setFormData({
+          name: '',
+          credits: '',
+          grade: '',
+          description: ''
+        });
+        if (onCourseCreated) onCourseCreated();
+        setTimeout(() => {
+          onBack();
+        }, 1500);
+      } else {
+        toast.error(response.data.message || 'Failed to create course');
+      }
       
     } catch (error: any) {
       console.error('Error creating course:', error);
@@ -172,27 +179,20 @@ function Course({ onBack }: CourseProps) {
                 />
               </div>
 
-              {/* Grade Level */}
+              {/* Grade Level as Text Field */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
                   Grade Level
                 </label>
-                <div className="relative">
-                  <select
-                    name="grade"
-                    value={formData.grade}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
-                    required
-                  >
-                    <option value="">Select grade level</option>
-                    <option value="9">Grade 9</option>
-                    <option value="10">Grade 10</option>
-                    <option value="11">Grade 11</option>
-                    <option value="12:A_level">Grade 12:A_level</option>
-                  </select>
-                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
+                <input
+                  type="text"
+                  name="grade"
+                  value={formData.grade}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900"
+                  placeholder="Enter grade level (e.g. 12:A_level)"
+                  required
+                />
               </div>
 
               {/* Description */}

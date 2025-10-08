@@ -4,6 +4,11 @@ import { SiGoogleclassroom } from "react-icons/si";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaCalendarCheck } from 'react-icons/fa';
 import { MdAssignment } from "react-icons/md";
+import { TbReport } from "react-icons/tb";
+import { IoIosPeople } from "react-icons/io";
+import { IoMdSettings } from "react-icons/io";
+import { FaClipboardCheck } from "react-icons/fa6";
+
 
 
 
@@ -116,12 +121,11 @@ export default function Dashboard() {
             </button>
             {[
               { icon: LiaChalkboardTeacherSolid, label: 'My Classes' },
-              { icon: FaCalendarCheck, label: 'Attendance' },
+              { icon: FaClipboardCheck, label: 'Attendance' },
               { icon:  MdAssignment, label: 'Assignments' },
-              { icon: BarChart3, label: 'Behavior Reports' },
-              { icon: UserCircle, label: 'Student Profiles' },
-              { icon: MessageSquare, label: 'Communication' },
-              { icon: Settings, label: 'Settings' }
+              { icon: TbReport, label: 'Behavior Reports' },
+              { icon: IoIosPeople, label: 'Student Profiles' },
+              { icon: IoMdSettings, label: 'Settings' }
             ].map((item, idx) => (
               <button key={idx} className="w-full text-gray-700 px-4 py-3 rounded-lg flex items-center gap-3 hover:bg-gray-50">
                 <item.icon className="w-5 h-5" />

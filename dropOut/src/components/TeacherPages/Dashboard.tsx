@@ -5,10 +5,10 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
 
   const statCards = [
-    { title: 'My Students', value: '128', subtitle: '+1 from last term', icon: Users, color: 'bg-blue-50', iconColor: 'text-blue-500' },
-    { title: 'My Classes', value: '6', subtitle: 'Active classes', icon: BookOpen, color: 'bg-purple-50', iconColor: 'text-purple-500' },
-    { title: 'At-Risk Students', value: '12', subtitle: 'Needs attention', icon: UserCircle, color: 'bg-red-50', iconColor: 'text-red-500', alert: true },
-    { title: "Today's Attendance", value: '92%', subtitle: '114 present, 10 absent', icon: BarChart3, color: 'bg-green-50', iconColor: 'text-green-500' }
+    { title: 'My Students', value: '128', subtitle: '+1 from last term', icon: Users, color: 'bg-white', iconColor: 'text-blue-500' },
+    { title: 'My Classes', value: '6', subtitle: 'Active classes', icon: BookOpen, color: 'bg-white', iconColor: 'text-purple-500' },
+    { title: 'At-Risk Students', value: '12', subtitle: 'Needs attention', icon: UserCircle, color: 'bg-white', iconColor: 'text-red-500', alert: true },
+    { title: "Today's Attendance", value: '92%', subtitle: '114 present, 10 absent', icon: BarChart3, color: 'bg-white', iconColor: 'text-green-500' }
   ];
 
   const attendanceData = [
@@ -111,7 +111,7 @@ export default function Dashboard() {
             {[
               { icon: BookOpen, label: 'My Classes' },
               { icon: Calendar, label: 'Attendance' },
-              { icon: BookOpen, label: 'Assignments & Quizzes' },
+              { icon: BookOpen, label: 'Assignments' },
               { icon: BarChart3, label: 'Behavior Reports' },
               { icon: UserCircle, label: 'Student Profiles' },
               { icon: MessageSquare, label: 'Communication' },
@@ -130,13 +130,13 @@ export default function Dashboard() {
           {/* Stat Cards */}
           <div className="grid grid-cols-4 gap-6 mb-6">
             {statCards.map((card, idx) => (
-              <div key={idx} className={`${card.color} rounded-lg p-5 relative`}>
+              <div key={idx} className={`${card.color} rounded-lg p-5 relative shadow-sm border border-gray-200`}>
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">{card.title}</p>
                     <h3 className="text-3xl font-bold text-gray-900">{card.value}</h3>
                   </div>
-                  <div className={`${card.color} p-2 rounded-lg`}>
+                  <div className={`bg-white p-2 rounded-lg border border-gray-200`}>
                     <card.icon className={`w-6 h-6 ${card.iconColor}`} />
                   </div>
                 </div>

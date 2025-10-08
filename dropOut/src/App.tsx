@@ -24,6 +24,7 @@ function App() {
           <Route path="/new-password-reset" element={<NewPasswordReset />} />
           <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
           <Route path="/hod-dashboard" element={<Hod />} />
+           <Route path="/teacher-dashboard" element={<Dashboard />} />
         </Routes>
         <ToastContainer 
           position="top-right"

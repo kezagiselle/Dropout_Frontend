@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { ChevronDown, Calendar, Users, BookOpen, BarChart3, UserCircle, MessageSquare, Settings, Bell, Search } from 'lucide-react';
+import { SiGoogleclassroom } from "react-icons/si";
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
+import { FaCalendarCheck } from 'react-icons/fa';
+import { MdAssignment } from "react-icons/md";
+
+
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -109,9 +115,9 @@ export default function Dashboard() {
               <span className="font-medium">Dashboard</span>
             </button>
             {[
-              { icon: BookOpen, label: 'My Classes' },
-              { icon: Calendar, label: 'Attendance' },
-              { icon: BookOpen, label: 'Assignments' },
+              { icon: LiaChalkboardTeacherSolid, label: 'My Classes' },
+              { icon: FaCalendarCheck, label: 'Attendance' },
+              { icon:  MdAssignment, label: 'Assignments' },
               { icon: BarChart3, label: 'Behavior Reports' },
               { icon: UserCircle, label: 'Student Profiles' },
               { icon: MessageSquare, label: 'Communication' },

@@ -8,18 +8,17 @@ import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import { FaClipboardCheck } from "react-icons/fa6";
-
-
-
+import { IoMdTv } from "react-icons/io";
+import { TbAlertTriangle } from "react-icons/tb";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
 
   const statCards = [
-    { title: 'My Students', value: '128', subtitle: '+1 from last term', icon: Users, color: 'bg-white', iconColor: 'text-blue-500' },
-    { title: 'My Classes', value: '6', subtitle: 'Active classes', icon: BookOpen, color: 'bg-white', iconColor: 'text-purple-500' },
-    { title: 'At-Risk Students', value: '12', subtitle: 'Needs attention', icon: UserCircle, color: 'bg-white', iconColor: 'text-red-500', alert: true },
-    { title: "Today's Attendance", value: '92%', subtitle: '114 present, 10 absent', icon: BarChart3, color: 'bg-white', iconColor: 'text-green-500' }
+    { title: 'My Students', value: '128', subtitle: '+1 from last term', icon: IoIosPeople, color: 'bg-white', iconColor: 'text-blue-500' },
+    { title: 'My Classes', value: '6', subtitle: 'Active classes', icon: IoMdTv, color: 'bg-white', iconColor: 'text-green-500' },
+    { title: 'At-Risk Students', value: '12', subtitle: 'Needs attention', icon: TbAlertTriangle, color: 'bg-white', iconColor: 'text-red-500', valueColor: 'text-red-600' },
+    { title: "Today's Attendance", value: '92%', subtitle: '114 present, 10 absent', icon: FaClipboardCheck, color: 'bg-white', iconColor: 'text-green-500', valueColor: 'text-green-600' }
   ];
 
   const attendanceData = [
@@ -48,9 +47,9 @@ export default function Dashboard() {
   ];
 
   const alerts = [
-    { title: 'Parent meeting scheduled', time: 'Tomorrow, 3:00 PM', type: 'urgent', color: 'bg-red-500' },
-    { title: 'Grade submission deadline', time: 'Due in 2 days', type: 'medium', color: 'bg-orange-500' },
-    { title: 'New curriculum update', time: 'Review required', type: 'info', color: 'bg-blue-500' }
+    { title: 'Parent meeting scheduled', time: 'Tomorrow, 3:00 PM', type: 'urgent', bgColor: 'bg-red-50', borderColor: 'border-red-200' },
+    { title: 'Grade submission deadline', time: 'Due in 2 days', type: 'medium', bgColor: 'bg-orange-50', borderColor: 'border-orange-200' },
+    { title: 'New curriculum update', time: 'Review required', type: 'info', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' }
   ];
 
   return (
@@ -143,19 +142,14 @@ export default function Dashboard() {
               <div key={idx} className={`${card.color} rounded-lg p-5 relative shadow-sm border border-gray-200`}>
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">{card.title}</p>
-                    <h3 className="text-3xl font-bold text-gray-900">{card.value}</h3>
+                    <p className="text-sm font-semibold text-gray-600 mb-1">{card.title}</p>
+                    <h3 className={`text-3xl font-bold ${card.valueColor || 'text-gray-900'}`}>{card.value}</h3>
                   </div>
-                  <div className={`bg-white p-2 rounded-lg border border-gray-200`}>
+                  <div className="bg-white p-2 rounded-lg border border-gray-200">
                     <card.icon className={`w-6 h-6 ${card.iconColor}`} />
                   </div>
                 </div>
                 <p className="text-xs text-gray-500">{card.subtitle}</p>
-                {card.alert && (
-                  <div className="absolute top-2 right-2">
-                    <span className="w-2 h-2 bg-red-500 rounded-full inline-block"></span>
-                  </div>
-                )}
               </div>
             ))}
           </div>
@@ -223,12 +217,12 @@ export default function Dashboard() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <h3 className="text-sm text-gray-600 mb-2">Pending to Grade</h3>
+                    <h3 className="text-sm font-semibold text-gray-600 mb-2">Pending to Grade</h3>
                     <div className="text-3xl font-bold text-red-600 mb-1">24</div>
                     <p className="text-xs text-gray-500">assignments</p>
                   </div>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h3 className="text-sm text-gray-600 mb-2">Upcoming to Publish</h3>
+                    <h3 className="text-sm font-semibold text-gray-600 mb-2">Upcoming to Publish</h3>
                     <div className="text-3xl font-bold text-blue-600 mb-1">3</div>
                     <p className="text-xs text-gray-500">assignments</p>
                   </div>
@@ -257,20 +251,20 @@ export default function Dashboard() {
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
                 <div className="grid grid-cols-4 gap-4">
-                  <button className="bg-blue-400 text-white p-4 rounded-lg hover:bg-blue-500 transition">
-                    <Users className="w-6 h-6 mx-auto mb-2" />
+                  <button className="bg-blue-400 text-white p-3 rounded-lg hover:bg-blue-500 transition flex items-center justify-center gap-2">
+                    <Users className="w-4 h-4" />
                     <span className="text-sm">Add Class</span>
                   </button>
-                  <button className="bg-yellow-400 text-white p-4 rounded-lg hover:bg-yellow-500 transition">
-                    <BookOpen className="w-6 h-6 mx-auto mb-2" />
+                  <button className="bg-yellow-400 text-white p-3 rounded-lg hover:bg-yellow-500 transition flex items-center justify-center gap-2">
+                    <BookOpen className="w-4 h-4" />
                     <span className="text-sm">Add Assignment</span>
                   </button>
-                  <button className="bg-red-400 text-white p-4 rounded-lg hover:bg-red-500 transition">
-                    <BarChart3 className="w-6 h-6 mx-auto mb-2" />
+                  <button className="bg-red-400 text-white p-3 rounded-lg hover:bg-red-500 transition flex items-center justify-center gap-2">
+                    <BarChart3 className="w-4 h-4" />
                     <span className="text-sm">Log Behavior</span>
                   </button>
-                  <button className="bg-green-400 text-white p-4 rounded-lg hover:bg-green-500 transition">
-                    <MessageSquare className="w-6 h-6 mx-auto mb-2" />
+                  <button className="bg-green-400 text-white p-3 rounded-lg hover:bg-green-500 transition flex items-center justify-center gap-2">
+                    <MessageSquare className="w-4 h-4" />
                     <span className="text-sm">Message Parent</span>
                   </button>
                 </div>
@@ -324,8 +318,8 @@ export default function Dashboard() {
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Alerts & Tasks</h2>
                 <div className="space-y-3">
                   {alerts.map((alert, idx) => (
-                    <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className={`${alert.color} text-white px-2 py-1 rounded text-xs font-medium`}>
+                    <div key={idx} className={`flex items-start gap-3 p-3 rounded-lg border ${alert.bgColor} ${alert.borderColor}`}>
+                      <div className={`${alert.type === 'urgent' ? 'bg-red-500' : alert.type === 'medium' ? 'bg-orange-500' : 'bg-blue-500'} text-white px-2 py-1 rounded text-xs font-medium`}>
                         {alert.type === 'urgent' ? 'Urgent' : alert.type === 'medium' ? 'Medium' : 'Info'}
                       </div>
                       <div className="flex-1">

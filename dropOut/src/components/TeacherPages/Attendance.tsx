@@ -8,14 +8,18 @@ import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import pe1 from "../../../src/img/pe1.png";
+import pe2 from "../../../src/img/pe2.png";
+import pe3 from "../../../src/img/pe3.png";
 
-// Define TypeScript interfaces
+
 interface Student {
   id: number;
   name: string;
   studentId: string;
   avatar: string;
   statuses: string[];
+  activeStatus: string;
 }
 
 interface ChronicAbsence {
@@ -33,7 +37,7 @@ interface ChartData {
   amt: number;
 }
 
-// Define proper TypeScript types for Recharts
+
 interface TickProps {
   x: number;
   y: number;
@@ -45,13 +49,13 @@ interface TickProps {
   visibleTicksCount: number;
 }
 
-// Custom tick formatters with proper TypeScript types
+
 const monthTickFormatter = (tick: string): string => {
   const date = new Date(tick);
   return (date.getMonth() + 1).toString();
 };
 
-const renderQuarterTick = (tickProps: TickProps): React.ReactElement | null => {
+const renderQuarterTick = (tickProps: TickProps): React.ReactElement => {
   const { x, y, payload, width, visibleTicksCount } = tickProps;
   const { value, offset } = payload;
   const date = new Date(value);
@@ -76,7 +80,7 @@ const renderQuarterTick = (tickProps: TickProps): React.ReactElement | null => {
     const pathX = Math.floor(isLast ? x - offset + width / visibleTicksCount : x - offset) + 0.5;
     return <path d={`M${pathX},${y - 4}v${-35}`} stroke="red" />;
   }
-  return null;
+  return<></>
 };
 
 export default function Attendance() {
@@ -98,7 +102,7 @@ export default function Attendance() {
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
-  // Updated chart data for the BarChart with quarterly formatting
+  
   const chartData: ChartData[] = [
     { date: '2000-01', uv: 4000, pv: 2400, amt: 2400 },
     { date: '2000-02', uv: 3000, pv: 1398, amt: 2210 },
@@ -119,47 +123,60 @@ export default function Attendance() {
       id: 1,
       name: 'Emma Johnson',
       studentId: 'Student ID: 2024001',
-      avatar: '👩',
-      statuses: ['Present', 'Absent', 'Late', 'Excused']
+      avatar: pe1,
+      statuses: ['Present', 'Absent', 'Late', 'Excused'],
+      activeStatus: 'Present' 
     },
     {
       id: 2,
       name: 'Michael Chen',
       studentId: 'Student ID: 2024002',
-      avatar: '👨',
-      statuses: ['Present', 'Absent', 'Late', 'Excused']
+      avatar: pe2,
+      statuses: ['Present', 'Absent', 'Late', 'Excused'],
+      activeStatus: 'Present' 
     },
     {
       id: 3,
       name: 'Sarah Williams',
       studentId: 'Student ID: 2024003',
-      avatar: '👩',
-      statuses: ['Present', 'Absent', 'Late', 'Excused']
+      avatar: pe3,
+      statuses: ['Present', 'Absent', 'Late', 'Excused'],
+      activeStatus: 'Present' 
     },
     {
       id: 4,
       name: 'David Martinez',
       studentId: 'Student ID: 2024004',
-      avatar: '👨',
-      statuses: ['Present', 'Absent', 'Late', 'Excused']
+      avatar: pe1,
+      statuses: ['Present', 'Absent', 'Late', 'Excused'],
+      activeStatus: 'Late' 
     }
   ];
 
   const chronicAbsences: ChronicAbsence[] = [
-    { name: 'Alex Thompson', grade: 'Grade 5A', days: '12 day', risk: 'High Risk', avatar: '👨' },
-    { name: 'Jessica Lee', grade: 'Grade 5B', days: '8 day', risk: 'Medium Risk', avatar: '👩' },
-    { name: 'Ryan Garcia', grade: 'Grade 6A', days: '6 day', risk: 'Watch List', avatar: '👨' }
+    { name: 'Alex Thompson', grade: 'Grade 5A', days: '12 day', risk: 'High Risk', avatar: pe2 },
+    { name: 'Jessica Lee', grade: 'Grade 5B', days: '8 day', risk: 'Medium Risk', avatar: pe3 },
+    { name: 'Ryan Garcia', grade: 'Grade 6A', days: '6 day', risk: 'Watch List', avatar: pe1 }
   ];
 
-  // Add proper TypeScript types to function parameters
-  const getStatusStyle = (status: string): string => {
-    switch(status) {
-      case 'Present': return 'bg-green-400 text-white';
-      case 'Absent': return 'bg-gray-300 text-gray-700';
-      case 'Late': return 'bg-yellow-400 text-white';
-      case 'Excused': return 'bg-gray-200 text-gray-700';
-      default: return 'bg-gray-200 text-gray-700';
+  
+  const getStatusStyle = (status: string, student: Student): string => {
+    if (status === student.activeStatus) {
+      switch(status) {
+        case 'Present': 
+          return 'bg-green-400 text-white'; 
+        case 'Late':
+          if (student.name === 'David Martinez') {
+            return 'bg-yellow-600 text-white'; 
+          }
+          return 'bg-gray-300 text-gray-700'; 
+        default:
+          return 'bg-gray-300 text-gray-700'; 
+      }
     }
+    
+    
+    return 'bg-gray-200 text-gray-500';
   };
 
   const getRiskStyle = (risk: string): string => {
@@ -168,6 +185,15 @@ export default function Attendance() {
       case 'Medium Risk': return 'bg-orange-500 text-white';
       case 'Watch List': return 'bg-yellow-500 text-white';
       default: return 'bg-gray-500 text-white';
+    }
+  };
+
+  const getChronicAbsenceBg = (risk: string): string => {
+    switch(risk) {
+      case 'High Risk': return 'bg-red-50 border-red-200';
+      case 'Medium Risk': return 'bg-orange-50 border-orange-200';
+      case 'Watch List': return 'bg-yellow-50 border-yellow-200';
+      default: return 'bg-gray-50 border-gray-200';
     }
   };
 
@@ -239,7 +265,7 @@ export default function Attendance() {
                   ? 'bg-orange-500 text-white' 
                   : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
               }`}
-              onClick={() => handleNavigation('/', 'Dashboard')}
+              onClick={() => handleNavigation('/teacher-dashboard', 'Dashboard')}
             >
               <BarChart3 className="w-5 h-5" />
               <span className="font-medium">Dashboard</span>
@@ -388,7 +414,7 @@ export default function Attendance() {
                     axisLine={false}
                     tickLine={false}
                     interval={0}
-                   tick={renderQuarterTick as any}
+                    tick={renderQuarterTick as any}
                     height={1}
                     scale="band"
                     xAxisId="quarter"
@@ -403,13 +429,12 @@ export default function Attendance() {
             </div>
           </div>
 
-          {/* Two Column Layout - Daily Attendance on Left, Chronic Absences on Right */}
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Daily Attendance Recording - Left Side */}
             <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-bold text-gray-900">Daily Attendance Recording</h2>
-                <div className="flex gap-3">
+                <div className="flex items-center gap-3">
                   <button className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm flex items-center gap-2 hover:bg-gray-50">
                     {selectedGrade}
                     <ChevronDown className="w-4 h-4" />
@@ -425,8 +450,8 @@ export default function Attendance() {
                 {students.map((student) => (
                   <div key={student.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-xl">
-                        {student.avatar}
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                        <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">{student.name}</p>
@@ -437,7 +462,7 @@ export default function Attendance() {
                       {student.statuses.map((status, idx) => (
                         <button
                           key={idx}
-                          className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${getStatusStyle(status)}`}
+                          className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${getStatusStyle(status, student)}`}
                         >
                           {status}
                         </button>
@@ -447,12 +472,14 @@ export default function Attendance() {
                 ))}
               </div>
 
-              <button className="w-full mt-4 px-4 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors">
-                See All
-              </button>
+              <div className="flex justify-end mt-4">
+                <button className="px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-sm">
+                  See All
+                </button>
+              </div>
             </div>
 
-            {/* Chronic Absences - Right Side */}
+            
             <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-gray-900">Chronic Absences</h2>
@@ -461,10 +488,13 @@ export default function Attendance() {
 
               <div className="space-y-4">
                 {chronicAbsences.map((student, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <div 
+                    key={idx} 
+                    className={`flex items-center justify-between p-4 rounded-lg border-2 transition-colors ${getChronicAbsenceBg(student.risk)}`}
+                  >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-xl">
-                        {student.avatar}
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                        <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">{student.name}</p>
@@ -480,6 +510,7 @@ export default function Attendance() {
                   </div>
                 ))}
               </div>
+            
             </div>
           </div>
         </main>

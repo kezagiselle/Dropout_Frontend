@@ -13,6 +13,7 @@ import Hod from "./components/Hod";
 import Dashboard from "./components/TeacherPages/Dashboard";
 import MyClasses from './components/TeacherPages/MyClasses';
 import Attendance from "./components/TeacherPages/Attendance";
+import DailyAttendanceRecording from "./components/TeacherPages/DailyAttendance";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/new-password-reset" element={<NewPasswordReset />} />
           <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
            <Route path="/attendance" element={<Attendance />} />
+            <Route path="/daily-attendance" element={<DailyAttendanceRecording/>} />
           <Route path="/hod-dashboard" element={<Hod />} />
            <Route path="/teacher-dashboard" element={<Dashboard />} />
            <Route path="/my-classes" element={<MyClasses />} />

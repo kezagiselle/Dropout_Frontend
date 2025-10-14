@@ -133,7 +133,7 @@ export default function Attendance() {
       studentId: 'Student ID: 2024002',
       avatar: pe2,
       statuses: ['Present', 'Absent', 'Late', 'Excused'],
-      activeStatus: 'Present' 
+      activeStatus: 'Absent' // Changed to Absent for orange color
     },
     {
       id: 3,
@@ -164,7 +164,15 @@ export default function Attendance() {
     if (status === student.activeStatus) {
       switch(status) {
         case 'Present': 
+          if (student.name === 'Michael Chen') {
+            return 'bg-gray-300 text-gray-700'; // Light gray for Michael's Present
+          }
           return 'bg-green-400 text-white'; 
+        case 'Absent':
+          if (student.name === 'Michael Chen') {
+            return 'bg-orange-500 text-white'; // Orange for Michael's Absent
+          }
+          return 'bg-gray-300 text-gray-700';
         case 'Late':
           if (student.name === 'David Martinez') {
             return 'bg-yellow-600 text-white'; 

@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import MyClasses from './MyClasses';
 import Attendance from '../TeacherPages/Attendance';
+import DailyAttendance from '../TeacherPages/DailyAttendance'
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -30,7 +31,10 @@ export default function Dashboard() {
         return <Attendance />;
       case '/my-classes':
         return <MyClasses />;
-      // Add other cases for different routes
+
+        case '/DailyAttendance':
+        return <DailyAttendance />;
+
       default:
         return <Dashboard />;
     }

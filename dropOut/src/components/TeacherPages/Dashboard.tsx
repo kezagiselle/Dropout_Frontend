@@ -3,7 +3,6 @@ import { ChevronDown, Calendar, Users, BookOpen, BarChart3, UserCircle, MessageS
 import { SiGoogleclassroom } from "react-icons/si";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaCalendarCheck } from 'react-icons/fa';
-import { MdAssignment } from "react-icons/md";
 import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
@@ -41,9 +40,9 @@ export default function Dashboard() {
   ];
 
   const schedule = [
-    { period: 'Period 1', class: 'Mathematics - Grade 10A', time: '8:00 - 8:45 AM', color: 'bg-blue-500' },
-    { period: 'Period 2', class: 'Mathematics - Grade 10B', time: '8:50 - 9:35 AM', color: 'bg-green-500' },
-    { period: 'Free', class: 'Free Period', time: '9:40 - 10:25 AM', color: 'bg-emerald-600' }
+    { period: 'Period 1', class: 'Mathematics - Grade 10A', time: '8:00 - 8:45 AM', color: 'bg-blue-500', bgColor: 'bg-blue-50' },
+    { period: 'Period 2', class: 'Mathematics - Grade 10B', time: '8:50 - 9:35 AM', color: 'bg-green-500', bgColor: 'bg-green-50' },
+    { period: 'Free', class: 'Free Period', time: '9:40 - 10:25 AM', color: 'bg-emerald-600', bgColor: 'bg-green-50' }
   ];
 
   const alerts = [
@@ -121,7 +120,6 @@ export default function Dashboard() {
             {[
               { icon: LiaChalkboardTeacherSolid, label: 'My Classes' },
               { icon: FaClipboardCheck, label: 'Attendance' },
-              { icon:  MdAssignment, label: 'Assignments' },
               { icon: TbReport, label: 'Behavior Reports' },
               { icon: IoIosPeople, label: 'Student Profiles' },
               { icon: IoMdSettings, label: 'Settings' }
@@ -234,14 +232,16 @@ export default function Dashboard() {
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Today's Schedule</h2>
                 <div className="space-y-3">
                   {schedule.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-4">
-                      <div className={`${item.color} text-white px-3 py-1 rounded text-sm font-medium`}>
-                        {item.period}
+                    <div key={idx} className={`${item.bgColor} rounded-lg p-4 border border-gray-200`}>
+                      <div className="flex items-center gap-4">
+                        <div className={`${item.color} text-white px-3 py-1 rounded text-sm font-medium`}>
+                          {item.period}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900">{item.class}</p>
+                        </div>
+                        <p className="text-sm text-gray-500">{item.time}</p>
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{item.class}</p>
-                      </div>
-                      <p className="text-sm text-gray-500">{item.time}</p>
                     </div>
                   ))}
                 </div>

@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Check, X, Clock, User, ChevronDown, Bell, Save } from 'lucide-react';
+import { ArrowLeft, Calendar, Check, X, User, ChevronDown, Bell, Save } from 'lucide-react';
+import { IoTimeSharp } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
+import pe1 from "../../../src/img/pe1.png";
+import pe2 from "../../../src/img/pe2.png";
+import pe3 from "../../../src/img/pe3.png";
 
 interface Student {
   id: string;
@@ -18,13 +23,14 @@ interface Counts {
 export default function DailyAttendance() {
   const [selectedGrade, setSelectedGrade] = useState<string>('Grade 5A');
   const [selectedDate, setSelectedDate] = useState<string>('2024-01-15');
+  const navigate = useNavigate();
   
   const [students, setStudents] = useState<Student[]>([
-    { id: 'STU001', name: 'Emma Johnson', avatar: '👩', status: 'present' },
-    { id: 'STU002', name: 'Michael Chen', avatar: '👨', status: 'present' },
-    { id: 'STU003', name: 'Sarah Williams', avatar: '👩‍🦰', status: 'absent' },
-    { id: 'STU004', name: 'David Rodriguez', avatar: '👨‍🦱', status: 'late' },
-    { id: 'STU005', name: 'Jessica Brown', avatar: '👩‍🦱', status: 'excused' },
+    { id: 'STU001', name: 'Emma Johnson', avatar: pe1, status: 'present' },
+    { id: 'STU002', name: 'Michael Chen', avatar: pe2, status: 'present' },
+    { id: 'STU003', name: 'Sarah Williams', avatar: pe3, status: 'absent' },
+    { id: 'STU004', name: 'David Rodriguez', avatar: pe1, status: 'late' },
+    { id: 'STU005', name: 'Jessica Brown', avatar: pe2, status: 'excused' },
   ]);
 
   const updateStatus = (studentId: string, newStatus: Student['status']): void => {
@@ -35,6 +41,10 @@ export default function DailyAttendance() {
 
   const markAllPresent = (): void => {
     setStudents(students.map(student => ({ ...student, status: 'present' })));
+  };
+
+  const handleBack = (): void => {
+    navigate('/attendance');
   };
 
   const counts: Counts = students.reduce((acc: Counts, student) => {
@@ -48,13 +58,13 @@ export default function DailyAttendance() {
     
     switch(buttonStatus) {
       case 'present':
-        return `${baseClass} ${isActive ? 'bg-green-400 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`;
+        return `${baseClass} ${isActive ? 'bg-green-200 text-gray-800 shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`;
       case 'absent':
         return `${baseClass} ${isActive ? 'bg-red-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`;
       case 'late':
         return `${baseClass} ${isActive ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`;
       case 'excused':
-        return `${baseClass} ${isActive ? 'bg-green-400 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`;
+        return `${baseClass} ${isActive ? 'bg-green-200 text-gray-800 shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`;
       default:
         return baseClass;
     }
@@ -69,7 +79,10 @@ export default function DailyAttendance() {
             <h1 className="text-2xl font-bold text-gray-900">Daily Attendance Recording</h1>
             <p className="text-sm text-gray-600 mt-1">Mark attendance for your students quickly and efficiently</p>
           </div>
-          <button className="px-4 py-2 bg-gray-800 text-white rounded-lg flex items-center gap-2 hover:bg-gray-700 transition-colors">
+          <button 
+            onClick={handleBack}
+            className="px-4 py-2 bg-gray-800 text-white rounded-lg flex items-center gap-2 hover:bg-gray-700 transition-colors"
+          >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
@@ -113,7 +126,7 @@ export default function DailyAttendance() {
 
             <button 
               onClick={markAllPresent}
-              className="px-5 py-2.5 bg-cyan-400 text-white rounded-lg font-medium flex items-center gap-2 hover:bg-cyan-500 transition-colors"
+              className="px-5 py-2.5 bg-blue-200 text-gray-800 rounded-lg font-medium flex items-center gap-2 hover:bg-blue-300 transition-colors"
             >
               <Check className="w-4 h-4" />
               Mark All Present
@@ -125,7 +138,7 @@ export default function DailyAttendance() {
         <div className="grid grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
             <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-green-200 rounded-full"></div>
               <div>
                 <p className="text-3xl font-bold text-gray-900">{counts.present || 0}</p>
                 <p className="text-sm text-gray-600">Present</p>
@@ -173,7 +186,7 @@ export default function DailyAttendance() {
                 <Bell className="w-4 h-4" />
                 Notify Parents
               </button>
-              <button className="px-4 py-2 bg-green-400 text-white rounded-lg font-medium flex items-center gap-2 hover:bg-green-500 transition-colors">
+              <button className="px-4 py-2 bg-green-200 text-gray-800 rounded-lg font-medium flex items-center gap-2 hover:bg-green-300 transition-colors">
                 <Save className="w-4 h-4" />
                 Save Attendance
               </button>
@@ -184,8 +197,8 @@ export default function DailyAttendance() {
             {students.map((student) => (
               <div key={student.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-2xl">
-                    {student.avatar}
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+                    <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">{student.name}</p>
@@ -212,7 +225,7 @@ export default function DailyAttendance() {
                     onClick={() => updateStatus(student.id, 'late')}
                     className={getStatusButtonClass(student.status, 'late')}
                   >
-                    <Clock className="w-4 h-4" />
+                    <IoTimeSharp className="w-4 h-4" />
                     Late
                   </button>
                   <button 
@@ -236,7 +249,7 @@ export default function DailyAttendance() {
               <Check className="w-4 h-4" />
               Submit Attendance
             </button>
-            <button className="px-6 py-3 bg-green-400 text-white rounded-lg font-medium flex items-center gap-2 hover:bg-green-500 transition-colors">
+            <button className="px-6 py-3 bg-green-200 text-gray-800 rounded-lg font-medium flex items-center gap-2 hover:bg-green-300 transition-colors">
               <Bell className="w-4 h-4" />
               Notify Parents
             </button>

@@ -207,7 +207,7 @@ export default function Attendance() {
 
   // Add this function to handle navigation to DailyAttendanceRecording
   const handleMarkAllPresent = () => {
-    navigate('/DailyAttendance');
+    navigate('/daily-attendance');
   };
 
   return (

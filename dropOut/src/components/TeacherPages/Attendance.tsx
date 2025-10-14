@@ -205,6 +205,11 @@ export default function Attendance() {
     }
   };
 
+  // Add this function to handle navigation to DailyAttendanceRecording
+  const handleMarkAllPresent = () => {
+    navigate('/DailyAttendance');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -447,7 +452,10 @@ export default function Attendance() {
                     {selectedGrade}
                     <ChevronDown className="w-4 h-4" />
                   </button>
-                  <button className="px-5 py-2 bg-blue-300 text-white rounded-lg text-sm font-medium hover:bg-blue-400 flex items-center gap-2">
+                  <button 
+                    className="px-5 py-2 bg-blue-300 text-white rounded-lg text-sm font-medium hover:bg-blue-400 flex items-center gap-2"
+                    onClick={handleMarkAllPresent} // Updated to use the navigation function
+                  >
                     <Users className="w-4 h-4" />
                     Mark All Present
                   </button>

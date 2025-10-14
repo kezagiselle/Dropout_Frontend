@@ -15,7 +15,7 @@ interface Counts {
   excused?: number;
 }
 
-export default function DailyAttendanceRecording() {
+export default function DailyAttendance() {
   const [selectedGrade, setSelectedGrade] = useState<string>('Grade 5A');
   const [selectedDate, setSelectedDate] = useState<string>('2024-01-15');
   

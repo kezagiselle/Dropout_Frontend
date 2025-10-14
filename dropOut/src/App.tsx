@@ -11,6 +11,7 @@ import PasswordChangedConfirmation from "./components/PasswordChange";
 import LandingPage from "./components/LandingPage";
 import Hod from "./components/Hod";
 import Dashboard from "./components/TeacherPages/Dashboard";
+import MyClasses from './components/TeacherPages/MyClasses';
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
           <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
           <Route path="/hod-dashboard" element={<Hod />} />
            <Route path="/teacher-dashboard" element={<Dashboard />} />
+           <Route path="/my-classes" element={<MyClasses />} />
+           
         </Routes>
         <ToastContainer 
           position="top-right"

@@ -10,9 +10,17 @@ import { FaClipboardCheck } from "react-icons/fa6";
 import { IoMdTv } from "react-icons/io";
 import { TbAlertTriangle } from "react-icons/tb";
 import userr from "../../../src/img/userr.png";
+import { useNavigate } from 'react-router-dom';
+import MyClasses from './MyClasses';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string, tabName: string) => {
+    setActiveTab(tabName);
+    navigate(path);
+  };
 
   const statCards = [
     { title: 'My Students', value: '128', subtitle: '+1 from last term', icon: IoIosPeople, color: 'bg-white', iconColor: 'text-blue-500' },
@@ -50,6 +58,14 @@ export default function Dashboard() {
     { title: 'Parent meeting scheduled', time: 'Tomorrow, 3:00 PM', type: 'urgent', bgColor: 'bg-red-50', borderColor: 'border-red-200' },
     { title: 'Grade submission deadline', time: 'Due in 2 days', type: 'medium', bgColor: 'bg-orange-50', borderColor: 'border-orange-200' },
     { title: 'New curriculum update', time: 'Review required', type: 'info', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' }
+  ];
+
+  const menuItems = [
+    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
+    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
+    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
+    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
+    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
   return (
@@ -112,27 +128,35 @@ export default function Dashboard() {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
-          <nav className="p-4">
-            <button className="w-full bg-orange-500 text-white px-4 py-3 rounded-lg flex items-center gap-3 mb-2">
-              <BarChart3 className="w-5 h-5" />
-              <span className="font-medium">Dashboard</span>
-            </button>
-            {[
-              { icon: LiaChalkboardTeacherSolid, label: 'My Classes' },
-              { icon: FaClipboardCheck, label: 'Attendance' },
-              { icon: TbReport, label: 'Behavior Reports' },
-              { icon: IoIosPeople, label: 'Student Profiles' },
-              { icon: IoMdSettings, label: 'Settings' }
-            ].map((item, idx) => (
-              <button key={idx} className="w-full text-gray-700 px-4 py-3 rounded-lg flex items-center gap-3 hover:bg-gray-50">
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
+<aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
+  <nav className="p-4">
+    <button 
+      className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
+        activeTab === 'Dashboard' 
+          ? 'bg-orange-500 text-white' 
+          : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+      }`}
+      onClick={() => handleNavigation('/', 'Dashboard')}
+    >
+      <BarChart3 className="w-5 h-5" />
+      <span className="font-medium">Dashboard</span>
+    </button>
+    {menuItems.map((item, idx) => (
+      <button 
+        key={idx} 
+        className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
+          activeTab === item.label 
+            ? 'bg-orange-500 text-white' 
+            : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+        }`}
+        onClick={() => handleNavigation(item.path, item.label)}
+      >
+        <item.icon className="w-5 h-5" />
+        <span className="font-medium">{item.label}</span>
+      </button>
+    ))}
+  </nav>
+</aside>
         {/* Main Content */}
         <main className="flex-1 p-6">
           {/* Stat Cards */}

@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronDown, Calendar, Users, BookOpen, BarChart3, Bell, Search, Grid, List, ChevronLeft, ChevronRight, TrendingUp, AlertTriangle } from 'lucide-react';
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
+import { FaClipboardCheck } from "react-icons/fa6";
+import { TbReport } from "react-icons/tb";
+import { IoIosPeople } from "react-icons/io";
+import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
+import { useNavigate } from 'react-router-dom';
 
 interface ClassItem {
   id: number;
@@ -15,12 +21,26 @@ interface ClassItem {
   alert?: string;
 }
 
-
 function MyClasses() {
   const [periodFilter, setPeriodFilter] = useState('All Periods');
   const [subjectFilter, setSubjectFilter] = useState('All Subjects');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [viewMode, setViewMode] = useState('grid');
+  const [activeTab, setActiveTab] = useState('My Classes');
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string, tabName: string) => {
+    setActiveTab(tabName);
+    navigate(path);
+  };
+
+  const menuItems = [
+    { icon: BarChart3, label: 'Dashboard', path: '/' },
+    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
+    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
+    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
+    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
+  ];
 
   const classes = [
     {
@@ -82,20 +102,29 @@ function MyClasses() {
     }
   ];
 
-const getStatusColor = (status: 'Normal' | 'Low Attendance' | 'High Risk'): string => {
-  switch(status) {
-    case 'Normal': return 'bg-green-100 text-green-700';
-    case 'Low Attendance': return 'bg-orange-100 text-orange-700';
-    case 'High Risk': return 'bg-red-100 text-red-700';
-    default: return 'bg-gray-100 text-gray-700';
-  }
-};
+  // Separate classes for left and right columns
+  const leftColumnClasses = classes.filter(classItem => 
+    classItem.grade.includes('Grade 10') || classItem.grade.includes('Grade 11')
+  );
+  
+  const rightColumnClasses = classes.filter(classItem => 
+    classItem.grade.includes('Grade 9') || classItem.grade.includes('Grade 12')
+  );
 
-const getAttendanceColor = (attendance: number): string => {
-  if (attendance >= 90) return 'bg-green-500';
-  if (attendance >= 75) return 'bg-orange-500';
-  return 'bg-red-500';
-};
+  const getStatusColor = (status: 'Normal' | 'Low Attendance' | 'High Risk'): string => {
+    switch(status) {
+      case 'Normal': return 'bg-green-100 text-green-700';
+      case 'Low Attendance': return 'bg-orange-100 text-orange-700';
+      case 'High Risk': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getAttendanceColor = (attendance: number): string => {
+    if (attendance >= 90) return 'bg-green-500';
+    if (attendance >= 75) return 'bg-orange-500';
+    return 'bg-red-500';
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -156,8 +185,49 @@ const getAttendanceColor = (attendance: number): string => {
       </div>
 
       <div className="flex">
-        {/* Sidebar would go here */}
-        <div className="flex-1 p-6">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
+          <nav className="p-4">
+            <button 
+              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
+                activeTab === 'Dashboard' 
+                  ? 'bg-orange-500 text-white' 
+                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+              }`}
+              onClick={() => handleNavigation('/', 'Dashboard')}
+            >
+              <BarChart3 className="w-5 h-5" />
+              <span className="font-medium">Dashboard</span>
+            </button>
+            <button 
+              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
+                activeTab === 'My Classes' 
+                  ? 'bg-orange-500 text-white' 
+                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+              }`}
+            >
+              <LiaChalkboardTeacherSolid className="w-5 h-5" />
+              <span className="font-medium">My Classes</span>
+            </button>
+            {menuItems.filter(item => item.label !== 'Dashboard').map((item, idx) => (
+              <button 
+                key={idx} 
+                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
+                  activeTab === item.label 
+                    ? 'bg-orange-500 text-white' 
+                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+                }`}
+                onClick={() => handleNavigation(item.path, item.label)}
+              >
+                <item.icon className="w-5 h-5" />
+                <span className="font-medium">{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-6">
           {/* Page Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900">My Classes</h1>
@@ -219,154 +289,151 @@ const getAttendanceColor = (attendance: number): string => {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
-            {/* Left Column - Larger */}
-            <div className="col-span-2 space-y-6">
-              {/* Class Cards Grid */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900">My Classes</h2>
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
-                        {periodFilter} <ChevronDown className="w-3 h-3" />
-                      </button>
-                      <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
-                        {subjectFilter} <ChevronDown className="w-3 h-3" />
-                      </button>
-                      <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
-                        {statusFilter} <ChevronDown className="w-3 h-3" />
-                      </button>
+          <div className="grid grid-cols-2 gap-6">
+            {/* Left Column - Grade 10 & 11 Classes */}
+            <div className="space-y-6">
+              {leftColumnClasses.map((classItem) => (
+                <div key={classItem.id} className="bg-white rounded-lg border border-gray-200 p-4">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start gap-3">
+                      <div className="text-2xl">{classItem.icon}</div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{classItem.grade}</h3>
+                        <p className="text-sm text-gray-600">{classItem.period} • {classItem.room}</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => setViewMode('grid')}
-                        className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600 border border-gray-300'}`}
-                      >
-                        <Grid className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setViewMode('list')}
-                        className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600 border border-gray-300'}`}
-                      >
-                        <List className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4">
-                  {classes.map((classItem) => (
-                    <div key={classItem.id} className="bg-white rounded-lg border border-gray-200 p-4">
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-start gap-3">
-                          <div className="text-2xl">{classItem.icon}</div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900">{classItem.grade}</h3>
-                            <p className="text-sm text-gray-600">{classItem.period} • {classItem.room}</p>
-                          </div>
-                        </div>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(classItem.status as 'Normal' | 'Low Attendance' | 'High Risk')}`}>
-                                         {classItem.status}
+                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(classItem.status as 'Normal' | 'Low Attendance' | 'High Risk')}`}>
+                              {classItem.status}
                            </span>
-                      </div>
+                  </div>
 
-                      {/* Stats */}
-                      <div className="grid grid-cols-2 gap-4 mb-3">
-                        <div>
-                          <p className="text-xs text-gray-600 mb-1">Students</p>
-                          <p className="text-xl font-bold text-gray-900">{classItem.students}</p>
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-xs text-gray-600 mb-1">Students</p>
+                      <p className="text-xl font-bold text-gray-900">{classItem.students}</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-xs text-gray-600 mb-1">Attendance</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xl font-bold text-gray-900">{classItem.attendance}%</p>
+                        <div className="flex-1 bg-gray-200 rounded-full h-1">
+                          <div
+                            className={`h-1 rounded-full ${getAttendanceColor(classItem.attendance)}`}
+                            style={{ width: `${classItem.attendance}%` }}
+                          ></div>
                         </div>
-                        <div>
-                          <p className="text-xs text-gray-600 mb-1">Attendance</p>
-                          <div className="flex items-center gap-2">
-                            <p className="text-xl font-bold text-gray-900">{classItem.attendance}%</p>
-                            <div className="flex-1 bg-gray-200 rounded-full h-2">
-                              <div
-                                className={`h-2 rounded-full ${getAttendanceColor(classItem.attendance)}`}
-                                style={{ width: `${classItem.attendance}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Alert */}
-                      {classItem.alert && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-2 mb-3 flex items-center gap-2">
-                          <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
-                          <p className="text-sm text-red-700">{classItem.alert}</p>
-                        </div>
-                      )}
-
-                      {/* Upcoming */}
-                      <div className="mb-3">
-                        <p className="text-xs text-gray-600 mb-2">Upcoming</p>
-                        {classItem.upcoming.map((item, idx) => (
-                          <div key={idx} className="flex justify-between items-center mb-1">
-                            <p className="text-sm text-gray-700">{item.title}</p>
-                            <p className={`text-sm font-medium ${item.color}`}>{item.due}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex gap-2">
-                        <button className="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-600">
-                          👥 View Roster
-                        </button>
-                        <button className="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-orange-600">
-                          + Add Assignment
-                        </button>
-                        <button className="flex-1 bg-green-400 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-500">
-                          💬 Message Parents
-                        </button>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
 
-                {/* Pagination */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600">Showing 1 to 4 of 4 results</p>
+                  {/* Alert */}
+                  {classItem.alert && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-2 mb-3 flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                      <p className="text-sm text-red-700">{classItem.alert}</p>
+                    </div>
+                  )}
+
+                  {/* Upcoming */}
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-600 mb-2">Upcoming</p>
+                    {classItem.upcoming.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-center mb-1">
+                        <p className="text-sm text-gray-700">{item.title}</p>
+                        <p className={`text-sm font-medium ${item.color}`}>{item.due}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
                   <div className="flex gap-2">
-                    <button className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50 flex items-center gap-1">
-                      <ChevronLeft className="w-4 h-4" />
-                      Previous
+                    <button className="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-600">
+                      👥 View Roster
                     </button>
-                    <button className="px-3 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium">
-                      1
+                    <button className="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-orange-600">
+                      + Add Assignment
                     </button>
-                    <button className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-50 flex items-center gap-1">
-                      Next
-                      <ChevronRight className="w-4 h-4" />
+                    <button className="flex-1 bg-green-400 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-500">
+                      💬 Message Parents
                     </button>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
 
-            {/* Right Column */}
+            {/* Right Column - Grade 9 & 12 Classes */}
             <div className="space-y-6">
-              {/* Quick Actions */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-                <div className="flex flex-col gap-3">
-                  <button className="bg-orange-500 text-white px-4 py-3 rounded-lg hover:bg-orange-600 transition flex items-center gap-2 text-sm">
-                    <BookOpen className="w-4 h-4" />
-                    Create New Class
-                  </button>
-                  <button className="bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-600 transition flex items-center gap-2 text-sm">
-                    <Users className="w-4 h-4" />
-                    Manage Students
-                  </button>
-                  <button className="bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 transition flex items-center gap-2 text-sm">
-                    <BarChart3 className="w-4 h-4" />
-                    View Reports
-                  </button>
+              {rightColumnClasses.map((classItem) => (
+                <div key={classItem.id} className="bg-white rounded-lg border border-gray-200 p-4">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start gap-3">
+                      <div className="text-2xl">{classItem.icon}</div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{classItem.grade}</h3>
+                        <p className="text-sm text-gray-600">{classItem.period} • {classItem.room}</p>
+                      </div>
+                    </div>
+                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(classItem.status as 'Normal' | 'Low Attendance' | 'High Risk')}`}>
+                              {classItem.status}
+                           </span>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-xs text-gray-600 mb-1">Students</p>
+                      <p className="text-xl font-bold text-gray-900">{classItem.students}</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-xs text-gray-600 mb-1">Attendance</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xl font-bold text-gray-900">{classItem.attendance}%</p>
+                        <div className="flex-1 bg-gray-200 rounded-full h-1">
+                          <div
+                            className={`h-1 rounded-full ${getAttendanceColor(classItem.attendance)}`}
+                            style={{ width: `${classItem.attendance}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Alert */}
+                  {classItem.alert && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-2 mb-3 flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                      <p className="text-sm text-red-700">{classItem.alert}</p>
+                    </div>
+                  )}
+
+                  {/* Upcoming */}
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-600 mb-2">Upcoming</p>
+                    {classItem.upcoming.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-center mb-1">
+                        <p className="text-sm text-gray-700">{item.title}</p>
+                        <p className={`text-sm font-medium ${item.color}`}>{item.due}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2">
+                    <button className="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-600">
+                      👥 View Roster
+                    </button>
+                    <button className="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-orange-600">
+                      + Add Assignment
+                    </button>
+                    <button className="flex-1 bg-green-400 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-500">
+                      💬 Message Parents
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ))}
 
               {/* Recent Activity */}
               <div className="bg-white rounded-lg shadow p-6">
@@ -387,7 +454,7 @@ const getAttendanceColor = (attendance: number): string => {
                     </div>
                   </div>
                   <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt=2"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                     <div className="flex-1">
                       <p className="font-medium text-gray-900 text-sm">Parent message sent</p>
                       <p className="text-xs text-gray-500 mt-1">English Literature - Grade 11</p>
@@ -397,7 +464,7 @@ const getAttendanceColor = (attendance: number): string => {
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { ChevronDown, Calendar, Users, BookOpen, BarChart3, Bell, Search, Grid, List, ChevronLeft, ChevronRight, TrendingUp, AlertTriangle } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
-import { TbReport } from "react-icons/tb";
+import { TbReport, TbWorld } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
+import { BsThermometerSun } from "react-icons/bs";
+import { FaBook } from "react-icons/fa";
+import { FaCalculator } from "react-icons/fa6";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
+import Dashboard from './Dashboard';
 
 interface ClassItem {
   id: number;
@@ -16,7 +20,7 @@ interface ClassItem {
   status: 'Normal' | 'Low Attendance' | 'High Risk';
   students: number;
   attendance: number;
-  icon: string;
+  icon: React.ReactNode;
   upcoming: Array<{ title: string; due: string; color: string }>;
   alert?: string;
 }
@@ -42,7 +46,7 @@ function MyClasses() {
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
-  const classes = [
+  const classes: ClassItem[] = [
     {
       id: 1,
       grade: 'Grade 10 – Mathematics',
@@ -51,7 +55,7 @@ function MyClasses() {
       status: 'Normal',
       students: 32,
       attendance: 92,
-      icon: '📘',
+      icon: <div className="p-2 bg-blue-100 rounded-lg"><FaCalculator className="w-5 h-5 text-blue-700" /></div>,
       upcoming: [
         { title: 'Quiz: Algebra Basics', due: 'Tomorrow', color: 'text-orange-500' },
         { title: 'Assignment: Chapter 5', due: 'Due Friday', color: 'text-blue-500' }
@@ -65,7 +69,7 @@ function MyClasses() {
       status: 'Low Attendance',
       students: 28,
       attendance: 73,
-      icon: '🧪',
+      icon: <div className="p-2 bg-green-100 rounded-lg"><BsThermometerSun className="w-6 h-6 text-green-700" /></div>,
       upcoming: [
         { title: 'Lab: Cell Structure', due: 'Today', color: 'text-orange-500' },
         { title: 'Test: Genetics', due: 'Next Week', color: 'text-blue-500' }
@@ -79,7 +83,7 @@ function MyClasses() {
       status: 'Normal',
       students: 25,
       attendance: 88,
-      icon: '📚',
+      icon: <div className="p-2 bg-purple-100 rounded-lg"><FaBook className="w-5 h-5 text-purple-700" /></div>,
       upcoming: [
         { title: 'Essay: Shakespeare Analysis', due: 'Due Monday', color: 'text-orange-500' },
         { title: 'Discussion: Hamlet Act 3', due: 'Wednesday', color: 'text-blue-500' }
@@ -93,8 +97,7 @@ function MyClasses() {
       status: 'High Risk',
       students: 30,
       attendance: 68,
-      icon: '🏛️',
-      alert: '5 students flagged for poor attendance',
+      icon: <div className="p-2 bg-red-100 rounded-lg"><TbWorld className="w-6 h-6 text-red-700" /></div>,
       upcoming: [
         { title: 'Midterm Exam', due: 'Tomorrow', color: 'text-orange-500' },
         { title: 'Project: WWI Research', due: 'Due Friday', color: 'text-blue-500' }
@@ -194,7 +197,7 @@ function MyClasses() {
                   ? 'bg-orange-500 text-white' 
                   : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
               }`}
-              onClick={() => handleNavigation('/', 'Dashboard')}
+              onClick={() => handleNavigation('/teacher-dashboard', 'Dashboard')}
             >
               <BarChart3 className="w-5 h-5" />
               <span className="font-medium">Dashboard</span>
@@ -239,14 +242,14 @@ function MyClasses() {
             <div className="bg-white rounded-lg p-5 relative shadow-sm border border-gray-200">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <p className="text-sm font-semibold text-gray-600 mb-1">Total Classes</p>
+                  <p className="text-sm font-semibold text-gray-600 mb-1">Total Courses</p>
                   <h3 className="text-3xl font-bold text-gray-900">8</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
                   <BookOpen className="w-6 h-6 text-blue-600" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500">Active classes</p>
+              <p className="text-xs text-gray-500">Active courses</p>
             </div>
 
             <div className="bg-white rounded-lg p-5 relative shadow-sm border border-gray-200">
@@ -256,7 +259,7 @@ function MyClasses() {
                   <h3 className="text-3xl font-bold text-gray-900">247</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
-                  <Users className="w-6 h-6 text-green-600" />
+                  <IoIosPeople className="w-6 h-6 text-green-600" />
                 </div>
               </div>
               <p className="text-xs text-gray-500">Enrolled students</p>
@@ -297,15 +300,15 @@ function MyClasses() {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-start gap-3">
-                      <div className="text-2xl">{classItem.icon}</div>
+                      <div>{classItem.icon}</div>
                       <div>
                         <h3 className="font-semibold text-gray-900">{classItem.grade}</h3>
                         <p className="text-sm text-gray-600">{classItem.period} • {classItem.room}</p>
                       </div>
                     </div>
-                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(classItem.status as 'Normal' | 'Low Attendance' | 'High Risk')}`}>
+                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(classItem.status)}`}>
                               {classItem.status}
-                           </span>
+                         </span>
                   </div>
 
                   {/* Stats */}
@@ -317,24 +320,16 @@ function MyClasses() {
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-xs text-gray-600 mb-1">Attendance</p>
                       <div className="flex items-center gap-2">
-                        <p className="text-xl font-bold text-gray-900">{classItem.attendance}%</p>
-                        <div className="flex-1 bg-gray-200 rounded-full h-1">
+                        <p className="text-2xl font-bold text-gray-900 w-16">{classItem.attendance}%</p>
+                        <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-1 rounded-full ${getAttendanceColor(classItem.attendance)}`}
+                            className={`h-2 rounded-full ${getAttendanceColor(classItem.attendance)}`}
                             style={{ width: `${classItem.attendance}%` }}
                           ></div>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* Alert */}
-                  {classItem.alert && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-2 mb-3 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
-                      <p className="text-sm text-red-700">{classItem.alert}</p>
-                    </div>
-                  )}
 
                   {/* Upcoming */}
                   <div className="mb-3">
@@ -349,13 +344,14 @@ function MyClasses() {
 
                   {/* Actions */}
                   <div className="flex gap-2">
-                    <button className="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-600">
-                      👥 View Roster
+                    <button className="flex-1 bg-blue-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-400 flex items-center justify-center gap-1">
+                      <IoIosPeople className="w-4 h-4" />
+                      View Students
                     </button>
                     <button className="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-orange-600">
-                      + Add Assignment
+                      + Add Marks
                     </button>
-                    <button className="flex-1 bg-green-400 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-500">
+                    <button className="flex-1 bg-green-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-400">
                       💬 Message Parents
                     </button>
                   </div>
@@ -370,13 +366,13 @@ function MyClasses() {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-start gap-3">
-                      <div className="text-2xl">{classItem.icon}</div>
+                      <div>{classItem.icon}</div>
                       <div>
                         <h3 className="font-semibold text-gray-900">{classItem.grade}</h3>
                         <p className="text-sm text-gray-600">{classItem.period} • {classItem.room}</p>
                       </div>
                     </div>
-                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(classItem.status as 'Normal' | 'Low Attendance' | 'High Risk')}`}>
+                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(classItem.status)}`}>
                               {classItem.status}
                            </span>
                   </div>
@@ -390,24 +386,16 @@ function MyClasses() {
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-xs text-gray-600 mb-1">Attendance</p>
                       <div className="flex items-center gap-2">
-                        <p className="text-xl font-bold text-gray-900">{classItem.attendance}%</p>
-                        <div className="flex-1 bg-gray-200 rounded-full h-1">
+                        <p className="text-2xl font-bold text-gray-900 w-16">{classItem.attendance}%</p>
+                        <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-1 rounded-full ${getAttendanceColor(classItem.attendance)}`}
+                            className={`h-2 rounded-full ${getAttendanceColor(classItem.attendance)}`}
                             style={{ width: `${classItem.attendance}%` }}
                           ></div>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* Alert */}
-                  {classItem.alert && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-2 mb-3 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
-                      <p className="text-sm text-red-700">{classItem.alert}</p>
-                    </div>
-                  )}
 
                   {/* Upcoming */}
                   <div className="mb-3">
@@ -422,46 +410,19 @@ function MyClasses() {
 
                   {/* Actions */}
                   <div className="flex gap-2">
-                    <button className="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-600">
-                      👥 View Roster
+                    <button className="flex-1 bg-blue-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-400 flex items-center justify-center gap-1">
+                      <IoIosPeople className="w-4 h-4" />
+                      View Students
                     </button>
                     <button className="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-orange-600">
-                      + Add Assignment
+                      + Add Marks
                     </button>
-                    <button className="flex-1 bg-green-400 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-500">
+                    <button className="flex-1 bg-green-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-400">
                       💬 Message Parents
                     </button>
                   </div>
                 </div>
               ))}
-
-              {/* Recent Activity */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-sm">New assignment created</p>
-                      <p className="text-xs text-gray-500 mt-1">Mathematics - Grade 10A</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mt-2"></div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-sm">Low attendance alert</p>
-                      <p className="text-xs text-gray-500 mt-1">Biology - Grade 9</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-sm">Parent message sent</p>
-                      <p className="text-xs text-gray-500 mt-1">English Literature - Grade 11</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </main>

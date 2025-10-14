@@ -15,7 +15,7 @@ export default function Dashboard() {
 
   const statCards = [
     { title: 'My Students', value: '128', subtitle: '+1 from last term', icon: IoIosPeople, color: 'bg-white', iconColor: 'text-blue-500' },
-    { title: 'My Classes', value: '6', subtitle: 'Active classes', icon: IoMdTv, color: 'bg-white', iconColor: 'text-green-500' },
+    { title: 'My Courses', value: '6', subtitle: 'Active courses', icon: IoMdTv, color: 'bg-white', iconColor: 'text-green-500' },
     { title: 'At-Risk Students', value: '12', subtitle: 'Needs attention', icon: TbAlertTriangle, color: 'bg-white', iconColor: 'text-red-500', valueColor: 'text-red-600' },
     { title: "Today's Attendance", value: '92%', subtitle: '114 present, 10 absent', icon: FaClipboardCheck, color: 'bg-white', iconColor: 'text-green-500', valueColor: 'text-green-600' }
   ];
@@ -211,7 +211,6 @@ export default function Dashboard() {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold text-gray-900">Assignments & Quizzes</h2>
-                  <button className="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm">+ Create Assignment</button>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -250,22 +249,12 @@ export default function Dashboard() {
               {/* Quick Actions */}
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-                <div className="grid grid-cols-4 gap-4">
-                  <button className="bg-blue-400 text-white p-3 rounded-lg hover:bg-blue-500 transition flex items-center justify-center gap-2">
-                    <Users className="w-4 h-4" />
-                    <span className="text-sm">Add Class</span>
+                <div className="flex gap-4">
+                  <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition flex items-center gap-1 text-sm">
+                    + Add Marks
                   </button>
-                  <button className="bg-yellow-400 text-white p-3 rounded-lg hover:bg-yellow-500 transition flex items-center justify-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    <span className="text-sm">Add Assignment</span>
-                  </button>
-                  <button className="bg-red-400 text-white p-3 rounded-lg hover:bg-red-500 transition flex items-center justify-center gap-2">
-                    <BarChart3 className="w-4 h-4" />
-                    <span className="text-sm">Log Behavior</span>
-                  </button>
-                  <button className="bg-green-400 text-white p-3 rounded-lg hover:bg-green-500 transition flex items-center justify-center gap-2">
-                    <MessageSquare className="w-4 h-4" />
-                    <span className="text-sm">Message Parent</span>
+                  <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center gap-1 text-sm">
+                    + Log Behavior
                   </button>
                 </div>
               </div>

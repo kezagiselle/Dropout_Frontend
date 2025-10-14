@@ -9,6 +9,7 @@ import { IoMdSettings } from "react-icons/io";
 import { FaClipboardCheck } from "react-icons/fa6";
 import { IoMdTv } from "react-icons/io";
 import { TbAlertTriangle } from "react-icons/tb";
+import userr from "../../../src/img/userr.png";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -81,7 +82,7 @@ export default function Dashboard() {
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+              <img src={userr} alt="User profile" className="w-8 h-8 rounded-full object-cover" />
               <span className="text-sm font-medium">Sarah Wilson</span>
               <ChevronDown className="w-4 h-4 text-gray-600" />
             </div>

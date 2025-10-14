@@ -11,24 +11,7 @@ import { IoMdTv } from "react-icons/io";
 import { TbAlertTriangle } from "react-icons/tb";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-// Define TypeScript interfaces for the custom components
-interface CustomizedLabelProps {
-  x?: number;
-  y?: number;
-  stroke?: string;
-  value?: number;
-}
-
-interface CustomizedAxisTickProps {
-  x?: number;
-  y?: number;
-  stroke?: string;
-  payload?: {
-    value: string;
-  };
-}
+import MyClasses from './MyClasses';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -46,15 +29,12 @@ export default function Dashboard() {
     { title: "Today's Attendance", value: '92%', subtitle: '114 present, 10 absent', icon: FaClipboardCheck, color: 'bg-white', iconColor: 'text-green-500', valueColor: 'text-green-600' }
   ];
 
-  // Updated chart data for attendance overview
   const attendanceData = [
-    { name: 'Mon', attendance: 95, students: 124 },
-    { name: 'Tue', attendance: 92, students: 122 },
-    { name: 'Wed', attendance: 88, students: 118 },
-    { name: 'Thu', attendance: 94, students: 125 },
-    { name: 'Fri', attendance: 92, students: 121 },
-    { name: 'Sat', attendance: 85, students: 115 },
-    { name: 'Sun', attendance: 78, students: 108 }
+    { day: 'Mon', value: 95 },
+    { day: 'Tue', value: 92 },
+    { day: 'Wed', value: 88 },
+    { day: 'Thu', value: 94 },
+    { day: 'Fri', value: 92 }
   ];
 
   const flaggedStudents = [
@@ -87,26 +67,6 @@ export default function Dashboard() {
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
-
-  // Custom label component for the chart with proper typing
-  const CustomizedLabel: React.FC<CustomizedLabelProps> = ({ x = 0, y = 0, stroke = '#000', value = 0 }) => {
-    return (
-      <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
-        {value}%
-      </text>
-    );
-  };
-
-  // Custom axis tick component with proper typing
-  const CustomizedAxisTick: React.FC<CustomizedAxisTickProps> = ({ x = 0, y = 0, stroke = '#000', payload }) => {
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-35)">
-          {payload?.value}
-        </text>
-      </g>
-    );
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -168,36 +128,35 @@ export default function Dashboard() {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
-          <nav className="p-4">
-            <button 
-              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                activeTab === 'Dashboard' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/', 'Dashboard')}
-            >
-              <BarChart3 className="w-5 h-5" />
-              <span className="font-medium">Dashboard</span>
-            </button>
-            {menuItems.map((item, idx) => (
-              <button 
-                key={idx} 
-                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
-                  activeTab === item.label 
-                    ? 'bg-orange-500 text-white' 
-                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                }`}
-                onClick={() => handleNavigation(item.path, item.label)}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
+<aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
+  <nav className="p-4">
+    <button 
+      className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
+        activeTab === 'Dashboard' 
+          ? 'bg-orange-500 text-white' 
+          : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+      }`}
+      onClick={() => handleNavigation('/', 'Dashboard')}
+    >
+      <BarChart3 className="w-5 h-5" />
+      <span className="font-medium">Dashboard</span>
+    </button>
+    {menuItems.map((item, idx) => (
+      <button 
+        key={idx} 
+        className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
+          activeTab === item.label 
+            ? 'bg-orange-500 text-white' 
+            : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+        }`}
+        onClick={() => handleNavigation(item.path, item.label)}
+      >
+        <item.icon className="w-5 h-5" />
+        <span className="font-medium">{item.label}</span>
+      </button>
+    ))}
+  </nav>
+</aside>
         {/* Main Content */}
         <main className="flex-1 p-6">
           {/* Stat Cards */}
@@ -221,55 +180,52 @@ export default function Dashboard() {
           <div className="grid grid-cols-3 gap-6">
             {/* Left Column - Larger */}
             <div className="col-span-2 space-y-6">
-              {/* Attendance Overview with Recharts */}
+              {/* Attendance Overview */}
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold text-gray-900">Attendance Overview</h2>
                   <button className="text-sm text-orange-500 font-medium">View Details</button>
                 </div>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={attendanceData}
-                      margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 10,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                         dataKey="name" 
-                          height={60}
-                              angle={-45}
-                           textAnchor="end"
-                               fontSize={12}
-                          />
-                      <YAxis />
-                      <Tooltip 
-                        formatter={(value: number) => [`${value}%`, 'Attendance']}
-                        labelFormatter={(label: string) => `Day: ${label}`}
-                      />
-                      <Legend />
-                      <Line 
-                          type="monotone" 
-                          dataKey="attendance" 
-                           stroke="#8884d8" 
-                             strokeWidth={2}
-                                dot={{ fill: '#8884d8', strokeWidth: 2, r: 4 }}
-                                  activeDot={{ r: 6, fill: '#8884d8' }}
-                                   />
-                      <Line 
-                        type="monotone" 
-                        dataKey="students" 
-                        stroke="#82ca9d" 
-                        strokeWidth={2}
-                        dot={{ fill: '#82ca9d', strokeWidth: 2, r: 4 }}
-                        activeDot={{ r: 6, fill: '#82ca9d' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                <div className="relative h-48">
+                  <svg className="w-full h-full" viewBox="0 0 600 200">
+                    <defs>
+                      <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    {/* Grid lines */}
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <line key={i} x1="50" y1={40 + i * 30} x2="550" y2={40 + i * 30} stroke="#e5e7eb" strokeWidth="1" />
+                    ))}
+                    {/* Y-axis labels */}
+                    <text x="20" y="45" fontSize="12" fill="#9ca3af">100</text>
+                    <text x="20" y="105" fontSize="12" fill="#9ca3af">90</text>
+                    <text x="20" y="165" fontSize="12" fill="#9ca3af">80</text>
+                    {/* X-axis labels */}
+                    {attendanceData.map((d, i) => (
+                      <text key={i} x={100 + i * 100} y="190" fontSize="12" fill="#9ca3af" textAnchor="middle">{d.day}</text>
+                    ))}
+                    {/* Line path */}
+                    <path
+                      d={`M ${attendanceData.map((d, i) => `${100 + i * 100},${160 - (d.value - 80) * 4}`).join(' L ')}`}
+                      fill="none"
+                      stroke="#10b981"
+                      strokeWidth="3"
+                    />
+                    {/* Fill area */}
+                    <path
+                      d={`M 100,160 L ${attendanceData.map((d, i) => `${100 + i * 100},${160 - (d.value - 80) * 4}`).join(' L ')} L 500,160 Z`}
+                      fill="url(#lineGradient)"
+                    />
+                    {/* Data points */}
+                    {attendanceData.map((d, i) => (
+                      <g key={i}>
+                        <circle cx={100 + i * 100} cy={160 - (d.value - 80) * 4} r="4" fill="white" stroke="#10b981" strokeWidth="3" />
+                        <text x={100 + i * 100} y={160 - (d.value - 80) * 4 - 10} fontSize="12" fill="#10b981" fontWeight="bold" textAnchor="middle">{d.value}%</text>
+                      </g>
+                    ))}
+                  </svg>
                 </div>
                 <div className="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded flex items-center gap-2">
                   <span className="text-yellow-700 text-sm">⚠️ 3 students with chronic absences this week</span>
@@ -361,7 +317,7 @@ export default function Dashboard() {
                 <div className="space-y-3">
                   {recentBehavior.map((item, idx) => (
                     <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className={`w-2 h-2 rounded-full mt=2 ${item.type === 'positive' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                      <div className={`w-2 h-2 rounded-full mt-2 ${item.type === 'positive' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                       <div className="flex-1">
                         <p className="font-medium text-gray-900 text-sm">{item.name} - {item.behavior}</p>
                         <p className="text-xs text-gray-500 mt-1">{item.time}</p>

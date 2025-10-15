@@ -15,6 +15,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import MyClasses from './MyClasses';
 import Attendance from '../TeacherPages/Attendance';
 import DailyAttendance from '../TeacherPages/DailyAttendance'
+import Behavior from '../TeacherPages/Behavior'; 
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -34,6 +35,9 @@ export default function Dashboard() {
 
         case '/DailyAttendance':
         return <DailyAttendance />;
+
+         case '/behavior':
+        return <Behavior />;
 
       default:
         return <Dashboard />;
@@ -84,7 +88,7 @@ export default function Dashboard() {
   const menuItems = [
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
     { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
+    { icon: TbReport, label: 'Behavior Reports', path: '/behavior' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Plus, Search, ChevronDown, ChevronLeft, ChevronRight, BarChart3, Bell, Calendar } from 'lucide-react';
+import { Download, Plus, Search, ChevronDown, ChevronLeft, ChevronRight, BarChart3, Bell, Calendar, Menu, X } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
@@ -30,6 +30,7 @@ export default function StudentProfiles() {
   const [selectedRegion, setSelectedRegion] = useState<string>('All Regions');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>('All Risk Levels');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +38,7 @@ export default function StudentProfiles() {
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
+    setSidebarOpen(false); // Close sidebar on mobile after navigation
   };
 
   const menuItems = [
@@ -124,54 +126,83 @@ export default function StudentProfiles() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+          {/* Left Section - Mobile Menu Button and School Name */}
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+            
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800">Westfield High School</span>
-              <ChevronDown className="w-4 h-4 text-gray-600" />
-            </div>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search students, teachers, courses..."
-                className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
+              <span className="font-semibold text-gray-800 text-sm sm:text-base">Westfield High School</span>
+              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+
+          {/* Search Bar - Hidden on mobile, visible on tablet and up */}
+          <div className="hidden md:block relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search students, teachers, courses..."
+              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+
+          {/* Right Section - Calendar, Notifications, Profile */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Calendar - Hidden on mobile, visible on tablet and up */}
+            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="w-4 h-4" />
-              <span>Jan 15 - Feb 18, 2024</span>
-              <ChevronDown className="w-4 h-4" />
+              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
+              <ChevronDown className="w-4 h-4 hidden lg:block" />
             </div>
+
+            {/* Notifications */}
             <div className="relative">
               <Bell className="w-5 h-5 text-gray-600" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
             </div>
+
+            {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-2">
-              <img src={userr} alt="User profile" className="w-8 h-8 rounded-full object-cover" />
-              <span className="text-sm font-medium">Sarah Wilson</span>
-              <ChevronDown className="w-4 h-4 text-gray-600" />
+              <img src={userr} alt="User profile" className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover" />
+              <span className="text-sm font-medium hidden sm:block">Sarah Wilson</span>
+              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
+          </div>
+        </div>
+
+        {/* Mobile Search Bar - Visible only on mobile */}
+        <div className="md:hidden px-4 pb-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search students, teachers, courses..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
           </div>
         </div>
       </header>
 
       {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3">
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-600">Filters</span>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-gray-600 mr-2">Filters</span>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             All Grades <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             All Classes <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             Current Term <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2">
+          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
             <Calendar className="w-4 h-4" />
             Date Filter
           </button>
@@ -180,8 +211,19 @@ export default function StudentProfiles() {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
-          <nav className="p-4">
+        <aside className={`
+          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
+        `}>
+          {/* Mobile Close Overlay */}
+          {sidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          
+          <nav className="p-4 relative z-50 bg-white h-full">
             <button 
               className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
                 activeTab === 'Dashboard' 
@@ -211,21 +253,21 @@ export default function StudentProfiles() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 min-w-0 p-4 sm:p-6">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-6">
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-2">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Student Profiles</h1>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Student Profiles</h1>
                   <p className="text-sm text-gray-600 mt-1">Monitoring Students Profiles</p>
                 </div>
-                <div className="flex gap-3">
-                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                <div className="flex gap-3 flex-wrap">
+                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm sm:text-base w-full sm:w-auto justify-center">
                     <Download className="w-4 h-4" />
                     Export
                   </button>
-                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm sm:text-base w-full sm:w-auto justify-center">
                     <Plus className="w-4 h-4" />
                     Add Report
                   </button>
@@ -235,8 +277,8 @@ export default function StudentProfiles() {
 
             {/* Filters */}
             <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-              <div className="flex items-center gap-4 flex-wrap">
-                <div className="flex-1 relative">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex-1 w-full relative">
                   <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
@@ -247,41 +289,43 @@ export default function StudentProfiles() {
                   />
                 </div>
                 
-                <div className="relative">
-                  <select
-                    value={selectedRegion}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRegion(e.target.value)}
-                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option>All Regions</option>
-                    <option>North Region</option>
-                    <option>South Region</option>
-                    <option>East Region</option>
-                    <option>West Region</option>
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+                <div className="flex gap-4 w-full sm:w-auto">
+                  <div className="flex-1 sm:flex-none relative">
+                    <select
+                      value={selectedRegion}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRegion(e.target.value)}
+                      className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    >
+                      <option>All Regions</option>
+                      <option>North Region</option>
+                      <option>South Region</option>
+                      <option>East Region</option>
+                      <option>West Region</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
 
-                <div className="relative">
-                  <select
-                    value={selectedRiskLevel}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRiskLevel(e.target.value)}
-                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option>All Risk Levels</option>
-                    <option>At-risk</option>
-                    <option>Normal</option>
-                    <option>Low Risk</option>
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <div className="flex-1 sm:flex-none relative">
+                    <select
+                      value={selectedRiskLevel}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRiskLevel(e.target.value)}
+                      className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    >
+                      <option>All Risk Levels</option>
+                      <option>At-risk</option>
+                      <option>Normal</option>
+                      <option>Low Risk</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Table */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-700">
+              {/* Table Header - Hidden on mobile, visible on tablet and up */}
+              <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-700">
                 <div className="col-span-3">Student Name</div>
                 <div className="col-span-2">Grade</div>
                 <div className="col-span-2">Risk Status</div>
@@ -292,46 +336,90 @@ export default function StudentProfiles() {
               {/* Table Body */}
               <div className="divide-y divide-gray-200">
                 {students.map((student) => (
-                  <div key={student.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-gray-50 transition-colors">
-                    {/* Student Name */}
-                    <div className="col-span-3 flex items-center gap-3">
-                      <img
-                        src={student.avatar}
-                        alt={student.name}
-                        className="w-10 h-10 rounded-full bg-gray-200 object-cover"
-                      />
-                      <div>
-                        <div className="font-medium text-gray-900">{student.name}</div>
-                        <div className="text-sm text-gray-500">ID: {student.id}</div>
+                  <div key={student.id} className="p-4 sm:px-6 sm:py-4 hover:bg-gray-50 transition-colors">
+                    {/* Mobile Layout */}
+                    <div className="sm:hidden space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={student.avatar}
+                            alt={student.name}
+                            className="w-12 h-12 rounded-full bg-gray-200 object-cover"
+                          />
+                          <div>
+                            <div className="font-medium text-gray-900">{student.name}</div>
+                            <div className="text-sm text-gray-500">ID: {student.id}</div>
+                          </div>
+                        </div>
+                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                          View
+                        </button>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <div className="text-gray-500 mb-1">Grade</div>
+                          <div className="font-medium">{student.grade}</div>
+                        </div>
+                        <div>
+                          <div className="text-gray-500 mb-1">Risk Status</div>
+                          <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${getRiskBadgeClass(student.riskColor)}`}>
+                            {getRiskIcon(student.riskColor)}
+                            {student.riskStatus}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <div className="text-gray-500 mb-1">Enrollment Status</div>
+                          <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${getRiskBadgeClass(student.enrollmentColor)}`}>
+                            {getEnrollmentIcon(student.enrollmentColor)}
+                            {student.enrollmentStatus}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Grade */}
-                    <div className="col-span-2 text-gray-700">
-                      {student.grade}
-                    </div>
+                    {/* Desktop Layout */}
+                    <div className="hidden sm:grid grid-cols-12 gap-4 items-center">
+                      {/* Student Name */}
+                      <div className="col-span-3 flex items-center gap-3">
+                        <img
+                          src={student.avatar}
+                          alt={student.name}
+                          className="w-10 h-10 rounded-full bg-gray-200 object-cover"
+                        />
+                        <div>
+                          <div className="font-medium text-gray-900">{student.name}</div>
+                          <div className="text-sm text-gray-500">ID: {student.id}</div>
+                        </div>
+                      </div>
 
-                    {/* Risk Status */}
-                    <div className="col-span-2">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.riskColor)}`}>
-                        {getRiskIcon(student.riskColor)}
-                        {student.riskStatus}
-                      </span>
-                    </div>
+                      {/* Grade */}
+                      <div className="col-span-2 text-gray-700">
+                        {student.grade}
+                      </div>
 
-                    {/* Enrollment Status */}
-                    <div className="col-span-3">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.enrollmentColor)}`}>
-                        {getEnrollmentIcon(student.enrollmentColor)}
-                        {student.enrollmentStatus}
-                      </span>
-                    </div>
+                      {/* Risk Status */}
+                      <div className="col-span-2">
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.riskColor)}`}>
+                          {getRiskIcon(student.riskColor)}
+                          {student.riskStatus}
+                        </span>
+                      </div>
 
-                    {/* Actions */}
-                    <div className="col-span-2">
-                      <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                        View Profile
-                      </button>
+                      {/* Enrollment Status */}
+                      <div className="col-span-3">
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.enrollmentColor)}`}>
+                          {getEnrollmentIcon(student.enrollmentColor)}
+                          {student.enrollmentStatus}
+                        </span>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="col-span-2">
+                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                          View Profile
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -339,66 +427,39 @@ export default function StudentProfiles() {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between mt-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
               <div className="text-sm text-gray-600">
                 Showing 1 to 3 of 3 Students
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
                 <button 
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1 transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  Previous
+                  <span className="hidden sm:inline">Previous</span>
                 </button>
                 
-                <button 
-                  onClick={() => setCurrentPage(1)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === 1 
-                      ? 'bg-orange-500 text-white' 
-                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  1
-                </button>
-                <button 
-                  onClick={() => setCurrentPage(2)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === 2 
-                      ? 'bg-orange-500 text-white' 
-                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  2
-                </button>
-                <button 
-                  onClick={() => setCurrentPage(3)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === 3 
-                      ? 'bg-orange-500 text-white' 
-                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  3
-                </button>
-                <button 
-                  onClick={() => setCurrentPage(4)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === 4 
-                      ? 'bg-orange-500 text-white' 
-                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  4
-                </button>
+                {[1, 2, 3, 4].map((page) => (
+                  <button 
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      currentPage === page 
+                        ? 'bg-orange-500 text-white' 
+                        : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
                 
                 <button 
                   onClick={() => setCurrentPage(prev => prev + 1)}
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1 transition-colors"
                 >
-                  Next
+                  <span className="hidden sm:inline">Next</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>

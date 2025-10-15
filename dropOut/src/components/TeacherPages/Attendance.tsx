@@ -399,7 +399,7 @@ export default function Attendance() {
                   This Week
                 </button>
                 <button 
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${selectedWeek === 'Last 4 Weeks' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600 border border-gray-300'}`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium ${selectedWeek === 'Last 4 Weeks' ? 'bg-blue-300 text-white' : 'bg-white text-gray-600 border border-gray-300'}`}
                   onClick={() => setSelectedWeek('Last 4 Weeks')}
                 >
                   Last 4 Weeks
@@ -489,7 +489,7 @@ export default function Attendance() {
               </div>
 
               <div className="flex justify-end mt-4">
-                <button className="px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-sm">
+                <button className="px-5 py-2.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-base">
                   See All
                 </button>
               </div>

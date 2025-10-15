@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Download, Plus, Search, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, Plus, Search, ChevronDown, ChevronLeft, ChevronRight, BarChart3, Bell, Calendar } from 'lucide-react';
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
+import { FaClipboardCheck } from "react-icons/fa6";
+import { TbReport } from "react-icons/tb";
+import { IoIosPeople } from "react-icons/io";
+import { IoMdSettings } from "react-icons/io";
+import userr from "../../../src/img/userr.png";
+import { useNavigate, useLocation } from 'react-router-dom';
+import pe1 from "../../../src/img/pe1.png";
+import pe2 from "../../../src/img/pe2.png";
+import pe3 from "../../../src/img/pe3.png";
 
 interface Student {
   id: string;
@@ -15,16 +25,34 @@ interface Student {
 type RiskColor = 'red' | 'green' | 'yellow';
 
 export default function StudentProfiles() {
+  const [activeTab, setActiveTab] = useState('Student Profiles');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedRegion, setSelectedRegion] = useState<string>('All Regions');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>('All Risk Levels');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavigation = (path: string, tabName: string) => {
+    setActiveTab(tabName);
+    navigate(path);
+  };
+
+  const menuItems = [
+    { icon: BarChart3, label: 'Dashboard', path: '/' },
+    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
+    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
+    { icon: TbReport, label: 'Behavior Reports', path: '/behavior' },
+    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
+    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
+  ];
 
   const students: Student[] = [
     {
       id: 'STU001',
       name: 'John Doe',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
+      avatar: pe1,
       grade: 'Grade 11',
       riskStatus: 'At-risk',
       riskColor: 'red',
@@ -34,7 +62,7 @@ export default function StudentProfiles() {
     {
       id: 'STU002',
       name: 'Maria Gonzalez',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria',
+      avatar: pe2,
       grade: 'Grade 12',
       riskStatus: 'Normal',
       riskColor: 'green',
@@ -44,7 +72,7 @@ export default function StudentProfiles() {
     {
       id: 'STU003',
       name: 'Ahmed Ali',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ahmed',
+      avatar: pe3,
       grade: 'Grade 10',
       riskStatus: 'At-risk',
       riskColor: 'red',
@@ -95,200 +123,288 @@ export default function StudentProfiles() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Student Profiles</h1>
-              <p className="text-sm text-gray-600 mt-1">Monitoring Students Profiles</p>
-            </div>
-            <div className="flex gap-3">
-              <button className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                <Download className="w-4 h-4" />
-                Export
-              </button>
-              <button className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                <Plus className="w-4 h-4" />
-                Add Report
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto">
+      <header className="bg-white border-b border-gray-200">
+        <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-4">
-            <div className="flex-1 relative">
-              <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-gray-800">Westfield High School</span>
+              <ChevronDown className="w-4 h-4 text-gray-600" />
+            </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by Student Name"
-                value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Search students, teachers, courses..."
+                className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
-            
-            <div className="relative">
-              <select
-                value={selectedRegion}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRegion(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option>All Regions</option>
-                <option>North Region</option>
-                <option>South Region</option>
-                <option>East Region</option>
-                <option>West Region</option>
-              </select>
-              <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Calendar className="w-4 h-4" />
+              <span>Jan 15 - Feb 18, 2024</span>
+              <ChevronDown className="w-4 h-4" />
             </div>
-
             <div className="relative">
-              <select
-                value={selectedRiskLevel}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRiskLevel(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option>All Risk Levels</option>
-                <option>At-risk</option>
-                <option>Normal</option>
-                <option>Low Risk</option>
-              </select>
-              <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Bell className="w-5 h-5 text-gray-600" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <img src={userr} alt="User profile" className="w-8 h-8 rounded-full object-cover" />
+              <span className="text-sm font-medium">Sarah Wilson</span>
+              <ChevronDown className="w-4 h-4 text-gray-600" />
             </div>
           </div>
         </div>
+      </header>
+
+      {/* Filters */}
+      <div className="bg-white border-b border-gray-200 px-6 py-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-600">Filters</span>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+            All Grades <ChevronDown className="w-3 h-3" />
+          </button>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+            All Classes <ChevronDown className="w-3 h-3" />
+          </button>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+            Current Term <ChevronDown className="w-3 h-3" />
+          </button>
+          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            Date Filter
+          </button>
+        </div>
       </div>
 
-      {/* Table */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-700">
-            <div className="col-span-3">Student Name</div>
-            <div className="col-span-2">Grade</div>
-            <div className="col-span-2">Risk Status</div>
-            <div className="col-span-3">Enrollment Status</div>
-            <div className="col-span-2">Actions</div>
-          </div>
+      <div className="flex">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
+          <nav className="p-4">
+            <button 
+              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
+                activeTab === 'Dashboard' 
+                  ? 'bg-orange-500 text-white' 
+                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+              }`}
+              onClick={() => handleNavigation('/', 'Dashboard')}
+            >
+              <BarChart3 className="w-5 h-5" />
+              <span className="font-medium">Dashboard</span>
+            </button>
+            {menuItems.filter(item => item.label !== 'Dashboard').map((item, idx) => (
+              <button 
+                key={idx} 
+                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
+                  activeTab === item.label 
+                    ? 'bg-orange-500 text-white' 
+                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+                }`}
+                onClick={() => handleNavigation(item.path, item.label)}
+              >
+                <item.icon className="w-5 h-5" />
+                <span className="font-medium">{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </aside>
 
-          {/* Table Body */}
-          <div className="divide-y divide-gray-200">
-            {students.map((student) => (
-              <div key={student.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-gray-50 transition-colors">
-                {/* Student Name */}
-                <div className="col-span-3 flex items-center gap-3">
-                  <img
-                    src={student.avatar}
-                    alt={student.name}
-                    className="w-10 h-10 rounded-full bg-gray-200"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-900">{student.name}</div>
-                    <div className="text-sm text-gray-500">ID: {student.id}</div>
-                  </div>
+        {/* Main Content */}
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-6">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Student Profiles</h1>
+                  <p className="text-sm text-gray-600 mt-1">Monitoring Students Profiles</p>
                 </div>
-
-                {/* Grade */}
-                <div className="col-span-2 text-gray-700">
-                  {student.grade}
-                </div>
-
-                {/* Risk Status */}
-                <div className="col-span-2">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.riskColor)}`}>
-                    {getRiskIcon(student.riskColor)}
-                    {student.riskStatus}
-                  </span>
-                </div>
-
-                {/* Enrollment Status */}
-                <div className="col-span-3">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.enrollmentColor)}`}>
-                    {getEnrollmentIcon(student.enrollmentColor)}
-                    {student.enrollmentStatus}
-                  </span>
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-2">
-                  <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                    View Profile
+                <div className="flex gap-3">
+                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <Download className="w-4 h-4" />
+                    Export
+                  </button>
+                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <Plus className="w-4 h-4" />
+                    Add Report
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between mt-6">
-          <div className="text-sm text-gray-600">
-            Showing 1 to 3 of 3 Students
+            {/* Filters */}
+            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex-1 relative">
+                  <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search by Student Name"
+                    value={searchQuery}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div className="relative">
+                  <select
+                    value={selectedRegion}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRegion(e.target.value)}
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option>All Regions</option>
+                    <option>North Region</option>
+                    <option>South Region</option>
+                    <option>East Region</option>
+                    <option>West Region</option>
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+
+                <div className="relative">
+                  <select
+                    value={selectedRiskLevel}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRiskLevel(e.target.value)}
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option>All Risk Levels</option>
+                    <option>At-risk</option>
+                    <option>Normal</option>
+                    <option>Low Risk</option>
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-700">
+                <div className="col-span-3">Student Name</div>
+                <div className="col-span-2">Grade</div>
+                <div className="col-span-2">Risk Status</div>
+                <div className="col-span-3">Enrollment Status</div>
+                <div className="col-span-2">Actions</div>
+              </div>
+
+              {/* Table Body */}
+              <div className="divide-y divide-gray-200">
+                {students.map((student) => (
+                  <div key={student.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-gray-50 transition-colors">
+                    {/* Student Name */}
+                    <div className="col-span-3 flex items-center gap-3">
+                      <img
+                        src={student.avatar}
+                        alt={student.name}
+                        className="w-10 h-10 rounded-full bg-gray-200 object-cover"
+                      />
+                      <div>
+                        <div className="font-medium text-gray-900">{student.name}</div>
+                        <div className="text-sm text-gray-500">ID: {student.id}</div>
+                      </div>
+                    </div>
+
+                    {/* Grade */}
+                    <div className="col-span-2 text-gray-700">
+                      {student.grade}
+                    </div>
+
+                    {/* Risk Status */}
+                    <div className="col-span-2">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.riskColor)}`}>
+                        {getRiskIcon(student.riskColor)}
+                        {student.riskStatus}
+                      </span>
+                    </div>
+
+                    {/* Enrollment Status */}
+                    <div className="col-span-3">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.enrollmentColor)}`}>
+                        {getEnrollmentIcon(student.enrollmentColor)}
+                        {student.enrollmentStatus}
+                      </span>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="col-span-2">
+                      <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        View Profile
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Pagination */}
+            <div className="flex items-center justify-between mt-6">
+              <div className="text-sm text-gray-600">
+                Showing 1 to 3 of 3 Students
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1 transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </button>
+                
+                <button 
+                  onClick={() => setCurrentPage(1)}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage === 1 
+                      ? 'bg-orange-500 text-white' 
+                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  1
+                </button>
+                <button 
+                  onClick={() => setCurrentPage(2)}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage === 2 
+                      ? 'bg-orange-500 text-white' 
+                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  2
+                </button>
+                <button 
+                  onClick={() => setCurrentPage(3)}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage === 3 
+                      ? 'bg-orange-500 text-white' 
+                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  3
+                </button>
+                <button 
+                  onClick={() => setCurrentPage(4)}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage === 4 
+                      ? 'bg-orange-500 text-white' 
+                      : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  4
+                </button>
+                
+                <button 
+                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1 transition-colors"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1 transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Previous
-            </button>
-            
-            <button 
-              onClick={() => setCurrentPage(1)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                currentPage === 1 
-                  ? 'bg-orange-500 text-white' 
-                  : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              1
-            </button>
-            <button 
-              onClick={() => setCurrentPage(2)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                currentPage === 2 
-                  ? 'bg-orange-500 text-white' 
-                  : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              2
-            </button>
-            <button 
-              onClick={() => setCurrentPage(3)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                currentPage === 3 
-                  ? 'bg-orange-500 text-white' 
-                  : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              3
-            </button>
-            <button 
-              onClick={() => setCurrentPage(4)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                currentPage === 4 
-                  ? 'bg-orange-500 text-white' 
-                  : 'border border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              4
-            </button>
-            
-            <button 
-              onClick={() => setCurrentPage(prev => prev + 1)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1 transition-colors"
-            >
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   );

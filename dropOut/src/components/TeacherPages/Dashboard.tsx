@@ -20,7 +20,7 @@ import Behavior from '../TeacherPages/Behavior';
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const navigate = useNavigate();
-  const location = useLocation(); // ADD this line
+  const location = useLocation(); 
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);

@@ -16,6 +16,7 @@ import Attendance from "./components/TeacherPages/Attendance";
 import DailyAttendance from "./components/TeacherPages/DailyAttendance";
 import Behavior from "./components/TeacherPages/Behavior.tsx";
 import LogBehaviorReport from "./components/TeacherPages/LogBehaviorReport.tsx";
+import StudentProfiles from "./components/TeacherPages/StudentProfiles.tsx";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/daily-attendance" element={<DailyAttendance/>} />
              <Route path="/behavior-reports" element={<Behavior/>} />
              <Route path="/log-behavior-report" element={<LogBehaviorReport />} />
+              <Route path="/student-profiles" element={<StudentProfiles />} />
           <Route path="/hod-dashboard" element={<Hod />} />
            <Route path="/teacher-dashboard" element={<Dashboard />} />
            <Route path="/my-classes" element={<MyClasses />} />

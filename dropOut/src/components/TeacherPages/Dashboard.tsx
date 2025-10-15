@@ -10,12 +10,13 @@ import { FaClipboardCheck } from "react-icons/fa6";
 import { IoMdTv } from "react-icons/io";
 import { TbAlertTriangle } from "react-icons/tb";
 import userr from "../../../src/img/userr.png";
-import { useNavigate, useLocation } from 'react-router-dom'; // ADD useLocation
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import MyClasses from './MyClasses';
 import Attendance from '../TeacherPages/Attendance';
 import DailyAttendance from '../TeacherPages/DailyAttendance'
 import Behavior from '../TeacherPages/Behavior'; 
+import StudentProfiles from './StudentProfiles';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -37,6 +38,8 @@ export default function Dashboard() {
         return <DailyAttendance />;
       case '/behavior-reports':
         return <Behavior />;
+          case '/student-profiles':
+        return <StudentProfiles />;
       default:
         return <DashboardContent />;
     }

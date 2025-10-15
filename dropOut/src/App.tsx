@@ -29,7 +29,7 @@ function App() {
           <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
            <Route path="/attendance" element={<Attendance />} />
             <Route path="/daily-attendance" element={<DailyAttendance/>} />
-             <Route path="/behavior" element={<Behavior/>} />
+             <Route path="/behavior-reports" element={<Behavior/>} />
           <Route path="/hod-dashboard" element={<Hod />} />
            <Route path="/teacher-dashboard" element={<Dashboard />} />
            <Route path="/my-classes" element={<MyClasses />} />

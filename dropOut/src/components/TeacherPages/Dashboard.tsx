@@ -355,7 +355,6 @@ export default function Dashboard() {
           </nav>
         </aside>
 
-        {/* Use renderMainContent here instead of hardcoded DashboardContent */}
         {renderMainContent()}
       </div>
     </div>

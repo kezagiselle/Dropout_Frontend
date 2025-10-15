@@ -53,7 +53,7 @@ export default function LogBehaviorReport() {
 
   const handleCancel = () => {
     if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
-      navigate('/behavior'); // Navigate back to Behavior Reports page
+      navigate('/behavior-reports'); 
     }
   };
 

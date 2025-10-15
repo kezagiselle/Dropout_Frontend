@@ -17,6 +17,7 @@ import Attendance from '../TeacherPages/Attendance';
 import DailyAttendance from '../TeacherPages/DailyAttendance'
 import Behavior from '../TeacherPages/Behavior'; 
 import StudentProfiles from './StudentProfiles';
+import settings from './Settings';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -40,6 +41,8 @@ export default function Dashboard() {
         return <Behavior />;
           case '/student-profiles':
         return <StudentProfiles />;
+          case '/settings':
+        return <Settings />;
       default:
         return <DashboardContent />;
     }

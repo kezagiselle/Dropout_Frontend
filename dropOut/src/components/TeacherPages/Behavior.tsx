@@ -37,6 +37,11 @@ export default function Behavior() {
     navigate(path);
   };
 
+  
+  const handleLogNewReport = () => {
+    navigate('/log-behavior-report');
+  };
+
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/' },
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
@@ -243,7 +248,10 @@ export default function Behavior() {
                   <p className="text-sm text-gray-600 mt-1">Track and manage student behavior incidents and commendations</p>
                 </div>
                 <div className="flex gap-3">
-                  <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                  <button 
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                    onClick={handleLogNewReport} // Add onClick handler here
+                  >
                     <Plus className="w-4 h-4" />
                     Log New Behavior Report
                   </button>
@@ -255,6 +263,7 @@ export default function Behavior() {
               </div>
             </div>
 
+            {/* Rest of your component remains the same */}
             {/* Filters */}
             <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
               <div className="flex items-center gap-4 flex-wrap">

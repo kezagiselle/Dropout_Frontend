@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Calendar, Users, BookOpen, BarChart3, UserCircle, MessageSquare, Settings, Bell, Search } from 'lucide-react';
+import { ChevronDown, Calendar, Users, BookOpen, BarChart3, UserCircle, MessageSquare, Bell, Search, Menu, X } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaCalendarCheck } from 'react-icons/fa';
@@ -17,16 +17,18 @@ import Attendance from '../TeacherPages/Attendance';
 import DailyAttendance from '../TeacherPages/DailyAttendance'
 import Behavior from '../TeacherPages/Behavior'; 
 import StudentProfiles from './StudentProfiles';
-import settings from './Settings';
+import Settings from './Settings';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); 
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
+    setSidebarOpen(false); // Close sidebar on mobile after navigation
   };
 
   const renderMainContent = () => {
@@ -39,9 +41,9 @@ export default function Dashboard() {
         return <DailyAttendance />;
       case '/behavior-reports':
         return <Behavior />;
-          case '/student-profiles':
+      case '/student-profiles':
         return <StudentProfiles />;
-          case '/settings':
+      case '/settings':
         return <Settings />;
       default:
         return <DashboardContent />;
@@ -99,18 +101,18 @@ export default function Dashboard() {
 
   // Extract dashboard content to separate component to avoid recursion
   const DashboardContent = () => (
-    <main className="flex-1 p-6">
+    <main className="flex-1 min-w-0 p-4 sm:p-6">
       {/* Stat Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
         {statCards.map((card, idx) => (
-          <div key={idx} className={`${card.color} rounded-lg p-5 relative shadow-sm border border-gray-200`}>
+          <div key={idx} className={`${card.color} rounded-lg p-4 sm:p-5 relative shadow-sm border border-gray-200`}>
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="text-sm font-semibold text-gray-600 mb-1">{card.title}</p>
-                <h3 className={`text-3xl font-bold ${card.valueColor || 'text-gray-900'}`}>{card.value}</h3>
+                <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">{card.title}</p>
+                <h3 className={`text-xl sm:text-2xl lg:text-3xl font-bold ${card.valueColor || 'text-gray-900'}`}>{card.value}</h3>
               </div>
               <div className="bg-white p-2 rounded-lg border border-gray-200">
-                <card.icon className={`w-6 h-6 ${card.iconColor}`} />
+                <card.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${card.iconColor}`} />
               </div>
             </div>
             <p className="text-xs text-gray-500">{card.subtitle}</p>
@@ -118,16 +120,16 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
         {/* Left Column - Larger */}
-        <div className="col-span-2 space-y-6">
+        <div className="xl:col-span-2 space-y-4 sm:space-y-6">
           {/* Attendance Overview with BarChart */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Attendance Overview</h2>
-              <button className="text-sm text-orange-500 font-medium">View Details</button>
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Attendance Overview</h2>
+              <button className="text-sm text-orange-500 font-medium w-full sm:w-auto text-left sm:text-right">View Details</button>
             </div>
-            <div className="h-64">
+            <div className="h-48 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={attendanceData}
@@ -150,43 +152,43 @@ export default function Dashboard() {
               </ResponsiveContainer>
             </div>
             <div className="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded flex items-center gap-2">
-              <span className="text-yellow-700 text-sm">⚠️ 3 students with chronic absences this week</span>
+              <span className="text-yellow-700 text-xs sm:text-sm">⚠️ 3 students with chronic absences this week</span>
             </div>
           </div>
 
           {/* Assignments & Quizzes */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Assignments & Quizzes</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Assignments & Quizzes</h2>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-gray-600 mb-2">Pending to Grade</h3>
-                <div className="text-3xl font-bold text-red-600 mb-1">24</div>
+                <div className="text-2xl sm:text-3xl font-bold text-red-600 mb-1">24</div>
                 <p className="text-xs text-gray-500">assignments</p>
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-gray-600 mb-2">Upcoming to Publish</h3>
-                <div className="text-3xl font-bold text-blue-600 mb-1">3</div>
+                <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-1">3</div>
                 <p className="text-xs text-gray-500">assignments</p>
               </div>
             </div>
           </div>
 
           {/* Today's Schedule */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Today's Schedule</h2>
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Today's Schedule</h2>
             <div className="space-y-3">
               {schedule.map((item, idx) => (
-                <div key={idx} className={`${item.bgColor} rounded-lg p-4 border border-gray-200`}>
-                  <div className="flex items-center gap-4">
-                    <div className={`${item.color} text-white px-3 py-1 rounded text-sm font-medium`}>
+                <div key={idx} className={`${item.bgColor} rounded-lg p-3 sm:p-4 border border-gray-200`}>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                    <div className={`${item.color} text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium w-fit`}>
                       {item.period}
                     </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{item.class}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{item.class}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{item.time}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">{item.time}</p>
                   </div>
                 </div>
               ))}
@@ -194,13 +196,13 @@ export default function Dashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-            <div className="flex gap-4">
-              <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition flex items-center gap-1 text-sm">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition flex items-center gap-1 text-sm justify-center">
                 + Add Marks
               </button>
-              <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center gap-1 text-sm">
+              <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center gap-1 text-sm justify-center">
                 + Log Behavior
               </button>
             </div>
@@ -208,21 +210,21 @@ export default function Dashboard() {
         </div>
 
         {/* Right Column */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Flagged Students */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Flagged Students</h2>
-              <button className="text-sm text-orange-500 font-medium">View All</button>
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Flagged Students</h2>
+              <button className="text-sm text-orange-500 font-medium w-full sm:w-auto text-left sm:text-right">View All</button>
             </div>
             <div className="space-y-3">
               {flaggedStudents.map((student, idx) => (
                 <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-gray-900 text-sm">{student.name}</p>
-                    <p className="text-xs text-gray-500">{student.grade}</p>
+                  <div className="min-w-0 flex-1 mr-2">
+                    <p className="font-medium text-gray-900 text-sm truncate">{student.name}</p>
+                    <p className="text-xs text-gray-500 truncate">{student.grade}</p>
                   </div>
-                  <span className={`${student.color} px-2 py-1 rounded text-xs font-medium`}>
+                  <span className={`${student.color} px-2 py-1 rounded text-xs font-medium whitespace-nowrap flex-shrink-0`}>
                     {student.risk}
                   </span>
                 </div>
@@ -231,17 +233,17 @@ export default function Dashboard() {
           </div>
 
           {/* Recent Behavior */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Recent Behavior</h2>
-              <button className="px-3 py-1 bg-red-500 text-white rounded text-sm">+ Log Report</button>
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Recent Behavior</h2>
+              <button className="px-3 py-1 bg-red-500 text-white rounded text-sm w-full sm:w-auto text-center">+ Log Report</button>
             </div>
             <div className="space-y-3">
               {recentBehavior.map((item, idx) => (
                 <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div className={`w-2 h-2 rounded-full mt-2 ${item.type === 'positive' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 text-sm">{item.name} - {item.behavior}</p>
+                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${item.type === 'positive' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 text-sm truncate">{item.name} - {item.behavior}</p>
                     <p className="text-xs text-gray-500 mt-1">{item.time}</p>
                   </div>
                 </div>
@@ -250,16 +252,16 @@ export default function Dashboard() {
           </div>
 
           {/* Alerts & Tasks */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Alerts & Tasks</h2>
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Alerts & Tasks</h2>
             <div className="space-y-3">
               {alerts.map((alert, idx) => (
-                <div key={idx} className={`flex items-start gap-3 p-3 rounded-lg border ${alert.bgColor} ${alert.borderColor}`}>
-                  <div className={`${alert.type === 'urgent' ? 'bg-red-500' : alert.type === 'medium' ? 'bg-orange-500' : 'bg-blue-500'} text-white px-2 py-1 rounded text-xs font-medium`}>
+                <div key={idx} className={`flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 p-3 rounded-lg border ${alert.bgColor} ${alert.borderColor}`}>
+                  <div className={`${alert.type === 'urgent' ? 'bg-red-500' : alert.type === 'medium' ? 'bg-orange-500' : 'bg-blue-500'} text-white px-2 py-1 rounded text-xs font-medium w-fit`}>
                     {alert.type === 'urgent' ? 'Urgent' : alert.type === 'medium' ? 'Medium' : 'Info'}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 text-sm">{alert.title}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 text-sm truncate">{alert.title}</p>
                     <p className="text-xs text-gray-500 mt-1">{alert.time}</p>
                   </div>
                 </div>
@@ -275,54 +277,83 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+          {/* Left Section - Mobile Menu Button and School Name */}
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+            
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800">Westfield High School</span>
-              <ChevronDown className="w-4 h-4 text-gray-600" />
-            </div>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search students, teachers, courses..."
-                className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
+              <span className="font-semibold text-gray-800 text-sm sm:text-base">Westfield High School</span>
+              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+
+          {/* Search Bar - Hidden on mobile, visible on tablet and up */}
+          <div className="hidden md:block relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search students, teachers, courses..."
+              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+
+          {/* Right Section - Calendar, Notifications, Profile */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Calendar - Hidden on mobile, visible on tablet and up */}
+            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="w-4 h-4" />
-              <span>Jan 15 - Feb 18, 2024</span>
-              <ChevronDown className="w-4 h-4" />
+              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
+              <ChevronDown className="w-4 h-4 hidden lg:block" />
             </div>
+
+            {/* Notifications */}
             <div className="relative">
               <Bell className="w-5 h-5 text-gray-600" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
             </div>
+
+            {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-2">
-              <img src={userr} alt="User profile" className="w-8 h-8 rounded-full object-cover" />
-              <span className="text-sm font-medium">Sarah Wilson</span>
-              <ChevronDown className="w-4 h-4 text-gray-600" />
+              <img src={userr} alt="User profile" className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover" />
+              <span className="text-sm font-medium hidden sm:block">Sarah Wilson</span>
+              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
+          </div>
+        </div>
+
+        {/* Mobile Search Bar - Visible only on mobile */}
+        <div className="md:hidden px-4 pb-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search students, teachers, courses..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
           </div>
         </div>
       </header>
 
       {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3">
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-600">Filters</span>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-gray-600 mr-2">Filters</span>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             All Grades <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             All Classes <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             Current Term <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2">
+          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
             <Calendar className="w-4 h-4" />
             Date Filter
           </button>
@@ -331,8 +362,19 @@ export default function Dashboard() {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
-          <nav className="p-4">
+        <aside className={`
+          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
+        `}>
+          {/* Mobile Close Overlay */}
+          {sidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          
+          <nav className="p-4 relative z-50 bg-white h-full">
             <button 
               className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
                 activeTab === 'Dashboard' 

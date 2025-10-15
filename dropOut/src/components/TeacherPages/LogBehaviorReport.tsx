@@ -60,16 +60,16 @@ export default function LogBehaviorReport() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header - Updated to align with centered content */}
-      <div className="bg-white px-6 py-4 border-b border-gray-200">
+      <div className="bg-white px-4 sm:px-6 py-4 border-b border-gray-200">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex-1">
-              <h1 className="text-xl font-semibold mb-1 text-gray-900">Log Behavior Report</h1>
-              <p className="text-sm text-gray-600">Record student behavior incidents or commendations with detailed information and notifications.</p>
+              <h1 className="text-lg sm:text-xl font-semibold mb-1 text-gray-900">Log Behavior Report</h1>
+              <p className="text-xs sm:text-sm text-gray-600">Record student behavior incidents or commendations with detailed information and notifications.</p>
             </div>
             <button 
               onClick={handleCancel}
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors w-full sm:w-auto justify-center"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
@@ -79,18 +79,18 @@ export default function LogBehaviorReport() {
       </div>
 
       {/* Form Content */}
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-4 sm:p-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Student Information */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+              <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
                 <User className="w-5 h-5 text-blue-600" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">Student Information</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Student Information</h2>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Select Student(s)*
@@ -130,12 +130,12 @@ export default function LogBehaviorReport() {
           </div>
 
           {/* Behavior Type */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center">
+              <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">Behavior Type</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Behavior Type</h2>
             </div>
             
             <div className="space-y-4">
@@ -143,7 +143,7 @@ export default function LogBehaviorReport() {
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Type*
                 </label>
-                <div className="flex gap-6">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -201,12 +201,12 @@ export default function LogBehaviorReport() {
           </div>
 
           {/* Details & Description */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
+              <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center flex-shrink-0">
                 <FileText className="w-5 h-5 text-green-600" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">Details & Description</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Details & Description</h2>
             </div>
             
             <div className="space-y-4">
@@ -218,7 +218,7 @@ export default function LogBehaviorReport() {
                   value={description}
                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                   placeholder="Provide detailed description of the behavior incident or commendation..."
-                  rows={6}
+                  rows={4}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-orange-300 transition-colors resize-none"
                 />
               </div>
@@ -227,7 +227,7 @@ export default function LogBehaviorReport() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Optional Attachments
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-orange-300 transition-colors">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 text-center hover:border-orange-300 transition-colors">
                   <input
                     type="file"
                     multiple
@@ -238,11 +238,11 @@ export default function LogBehaviorReport() {
                   />
                   <label htmlFor="file-upload" className="cursor-pointer">
                     <div className="flex justify-center mb-3">
-                      <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                        <Upload className="w-6 h-6 text-gray-400" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <Upload className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-1">Click to upload photos, documents, or drag and drop</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-1">Click to upload photos, documents, or drag and drop</p>
                     <p className="text-xs text-gray-500">Supports: JPG, PNG, PDF (Max 10MB)</p>
                   </label>
                 </div>
@@ -251,10 +251,10 @@ export default function LogBehaviorReport() {
                   <div className="mt-3 space-y-2">
                     {uploadedFiles.map((file, index) => (
                       <div key={index} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded">
-                        <span className="text-sm text-gray-700">{file.name}</span>
+                        <span className="text-xs sm:text-sm text-gray-700 truncate flex-1 mr-2">{file.name}</span>
                         <button
                           onClick={() => removeFile(index)}
-                          className="text-gray-400 hover:text-red-500"
+                          className="text-gray-400 hover:text-red-500 flex-shrink-0"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -267,15 +267,15 @@ export default function LogBehaviorReport() {
           </div>
 
           {/* Date & Time */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+              <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
                 <Calendar className="w-5 h-5 text-blue-600" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">Date & Time</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Date & Time</h2>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Date of Incident / Commendation*
@@ -308,12 +308,12 @@ export default function LogBehaviorReport() {
           </div>
 
           {/* Notifications */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center">
+              <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center flex-shrink-0">
                 <Bell className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Notifications</h2>
             </div>
             
             <div className="space-y-3">
@@ -340,16 +340,16 @@ export default function LogBehaviorReport() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-2">
             <button
               onClick={handleCancel}
-              className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+              className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors w-full sm:w-auto"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
-              className="px-6 py-2.5 bg-blue-300 hover:bg-blue-400 text-white rounded-lg font-medium flex items-center gap-2 transition-colors"
+              className="px-6 py-2.5 bg-blue-300 hover:bg-blue-400 text-white rounded-lg font-medium flex items-center gap-2 transition-colors w-full sm:w-auto justify-center mb-3 sm:mb-0"
             >
               <IoMdSave className="w-4 h-4" />
               Save Behavior Report

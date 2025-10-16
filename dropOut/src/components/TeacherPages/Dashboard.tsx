@@ -9,6 +9,7 @@ import { IoMdSettings } from "react-icons/io";
 import { FaClipboardCheck } from "react-icons/fa6";
 import { IoMdTv } from "react-icons/io";
 import { TbAlertTriangle } from "react-icons/tb";
+import { FaRegChartBar } from "react-icons/fa"; 
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -18,6 +19,7 @@ import DailyAttendance from '../TeacherPages/DailyAttendance'
 import Behavior from '../TeacherPages/Behavior'; 
 import StudentProfiles from './StudentProfiles';
 import Settings from './Settings';
+import Marks from './Marks'; 
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -45,6 +47,8 @@ export default function Dashboard() {
         return <StudentProfiles />;
       case '/settings':
         return <Settings />;
+      case '/marks': // Added Marks route
+        return <Marks />;
       default:
         return <DashboardContent />;
     }
@@ -91,9 +95,11 @@ export default function Dashboard() {
     { title: 'New curriculum update', time: 'Review required', type: 'info', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' }
   ];
 
+  // Updated menuItems to include Marks
   const menuItems = [
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
     { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
+    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks menu item
     { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
@@ -199,7 +205,10 @@ export default function Dashboard() {
           <div className="bg-white rounded-lg shadow p-4 sm:p-6">
             <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="flex flex-col sm:flex-row gap-3">
-              <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition flex items-center gap-1 text-sm justify-center">
+              <button 
+                onClick={() => handleNavigation('/marks', 'Marks')}
+                className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition flex items-center gap-1 text-sm justify-center"
+              >
                 + Add Marks
               </button>
               <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center gap-1 text-sm justify-center">

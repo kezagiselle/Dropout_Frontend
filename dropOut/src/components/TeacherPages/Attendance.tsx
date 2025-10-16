@@ -5,6 +5,7 @@ import { FaClipboardCheck } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
+import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -96,9 +97,12 @@ export default function Attendance() {
     setSidebarOpen(false); // Close sidebar on mobile after navigation
   };
 
+  // Updated menuItems to include Marks
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/' },
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
+    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
+    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
     { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
@@ -314,42 +318,10 @@ export default function Attendance() {
           )}
           
           <nav className="p-4 relative z-50 bg-white h-full">
-            <button 
-              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                activeTab === 'Dashboard' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/teacher-dashboard', 'Dashboard')}
-            >
-              <BarChart3 className="w-5 h-5" />
-              <span className="font-medium">Dashboard</span>
-            </button>
-            <button 
-              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                activeTab === 'My Classes' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/my-classes', 'My Classes')}
-            >
-              <LiaChalkboardTeacherSolid className="w-5 h-5" />
-              <span className="font-medium">My Classes</span>
-            </button>
-            <button 
-              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                activeTab === 'Attendance' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-            >
-              <FaClipboardCheck className="w-5 h-5" />
-              <span className="font-medium">Attendance</span>
-            </button>
-            {menuItems.filter(item => item.label !== 'Dashboard' && item.label !== 'My Classes' && item.label !== 'Attendance').map((item, idx) => (
+            {menuItems.map((item, idx) => (
               <button 
                 key={idx} 
-                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
+                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
                   activeTab === item.label 
                     ? 'bg-orange-500 text-white' 
                     : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'

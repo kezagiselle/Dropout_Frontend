@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Download, Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight, BarChart3, Bell, Search, Calendar } from 'lucide-react';
+import { Download, Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight, BarChart3, Bell, Search, Calendar, Menu, X } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
+import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -23,6 +24,7 @@ type ColorType = 'green' | 'orange' | 'red';
 
 export default function Behavior() {
   const [activeTab, setActiveTab] = useState('Behavior Reports');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<string>('All Students');
   const [selectedClass, setSelectedClass] = useState<string>('All Classes');
   const [selectedType, setSelectedType] = useState<string>('All Types');
@@ -35,6 +37,7 @@ export default function Behavior() {
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
+    setSidebarOpen(false); // Close sidebar on mobile after navigation
   };
 
   // Add this function to handle navigation to LogBehaviorReport
@@ -42,11 +45,13 @@ export default function Behavior() {
     navigate('/log-behavior-report');
   };
 
+  // Updated menuItems to include Marks
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/' },
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
     { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior' },
+    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
+    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
@@ -151,54 +156,83 @@ export default function Behavior() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+          {/* Left Section - Mobile Menu Button and School Name */}
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+            
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800">Westfield High School</span>
-              <ChevronDown className="w-4 h-4 text-gray-600" />
-            </div>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search students, teachers, courses..."
-                className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
+              <span className="font-semibold text-gray-800 text-sm sm:text-base">Westfield High School</span>
+              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+
+          {/* Search Bar - Hidden on mobile, visible on tablet and up */}
+          <div className="hidden md:block relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search students, teachers, courses..."
+              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+
+          {/* Right Section - Calendar, Notifications, Profile */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Calendar - Hidden on mobile, visible on tablet and up */}
+            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="w-4 h-4" />
-              <span>Jan 15 - Feb 18, 2024</span>
-              <ChevronDown className="w-4 h-4" />
+              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
+              <ChevronDown className="w-4 h-4 hidden lg:block" />
             </div>
+
+            {/* Notifications */}
             <div className="relative">
               <Bell className="w-5 h-5 text-gray-600" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
             </div>
+
+            {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-2">
-              <img src={userr} alt="User profile" className="w-8 h-8 rounded-full object-cover" />
-              <span className="text-sm font-medium">Sarah Wilson</span>
-              <ChevronDown className="w-4 h-4 text-gray-600" />
+              <img src={userr} alt="User profile" className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover" />
+              <span className="text-sm font-medium hidden sm:block">Sarah Wilson</span>
+              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
+          </div>
+        </div>
+
+        {/* Mobile Search Bar - Visible only on mobile */}
+        <div className="md:hidden px-4 pb-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search students, teachers, courses..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
           </div>
         </div>
       </header>
 
       {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3">
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-600">Filters</span>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-gray-600 mr-2">Filters</span>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             All Grades <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             All Classes <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2">
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
             Current Term <ChevronDown className="w-3 h-3" />
           </button>
-          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2">
+          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
             <Calendar className="w-4 h-4" />
             Date Filter
           </button>
@@ -207,23 +241,23 @@ export default function Behavior() {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
-          <nav className="p-4">
-            <button 
-              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                activeTab === 'Dashboard' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/', 'Dashboard')}
-            >
-              <BarChart3 className="w-5 h-5" />
-              <span className="font-medium">Dashboard</span>
-            </button>
-            {menuItems.filter(item => item.label !== 'Dashboard').map((item, idx) => (
+        <aside className={`
+          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
+        `}>
+          {/* Mobile Close Overlay */}
+          {sidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          
+          <nav className="p-4 relative z-50 bg-white h-full">
+            {menuItems.map((item, idx) => (
               <button 
                 key={idx} 
-                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
+                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
                   activeTab === item.label 
                     ? 'bg-orange-500 text-white' 
                     : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
@@ -238,24 +272,24 @@ export default function Behavior() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 min-w-0 p-4 sm:p-6">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-6">
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-2">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Behavior Reports</h1>
-                  <p className="text-sm text-gray-600 mt-1">Track and manage student behavior incidents and commendations</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Behavior Reports</h1>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">Track and manage student behavior incidents and commendations</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                   <button 
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                    onClick={handleLogNewReport} // Add onClick handler here
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors justify-center text-sm sm:text-base"
+                    onClick={handleLogNewReport}
                   >
                     <Plus className="w-4 h-4" />
                     Log New Behavior Report
                   </button>
-                  <button className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                  <button className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors justify-center text-sm sm:text-base">
                     <Eye className="w-4 h-4" />
                     View All Reports
                   </button>
@@ -263,10 +297,9 @@ export default function Behavior() {
               </div>
             </div>
 
-            {/* Rest of your component remains the same */}
             {/* Filters */}
             <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-              <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-wrap">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4 text-gray-500" />
                   <span className="text-sm font-medium text-gray-700">Filters:</span>
@@ -276,7 +309,7 @@ export default function Behavior() {
                   <select 
                     value={selectedStudent}
                     onChange={(e) => setSelectedStudent(e.target.value)}
-                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                   >
                     <option>All Students</option>
                     <option>Emma Johnson</option>
@@ -290,7 +323,7 @@ export default function Behavior() {
                   <select 
                     value={selectedClass}
                     onChange={(e) => setSelectedClass(e.target.value)}
-                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                   >
                     <option>All Classes</option>
                     <option>Grade 9A</option>
@@ -304,7 +337,7 @@ export default function Behavior() {
                   <select 
                     value={selectedType}
                     onChange={(e) => setSelectedType(e.target.value)}
-                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                   >
                     <option>All Types</option>
                     <option>Commendation</option>
@@ -319,16 +352,16 @@ export default function Behavior() {
                   placeholder="mm/dd/yyyy"
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
                 />
 
-                <div className="ml-auto flex items-center gap-2">
-                  <span className="text-sm text-gray-600">Sort by:</span>
-                  <div className="relative">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <span className="text-sm text-gray-600 whitespace-nowrap">Sort by:</span>
+                  <div className="relative flex-1">
                     <select 
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     >
                       <option>Date (Latest)</option>
                       <option>Date (Oldest)</option>
@@ -342,18 +375,18 @@ export default function Behavior() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 mb-6">
-              <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-1">24</div>
-                <div className="text-sm text-gray-600">Commendations</div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-1">24</div>
+                <div className="text-xs sm:text-sm text-gray-600">Commendations</div>
               </div>
-              <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-                <div className="text-4xl font-bold text-orange-500 mb-1">8</div>
-                <div className="text-sm text-gray-600">Minor Incidents</div>
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-4xl font-bold text-orange-500 mb-1">8</div>
+                <div className="text-xs sm:text-sm text-gray-600">Minor Incidents</div>
               </div>
-              <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-                <div className="text-4xl font-bold text-red-500 mb-1">3</div>
-                <div className="text-sm text-gray-600">Major Incidents</div>
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
+                <div className="text-2xl sm:text-4xl font-bold text-red-500 mb-1">3</div>
+                <div className="text-xs sm:text-sm text-gray-600">Major Incidents</div>
               </div>
             </div>
 
@@ -364,27 +397,27 @@ export default function Behavior() {
                 {reports.map((report) => (
                   <div 
                     key={report.id}
-                    className={`bg-white rounded-lg shadow-sm border-l-4 ${getBorderColor(report.color)} p-6 hover:shadow-md transition-shadow`}
+                    className={`bg-white rounded-lg shadow-sm border-l-4 ${getBorderColor(report.color)} p-4 sm:p-6 hover:shadow-md transition-shadow`}
                   >
                     <div className="flex items-start gap-4">
-                      <div className={`w-10 h-10 rounded-full ${getIconBg(report.color)} flex items-center justify-center flex-shrink-0`}>
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${getIconBg(report.color)} flex items-center justify-center flex-shrink-0`}>
                         {getIcon(report.color)}
                       </div>
                       
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-3">
-                            <h3 className="font-semibold text-gray-900">{report.name}</h3>
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${getTypeBadge(report.type)}`}>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{report.name}</h3>
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${getTypeBadge(report.type)} w-fit`}>
                               {report.type}
                             </span>
                           </div>
-                          <button className="text-gray-400 hover:text-gray-600">
+                          <button className="text-gray-400 hover:text-gray-600 self-start sm:self-auto">
                             <MoreVertical className="w-5 h-5" />
                           </button>
                         </div>
                         
-                        <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3">
                           <div className="flex items-center gap-1">
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
@@ -399,7 +432,7 @@ export default function Behavior() {
                           </div>
                         </div>
                         
-                        <p className="text-sm text-gray-700">{report.description}</p>
+                        <p className="text-xs sm:text-sm text-gray-700">{report.description}</p>
                       </div>
                     </div>
                   </div>
@@ -408,7 +441,7 @@ export default function Behavior() {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-sm text-gray-600">
                 Showing 1 to 5 of 5 results
               </div>

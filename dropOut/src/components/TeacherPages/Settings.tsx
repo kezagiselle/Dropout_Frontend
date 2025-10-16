@@ -5,6 +5,7 @@ import { TbReport, TbWorld } from "react-icons/tb";
 import { BsThermometerSun } from "react-icons/bs";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { BarChart3, Bell, Search, Calendar, ChevronDown } from 'lucide-react';
+import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
 import { useTheme } from '../Hod';
 import pe3 from "../../img/pe3.png";
 import userr from "../../../src/img/userr.png";
@@ -26,9 +27,12 @@ const Settings = () => {
     setSidebarOpen(false); // Close sidebar on mobile after navigation
   };
 
+  // Updated menuItems to include Marks
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/' },
+    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
     { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
+    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
     { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
@@ -105,6 +109,26 @@ const Settings = () => {
         </div>
       </header>
 
+      {/* Filters */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-gray-600 mr-2">Filters</span>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
+            All Grades <ChevronDown className="w-3 h-3" />
+          </button>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
+            All Classes <ChevronDown className="w-3 h-3" />
+          </button>
+          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
+            Current Term <ChevronDown className="w-3 h-3" />
+          </button>
+          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
+            <Calendar className="w-4 h-4" />
+            Date Filter
+          </button>
+        </div>
+      </div>
+
       <div className="flex">
         {/* Sidebar */}
         <aside className={`
@@ -120,32 +144,10 @@ const Settings = () => {
           )}
           
           <nav className="p-4 relative z-50 bg-white h-full">
-            <button 
-              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                activeTab === 'Dashboard' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/teacher-dashboard', 'Dashboard')}
-            >
-              <BarChart3 className="w-5 h-5" />
-              <span className="font-medium">Dashboard</span>
-            </button>
-            <button 
-              className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                activeTab === 'My Classes' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/my-classes', 'My Classes')}
-            >
-              <LiaChalkboardTeacherSolid className="w-5 h-5" />
-              <span className="font-medium">My Classes</span>
-            </button>
-            {menuItems.filter(item => item.label !== 'Dashboard').map((item, idx) => (
+            {menuItems.map((item, idx) => (
               <button 
                 key={idx} 
-                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 ${
+                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
                   activeTab === item.label 
                     ? 'bg-orange-500 text-white' 
                     : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'

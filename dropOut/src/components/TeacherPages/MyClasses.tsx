@@ -8,9 +8,11 @@ import { IoMdSettings } from "react-icons/io";
 import { BsThermometerSun } from "react-icons/bs";
 import { FaBook } from "react-icons/fa";
 import { FaCalculator } from "react-icons/fa6";
-import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
+import { FaRegChartBar } from "react-icons/fa"; 
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
+import { AiFillMessage } from "react-icons/ai";
+
 
 interface ClassItem {
   id: number;
@@ -378,8 +380,10 @@ function MyClasses() {
                     <button className="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-orange-600">
                       + Add Marks
                     </button>
-                    <button className="flex-1 bg-green-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-400">
-                      💬 Parents
+                    <button className="flex-1 bg-green-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-400 flex items-center justify-center gap-1">
+                      <AiFillMessage className="w-4 h-4" />
+                      <span className="hidden sm:inline">Message Parent</span>
+                      <span className="sm:hidden">Parents</span>
                     </button>
                   </div>
                 </div>
@@ -447,8 +451,10 @@ function MyClasses() {
                     <button className="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-orange-600">
                       + Add Marks
                     </button>
-                    <button className="flex-1 bg-green-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-400">
-                      💬 Parents
+                    <button className="flex-1 bg-green-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-green-400 flex items-center justify-center gap-1">
+                      <AiFillMessage className="w-4 h-4" />
+                      <span className="hidden sm:inline">Message Parent</span>
+                      <span className="sm:hidden">Parents</span>
                     </button>
                   </div>
                 </div>

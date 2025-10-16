@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Search, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Mark {
   id: number;
@@ -13,13 +14,14 @@ function ViewMarks() {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
-  
+  // Empty data for the table
   const marksData: Mark[] = [];
 
   const gradeTypeOptions = ['Quiz', 'Assignment', 'Groupwork', 'Exam'];
 
-  
+  // Filter data based on search term and selected filters
   const filteredData = marksData.filter(mark => 
     mark.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     mark.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -27,13 +29,27 @@ function ViewMarks() {
     selectedFilter ? mark.gradeType === selectedFilter : true
   );
 
+  // Function to handle back navigation
+  const handleBack = () => {
+    navigate('/marks');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">View Marks</h1>
-          <p className="text-gray-600">Manage and view student marks across all courses</p>
+        {/* Header with Back Button */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">View Marks</h1>
+            <p className="text-gray-600">Manage and view student marks across all courses</p>
+          </div>
+          <button 
+            onClick={handleBack}
+            className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Marks
+          </button>
         </div>
 
         {/* Summary Stats - Moved to top */}
@@ -71,7 +87,7 @@ function ViewMarks() {
           </div>
         </div>
 
-        
+        {/* Filters Section */}
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Courses Dropdown */}
@@ -190,7 +206,7 @@ function ViewMarks() {
             </table>
           </div>
 
-          
+          {/* Empty State */}
           <div className="text-center py-12">
             <div className="text-gray-400 mb-2">
               <Search className="w-12 h-12 mx-auto" />

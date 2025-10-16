@@ -45,7 +45,7 @@ function MyClasses() {
     { icon: BarChart3, label: 'Dashboard', path: '/teacher-dashboard' },
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
     { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
+    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, 
     { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }

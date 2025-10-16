@@ -5,14 +5,12 @@ import { FaClipboardCheck } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
-import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
+import { FaRegChartBar } from "react-icons/fa";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import pe1 from "../../../src/img/pe1.png";
 import pe2 from "../../../src/img/pe2.png";
 import pe3 from "../../../src/img/pe3.png";
-
 
 interface Student {
   id: number;
@@ -31,60 +29,7 @@ interface ChronicAbsence {
   avatar: string;
 }
 
-interface ChartData {
-  date: string;
-  uv: number;
-  pv: number;
-  amt: number;
-}
-
-
-interface TickProps {
-  x: number;
-  y: number;
-  payload: {
-    value: string;
-    offset: number;
-  };
-  width: number;
-  visibleTicksCount: number;
-}
-
-
-const monthTickFormatter = (tick: string): string => {
-  const date = new Date(tick);
-  return (date.getMonth() + 1).toString();
-};
-
-const renderQuarterTick = (tickProps: TickProps): React.ReactElement => {
-  const { x, y, payload, width, visibleTicksCount } = tickProps;
-  const { value, offset } = payload;
-  const date = new Date(value);
-  const month = date.getMonth();
-  const quarterNo = Math.floor(month / 3) + 1;
-
-  if (month % 3 === 1) {
-    return (
-      <text 
-        x={x + width / visibleTicksCount / 2 - offset} 
-        y={y - 4} 
-        textAnchor="middle"
-      >
-        {`Q${quarterNo}`}
-      </text>
-    );
-  }
-
-  const isLast = month === 11;
-
-  if (month % 3 === 0 || isLast) {
-    const pathX = Math.floor(isLast ? x - offset + width / visibleTicksCount : x - offset) + 0.5;
-    return <path d={`M${pathX},${y - 4}v${-35}`} stroke="red" />;
-  }
-  return<></>
-};
-
-export default function Attendance() {
+const Attendance = () => {
   const [activeTab, setActiveTab] = useState('Attendance');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedWeek, setSelectedWeek] = useState<string>('This Week');
@@ -94,34 +39,25 @@ export default function Attendance() {
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
-    setSidebarOpen(false); // Close sidebar on mobile after navigation
+    setSidebarOpen(false);
   };
 
-  // Updated menuItems to include Marks
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/' },
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
     { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
+    { icon: FaRegChartBar, label: 'Marks', path: '/marks' },
     { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
-  
-  const chartData: ChartData[] = [
-    { date: '2000-01', uv: 4000, pv: 2400, amt: 2400 },
-    { date: '2000-02', uv: 3000, pv: 1398, amt: 2210 },
-    { date: '2000-03', uv: 2000, pv: 9800, amt: 2290 },
-    { date: '2000-04', uv: 2780, pv: 3908, amt: 2000 },
-    { date: '2000-05', uv: 1890, pv: 4800, amt: 2181 },
-    { date: '2000-06', uv: 2390, pv: 3800, amt: 2500 },
-    { date: '2000-07', uv: 3490, pv: 4300, amt: 2100 },
-    { date: '2000-08', uv: 4000, pv: 2400, amt: 2400 },
-    { date: '2000-09', uv: 3000, pv: 1398, amt: 2210 },
-    { date: '2000-10', uv: 2000, pv: 9800, amt: 2290 },
-    { date: '2000-11', uv: 2780, pv: 3908, amt: 2000 },
-    { date: '2000-12', uv: 1890, pv: 4800, amt: 2181 },
+  // Weekly attendance data
+  const weeklyData = [
+    { week: 'Week 1', grade5A: 97, grade5B: 92, grade6A: 95 },
+    { week: 'Week 2', grade5A: 95, grade5B: 88, grade6A: 93 },
+    { week: 'Week 3', grade5A: 99, grade5B: 87, grade6A: 92 },
+    { week: 'Week 4', grade5A: 96, grade5B: 89, grade6A: 93 }
   ];
 
   const students: Student[] = [
@@ -139,7 +75,7 @@ export default function Attendance() {
       studentId: 'Student ID: 2024002',
       avatar: pe2,
       statuses: ['Present', 'Absent', 'Late', 'Excused'],
-      activeStatus: 'Absent' // Changed to Absent for orange color
+      activeStatus: 'Absent'
     },
     {
       id: 3,
@@ -165,18 +101,17 @@ export default function Attendance() {
     { name: 'Ryan Garcia', grade: 'Grade 6A', days: '6 day', risk: 'Watch List', avatar: pe1 }
   ];
 
-  
   const getStatusStyle = (status: string, student: Student): string => {
     if (status === student.activeStatus) {
       switch(status) {
         case 'Present': 
           if (student.name === 'Michael Chen') {
-            return 'bg-gray-300 text-gray-700'; // Light gray for Michael's Present
+            return 'bg-gray-300 text-gray-700';
           }
           return 'bg-green-400 text-white'; 
         case 'Absent':
           if (student.name === 'Michael Chen') {
-            return 'bg-orange-500 text-white'; // Orange for Michael's Absent
+            return 'bg-orange-500 text-white';
           }
           return 'bg-gray-300 text-gray-700';
         case 'Late':
@@ -188,8 +123,6 @@ export default function Attendance() {
           return 'bg-gray-300 text-gray-700'; 
       }
     }
-    
-    
     return 'bg-gray-200 text-gray-500';
   };
 
@@ -211,7 +144,6 @@ export default function Attendance() {
     }
   };
 
-  // Add this function to handle navigation to DailyAttendanceRecording
   const handleMarkAllPresent = () => {
     navigate('/daily-attendance');
   };
@@ -421,42 +353,92 @@ export default function Attendance() {
               </div>
             </div>
 
-            <div className="h-48 sm:h-64 lg:h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  width={500}
-                  height={300}
-                  data={chartData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" tickFormatter={monthTickFormatter} />
-                  <XAxis
-                    dataKey="date"
-                    axisLine={false}
-                    tickLine={false}
-                    interval={0}
-                    tick={renderQuarterTick as any}
-                    height={1}
-                    scale="band"
-                    xAxisId="quarter"
-                  />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="pv" fill="#8884d8" />
-                  <Bar dataKey="uv" fill="#82ca9d" />
-                </BarChart>
-              </ResponsiveContainer>
+            {/* Updated Chart with Connected Lines */}
+            <div className="relative h-48 sm:h-64 lg:h-80">
+              <svg className="w-full h-full" viewBox="0 0 600 200">
+                {/* Grid lines */}
+                {[80, 85, 90, 95, 100].map((val, i) => (
+                  <g key={val}>
+                    <line 
+                      x1="60" 
+                      y1={200 - (val - 80) * 5} 
+                      x2="580" 
+                      y2={200 - (val - 80) * 5} 
+                      stroke="#e5e7eb" 
+                      strokeWidth="1"
+                    />
+                    <text x="40" y={205 - (val - 80) * 5} className="text-xs fill-gray-400">{val}</text>
+                  </g>
+                ))}
+
+                {/* Lines connecting the dots */}
+                {/* Grade 5A - Teal */}
+                <polyline
+                  points={weeklyData.map((d, i) => `${120 + i * 130},${200 - (d.grade5A - 80) * 5}`).join(' ')}
+                  fill="none"
+                  stroke="#14b8a6"
+                  strokeWidth="3"
+                />
+                {weeklyData.map((d, i) => (
+                  <g key={i}>
+                    <circle cx={120 + i * 130} cy={200 - (d.grade5A - 80) * 5} r="4" fill="#14b8a6" />
+                    <text x={120 + i * 130} y={195 - (d.grade5A - 80) * 5} className="text-xs fill-gray-900 font-medium" textAnchor="middle">{d.grade5A}</text>
+                  </g>
+                ))}
+
+                {/* Grade 5B - Orange */}
+                <polyline
+                  points={weeklyData.map((d, i) => `${120 + i * 130},${200 - (d.grade5B - 80) * 5}`).join(' ')}
+                  fill="none"
+                  stroke="#f97316"
+                  strokeWidth="3"
+                />
+                {weeklyData.map((d, i) => (
+                  <g key={i}>
+                    <circle cx={120 + i * 130} cy={200 - (d.grade5B - 80) * 5} r="4" fill="#f97316" />
+                    <text x={120 + i * 130} y={195 - (d.grade5B - 80) * 5} className="text-xs fill-gray-900 font-medium" textAnchor="middle">{d.grade5B}</text>
+                  </g>
+                ))}
+
+                {/* Grade 6A - Blue */}
+                <polyline
+                  points={weeklyData.map((d, i) => `${120 + i * 130},${200 - (d.grade6A - 80) * 5}`).join(' ')}
+                  fill="none"
+                  stroke="#3b82f6"
+                  strokeWidth="3"
+                />
+                {weeklyData.map((d, i) => (
+                  <g key={i}>
+                    <circle cx={120 + i * 130} cy={200 - (d.grade6A - 80) * 5} r="4" fill="#3b82f6" />
+                    <text x={120 + i * 130} y={195 - (d.grade6A - 80) * 5} className="text-xs fill-gray-900 font-medium" textAnchor="middle">{d.grade6A}</text>
+                  </g>
+                ))}
+
+                {/* X-axis labels */}
+                {weeklyData.map((d, i) => (
+                  <text key={i} x={120 + i * 130} y="190" className="text-xs fill-gray-600" textAnchor="middle">{d.week}</text>
+                ))}
+              </svg>
+            </div>
+
+            {/* Legend */}
+            <div className="flex items-center justify-center gap-6 mt-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-teal-500"></div>
+                <span className="text-sm text-gray-600">Grade 5A</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                <span className="text-sm text-gray-600">Grade 5B</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <span className="text-sm text-gray-600">Grade 6A</span>
+              </div>
             </div>
           </div>
 
-          
+          {/* Bottom Sections */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
             <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
@@ -509,7 +491,6 @@ export default function Attendance() {
               </div>
             </div>
 
-            
             <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200">
               <div className="mb-4 sm:mb-6">
                 <h2 className="text-base sm:text-lg font-bold text-gray-900">Chronic Absences</h2>
@@ -546,4 +527,6 @@ export default function Attendance() {
       </div>
     </div>
   );
-}
+};
+
+export default Attendance;

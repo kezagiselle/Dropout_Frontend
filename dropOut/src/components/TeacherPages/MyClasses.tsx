@@ -42,6 +42,11 @@ function MyClasses() {
     setSidebarOpen(false); 
   };
 
+  // Function to handle View Students button click
+  const handleViewStudents = (classItem: ClassItem) => {
+    navigate('/view-marks');
+  };
+
   
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/teacher-dashboard' },
@@ -372,7 +377,10 @@ function MyClasses() {
 
                   {/* Actions */}
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <button className="flex-1 bg-blue-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-400 flex items-center justify-center gap-1">
+                    <button 
+                      onClick={() => handleViewStudents(classItem)}
+                      className="flex-1 bg-blue-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-400 flex items-center justify-center gap-1"
+                    >
                       <IoIosPeople className="w-4 h-4" />
                       <span className="hidden sm:inline">View Students</span>
                       <span className="sm:hidden">Students</span>
@@ -443,7 +451,10 @@ function MyClasses() {
 
                   {/* Actions */}
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <button className="flex-1 bg-blue-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-400 flex items-center justify-center gap-1">
+                    <button 
+                      onClick={() => handleViewStudents(classItem)}
+                      className="flex-1 bg-blue-300 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-400 flex items-center justify-center gap-1"
+                    >
                       <IoIosPeople className="w-4 h-4" />
                       <span className="hidden sm:inline">View Students</span>
                       <span className="sm:hidden">Students</span>

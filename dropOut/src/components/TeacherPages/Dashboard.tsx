@@ -30,7 +30,7 @@ export default function Dashboard() {
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
-    setSidebarOpen(false); // Close sidebar on mobile after navigation
+    setSidebarOpen(false); 
   };
 
   const renderMainContent = () => {
@@ -211,7 +211,10 @@ export default function Dashboard() {
               >
                 + Add Marks
               </button>
-              <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center gap-1 text-sm justify-center">
+              <button 
+                onClick={() => handleNavigation('/behavior-reports', 'Behavior Reports')}
+                className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center gap-1 text-sm justify-center"
+              >
                 + Log Behavior
               </button>
             </div>
@@ -245,7 +248,12 @@ export default function Dashboard() {
           <div className="bg-white rounded-lg shadow p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
               <h2 className="text-base sm:text-lg font-semibold text-gray-900">Recent Behavior</h2>
-              <button className="px-3 py-1 bg-red-500 text-white rounded text-sm w-full sm:w-auto text-center">+ Log Report</button>
+              <button 
+                onClick={() => handleNavigation('/behavior-reports', 'Behavior Reports')}
+                className="px-3 py-1 bg-red-500 text-white rounded text-sm w-full sm:w-auto text-center"
+              >
+                + Log Report
+              </button>
             </div>
             <div className="space-y-3">
               {recentBehavior.map((item, idx) => (

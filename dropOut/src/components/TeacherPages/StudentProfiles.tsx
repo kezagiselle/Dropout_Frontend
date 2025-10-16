@@ -5,7 +5,7 @@ import { FaClipboardCheck } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
-import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
+import { FaRegChartBar } from "react-icons/fa"; 
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 import pe1 from "../../../src/img/pe1.png";
@@ -39,15 +39,15 @@ export default function StudentProfiles() {
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
-    setSidebarOpen(false); // Close sidebar on mobile after navigation
+    setSidebarOpen(false); 
   };
 
   // Updated menuItems to include Marks
   const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', path: '/' },
+    { icon: BarChart3, label: 'Dashboard', path: '/teacher-dashboard' },
     { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
     { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
+    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, 
     { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }

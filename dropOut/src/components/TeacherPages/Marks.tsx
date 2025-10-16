@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { ArrowLeft, User, BookOpen, FileText, BarChart3, Bell, Search, Calendar, ChevronDown, Menu, X, Eye } from 'lucide-react';
+import { User, BookOpen, BarChart3, Bell, Search, Calendar, ChevronDown, Menu, X, Eye } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
@@ -10,7 +10,6 @@ import { FaRegChartBar } from "react-icons/fa";
 import { IoMdSave } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import userr from "../../../src/img/userr.png";
-import ViewMarks from './ViewMarks';
 
 interface StudentGrade {
   id: number;
@@ -30,12 +29,6 @@ export default function Marks() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigate = useNavigate();
-
-
-  
-  const handleBack = () => {
-    navigate('/marks');
-  };
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -235,13 +228,6 @@ export default function Marks() {
                   <h1 className="text-lg sm:text-xl font-semibold mb-1 text-gray-900">Marks Management</h1>
                   <p className="text-xs sm:text-sm text-gray-600">Manage student grades and assessments for different courses and grade types.</p>
                 </div>
-                <button 
-                  onClick={handleCancel}
-                  className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors w-full sm:w-auto justify-center"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Back
-                </button>
               </div>
             </div>
           </div>

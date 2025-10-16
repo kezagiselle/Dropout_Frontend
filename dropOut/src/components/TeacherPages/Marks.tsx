@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { ArrowLeft, User, BookOpen, FileText, BarChart3, Bell, Search, Calendar, ChevronDown, Menu, X } from 'lucide-react';
+import { ArrowLeft, User, BookOpen, FileText, BarChart3, Bell, Search, Calendar, ChevronDown, Menu, X, Eye } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
@@ -10,6 +10,7 @@ import { FaRegChartBar } from "react-icons/fa";
 import { IoMdSave } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import userr from "../../../src/img/userr.png";
+import ViewMarks from './ViewMarks';
 
 interface StudentGrade {
   id: number;
@@ -30,12 +31,17 @@ export default function Marks() {
 
   const navigate = useNavigate();
 
+
+  
+  const handleBack = () => {
+    navigate('/marks');
+  };
+
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
     setSidebarOpen(false); 
   };
-
 
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/teacher-dashboard' },
@@ -93,6 +99,11 @@ export default function Marks() {
     if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
       navigate(-1); 
     }
+  };
+
+  // Function to handle View Marks navigation
+  const handleViewMarks = () => {
+    navigate('/view-marks');
   };
 
   return (
@@ -388,8 +399,18 @@ export default function Marks() {
                   </button>
                 </div>
 
-                {/* Save All Button */}
-                <div className="flex justify-end mt-6">
+                {/* Save All and View Marks Buttons */}
+                <div className="flex justify-end gap-3 mt-6">
+                  {/* View Marks Button */}
+                  <button
+                    onClick={handleViewMarks}
+                    className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium flex items-center gap-2 transition-colors"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View Marks
+                  </button>
+                  
+                  {/* Save All Button */}
                   <button
                     onClick={handleSaveAll}
                     className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium flex items-center gap-2 transition-colors"

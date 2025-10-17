@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, Calendar, Users, BookOpen, BarChart3, Bell, Search, Grid, List, ChevronLeft, ChevronRight, TrendingUp, AlertTriangle, Menu, X } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
@@ -12,6 +13,7 @@ import { FaRegChartBar } from "react-icons/fa";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 import { AiFillMessage } from "react-icons/ai";
+import { useUserAuth } from '../../context/useUserAuth';
 
 
 interface ClassItem {
@@ -19,12 +21,26 @@ interface ClassItem {
   grade: string;
   period: string;
   room: string;
-  status: 'Normal' | 'Low Attendance' | 'High Risk';
+  status: 'Active' | 'Inactive' ;
   students: number;
   attendance: number;
   icon: React.ReactNode;
   upcoming: Array<{ title: string; due: string; color: string }>;
   alert?: string;
+}
+
+interface CourseData {
+  courseName: string;
+  totalStudents: number;
+  todayAttendancePercentage: number;
+  active: boolean;
+}
+
+interface CoursesResponse {
+  totalCourses: number;
+  overallStudents: number;
+  averageAttendance: number;
+  courses: CourseData[];
 }
 
 function MyClasses() {
@@ -34,7 +50,32 @@ function MyClasses() {
   const [viewMode, setViewMode] = useState('grid');
   const [activeTab, setActiveTab] = useState('My Classes');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [coursesData, setCoursesData] = useState<CoursesResponse | null>(null);
   const navigate = useNavigate();
+  const { token, user } = useUserAuth();
+
+  useEffect(() => {
+    const fetchCoursesStats = async () => {
+      if (!token || !user?.userId) return;
+      
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      try {
+        const res = await fetch(`${baseUrl}/api/teachers/courses-stats/${user.userId}`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setCoursesData(data.data);
+        }
+      } catch (err) {
+        // Optionally handle error
+      }
+    };
+    fetchCoursesStats(); 
+  }, [token, user]);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -43,7 +84,7 @@ function MyClasses() {
   };
 
   // Function to handle View Students button click
-  const handleViewStudents = (classItem: ClassItem) => {
+  const handleViewStudents = (_classItem: ClassItem) => {
     navigate('/view-marks');
   };
 
@@ -58,76 +99,40 @@ function MyClasses() {
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
-  const classes: ClassItem[] = [
-    {
-      id: 1,
-      grade: 'Grade 10 – Mathematics',
-      period: '2nd Period',
-      room: 'Room 204',
-      status: 'Normal',
-      students: 32,
-      attendance: 92,
-      icon: <div className="p-2 bg-blue-100 rounded-lg"><FaCalculator className="w-5 h-5 text-blue-700" /></div>,
-      upcoming: [
-        { title: 'Quiz: Algebra Basics', due: 'Tomorrow', color: 'text-orange-500' },
-        { title: 'Assignment: Chapter 5', due: 'Due Friday', color: 'text-blue-500' }
-      ]
-    },
-    {
-      id: 2,
-      grade: 'Grade 9 – Biology',
-      period: '3rd Period',
-      room: 'Lab 101',
-      status: 'Low Attendance',
-      students: 28,
-      attendance: 73,
-      icon: <div className="p-2 bg-green-100 rounded-lg"><BsThermometerSun className="w-6 h-6 text-green-700" /></div>,
-      upcoming: [
-        { title: 'Lab: Cell Structure', due: 'Today', color: 'text-orange-500' },
-        { title: 'Test: Genetics', due: 'Next Week', color: 'text-blue-500' }
-      ]
-    },
-    {
-      id: 3,
-      grade: 'Grade 11 – English Literature',
-      period: '1st Period',
-      room: 'Room 108',
-      status: 'Normal',
-      students: 25,
-      attendance: 88,
-      icon: <div className="p-2 bg-purple-100 rounded-lg"><FaBook className="w-5 h-5 text-purple-700" /></div>,
-      upcoming: [
-        { title: 'Essay: Shakespeare Analysis', due: 'Due Monday', color: 'text-orange-500' },
-        { title: 'Discussion: Hamlet Act 3', due: 'Wednesday', color: 'text-blue-500' }
-      ]
-    },
-    {
-      id: 4,
-      grade: 'Grade 12 – World History',
-      period: '4th Period',
-      room: 'Room 302',
-      status: 'High Risk',
-      students: 30,
-      attendance: 68,
-      icon: <div className="p-2 bg-red-100 rounded-lg"><TbWorld className="w-6 h-6 text-red-700" /></div>,
-      upcoming: [
-        { title: 'Midterm Exam', due: 'Tomorrow', color: 'text-orange-500' },
-        { title: 'Project: WWI Research', due: 'Due Friday', color: 'text-blue-500' }
-      ]
+  // Generate classes from API data
+  const generateClassesFromAPI = (): ClassItem[] => {
+    if (!coursesData?.courses || !Array.isArray(coursesData.courses)) {
+      // Return empty array if no API data
+      return [];
     }
-  ];
 
-  // Separate classes for left and right columns
-  const leftColumnClasses = classes.filter(classItem => 
-    classItem.grade.includes('Grade 10') || classItem.grade.includes('Grade 11')
-  );
-  
-  const rightColumnClasses = classes.filter(classItem => 
-    classItem.grade.includes('Grade 9') || classItem.grade.includes('Grade 12')
-  );
+    // Map API courses to ClassItem format
+    return coursesData.courses.map((course: CourseData, index: number) => ({
+      id: index + 1,
+      grade: course.courseName,
+      period: `${index + 1}${index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th'} Period`, // Static period
+      room: `Room ${200 + index}`,
+      status: course.active ? 'Active' : 'Inactive',
+      students: course.totalStudents || 0,
+      attendance: Math.round(course.todayAttendancePercentage || 0),
+      icon: <div className="p-2 bg-blue-100 rounded-lg"><FaCalculator className="w-5 h-5 text-blue-700" /></div>, // Static icon
+      upcoming: [ // Static upcoming assignments
+        { title: 'Assignment: Current Topic', due: 'Due Friday', color: 'text-orange-500' },
+        { title: 'Quiz: Review', due: 'Next Week', color: 'text-blue-500' }
+      ]
+    }));
+  };
 
-  const getStatusColor = (status: 'Normal' | 'Low Attendance' | 'High Risk'): string => {
+  const classes: ClassItem[] = generateClassesFromAPI();
+
+  // Separate classes for left and right columns - distribute evenly
+  const leftColumnClasses = classes.filter((_, index) => index % 2 === 0); // Even indices (0, 2, 4...)
+  const rightColumnClasses = classes.filter((_, index) => index % 2 === 1); // Odd indices (1, 3, 5...)
+
+  const getStatusColor = (status: 'Active' | 'Inactive' | 'Normal' | 'Low Attendance' | 'High Risk'): string => {
     switch(status) {
+      case 'Active': return 'bg-green-100 text-green-700';
+      case 'Inactive': return 'bg-gray-100 text-gray-700';
       case 'Normal': return 'bg-green-100 text-green-700';
       case 'Low Attendance': return 'bg-orange-100 text-orange-700';
       case 'High Risk': return 'bg-red-100 text-red-700';
@@ -274,7 +279,7 @@ function MyClasses() {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">Total Courses</p>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">8</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">{coursesData?.totalCourses ?? 0}</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
                   <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
@@ -287,7 +292,7 @@ function MyClasses() {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">Total Students</p>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">247</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">{coursesData?.overallStudents ?? 0}</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
                   <IoIosPeople className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
@@ -300,7 +305,7 @@ function MyClasses() {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">Avg Attendance</p>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">89%</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">{coursesData?.averageAttendance ? `${coursesData.averageAttendance.toFixed(1)}%` : '0%'}</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
                   <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />

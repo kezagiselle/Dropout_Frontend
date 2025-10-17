@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { ChevronDown, Calendar, Users, BookOpen, BarChart3, UserCircle, MessageSquare, Bell, Search, Menu, X } from 'lucide-react';
-import { SiGoogleclassroom } from "react-icons/si";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useState, useEffect } from 'react';
+import { ChevronDown, Calendar, BarChart3, Bell, Search, Menu, X } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
-import { FaCalendarCheck } from 'react-icons/fa';
 import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
@@ -20,12 +20,44 @@ import Behavior from '../TeacherPages/Behavior';
 import StudentProfiles from './StudentProfiles';
 import Settings from './Settings';
 import Marks from './Marks'; 
+import { useUserAuth } from '../../context/useUserAuth';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); 
+  const { token, user } = useUserAuth();
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      setIsLoading(true);
+      if (!token || !user?.userId) {
+        setIsLoading(false);
+        return;
+      }
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      try {
+        const res = await fetch(`${baseUrl}/api/teachers/dashboard/${user.userId}`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setDashboardData(data.data);
+        }
+      } catch (err) {
+        // Optionally handle error
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDashboard(); 
+  }, [token, user]);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -54,11 +86,44 @@ export default function Dashboard() {
     }
   };
 
+  // Stat cards: use API data if available, else fallback to static
   const statCards = [
-    { title: 'My Students', value: '128', subtitle: '+1 from last term', icon: IoIosPeople, color: 'bg-white', iconColor: 'text-blue-500' },
-    { title: 'My Courses', value: '6', subtitle: 'Active courses', icon: IoMdTv, color: 'bg-white', iconColor: 'text-green-500' },
-    { title: 'At-Risk Students', value: '12', subtitle: 'Needs attention', icon: TbAlertTriangle, color: 'bg-white', iconColor: 'text-red-500', valueColor: 'text-red-600' },
-    { title: "Today's Attendance", value: '92%', subtitle: '114 present, 10 absent', icon: FaClipboardCheck, color: 'bg-white', iconColor: 'text-green-500', valueColor: 'text-green-600' }
+    {
+      title: 'My Students',
+      value: dashboardData?.totalStudents ?? 0,
+      subtitle: '+1 from last term',
+      icon: IoIosPeople,
+      color: 'bg-white',
+      iconColor: 'text-blue-500'
+    },
+    {
+      title: 'My Courses',
+      value: dashboardData?.totalCourses ?? 0,
+      subtitle: 'Active courses',
+      icon: IoMdTv,
+      color: 'bg-white',
+      iconColor: 'text-green-500'
+    },
+    {
+      title: 'At-Risk Students',
+      value: dashboardData?.atRiskStudents ?? 0,
+      subtitle: 'Needs attention',
+      icon: TbAlertTriangle,
+      color: 'bg-white',
+      iconColor: 'text-red-500',
+      valueColor: 'text-red-600'
+    },
+    {
+      title: "Today's Attendance",
+      value: dashboardData?.todayAttendancePercentage !== undefined
+        ? `${dashboardData.todayAttendancePercentage}%`
+        : '0%',
+      subtitle: 'Overall attendance rate',
+      icon: FaClipboardCheck,
+      color: 'bg-white',
+      iconColor: 'text-green-500',
+      valueColor: 'text-green-600'
+    }
   ];
 
   // Updated attendance data for the BarChart with increased absent AND late values
@@ -109,22 +174,41 @@ export default function Dashboard() {
   const DashboardContent = () => (
     <main className="flex-1 min-w-0 p-4 sm:p-6">
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
-        {statCards.map((card, idx) => (
-          <div key={idx} className={`${card.color} rounded-lg p-4 sm:p-5 relative shadow-sm border border-gray-200`}>
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">{card.title}</p>
-                <h3 className={`text-xl sm:text-2xl lg:text-3xl font-bold ${card.valueColor || 'text-gray-900'}`}>{card.value}</h3>
+      {isLoading ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+          {[...Array(4)].map((_, idx) => (
+            <div key={idx} className="bg-gray-100 rounded-lg p-4 sm:p-5 relative shadow-sm border border-gray-200 animate-pulse">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <div className="h-4 w-24 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-8 w-16 bg-gray-300 rounded"></div>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-gray-200">
+                  <div className="w-6 h-6 bg-gray-300 rounded"></div>
+                </div>
               </div>
-              <div className="bg-white p-2 rounded-lg border border-gray-200">
-                <card.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${card.iconColor}`} />
-              </div>
+              <div className="h-3 w-20 bg-gray-200 rounded"></div>
             </div>
-            <p className="text-xs text-gray-500">{card.subtitle}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+          {statCards.map((card, idx) => (
+            <div key={idx} className={`${card.color} rounded-lg p-4 sm:p-5 relative shadow-sm border border-gray-200`}>
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">{card.title}</p>
+                  <h3 className={`text-xl sm:text-2xl lg:text-3xl font-bold ${card.valueColor || 'text-gray-900'}`}>{card.value}</h3>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-gray-200">
+                  <card.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${card.iconColor}`} />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500">{card.subtitle}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
         {/* Left Column - Larger */}

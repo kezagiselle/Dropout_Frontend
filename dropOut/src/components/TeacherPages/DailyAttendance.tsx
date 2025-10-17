@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { ArrowLeft, Calendar, Check, X, User, ChevronDown, Bell, Save, Menu } from 'lucide-react';
 import { IoTimeSharp } from "react-icons/io5";

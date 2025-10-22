@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { useTheme } from '../Hod';
 import { FaFileAlt, FaCheck, FaTimes, FaClock, FaExclamationTriangle, FaInfoCircle, FaStar, FaArrowUp, FaArrowDown } from 'react-icons/fa';

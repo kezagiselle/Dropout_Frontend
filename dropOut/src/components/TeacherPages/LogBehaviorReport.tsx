@@ -31,10 +31,11 @@ export default function LogBehaviorReport() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+
+    <div className="min-h-screen bg-gray-50 w-full">
       {/* Header - Updated to align with centered content */}
       <div className="bg-white px-4 sm:px-6 py-4 border-b border-gray-200">
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full max-w-none">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex-1">
               <h1 className="text-lg sm:text-xl font-semibold mb-1 text-gray-900">Log Behavior Report</h1>
@@ -52,7 +53,7 @@ export default function LogBehaviorReport() {
       </div>
 
       {/* Form Content */}
-      <div className="max-w-4xl mx-auto p-4 sm:p-6">
+      <div className="w-full max-w-none p-4 sm:p-6">
         <div className="space-y-4 sm:space-y-6">
           {/* Student Information */}
           <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">

@@ -72,10 +72,10 @@ export default function DailyAttendance() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 w-full">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full max-w-none">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex-1">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Daily Attendance Recording</h1>
@@ -92,7 +92,7 @@ export default function DailyAttendance() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+      <div className="w-full max-w-none px-4 sm:px-6 py-4 sm:py-6">
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row sm:items-end gap-4 justify-between">

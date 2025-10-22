@@ -14,7 +14,7 @@ import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import MyClasses from './MyClasses';
-import Attendance from '../TeacherPages/Attendance';
+import Attendance from './Attendance';
 import DailyAttendance from '../TeacherPages/DailyAttendance'
 import Behavior from '../TeacherPages/Behavior'; 
 import StudentProfiles from './StudentProfiles';
@@ -27,7 +27,7 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); 
-  const { token, user } = useUserAuth();
+  const { token, user, logout } = useUserAuth();
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -81,6 +81,8 @@ export default function Dashboard() {
         return <Settings />;
       case '/marks': // Added Marks route
         return <Marks />;
+      case '/teacher-dashboard':
+        return <DashboardContent />;
       default:
         return <DashboardContent />;
     }
@@ -465,7 +467,7 @@ export default function Dashboard() {
         {/* Sidebar */}
         <aside className={`
           fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex flex-col justify-between
         `}>
           {/* Mobile Close Overlay */}
           {sidebarOpen && (
@@ -475,14 +477,14 @@ export default function Dashboard() {
             />
           )}
           
-          <nav className="p-4 relative z-50 bg-white h-full">
+          <nav className="p-4 relative z-50 bg-white">
             <button 
               className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
                 activeTab === 'Dashboard' 
                   ? 'bg-orange-500 text-white' 
                   : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
               }`}
-              onClick={() => handleNavigation('/', 'Dashboard')}
+              onClick={() => handleNavigation('/teacher-dashboard', 'Dashboard')}
             >
               <BarChart3 className="w-5 h-5" />
               <span className="font-medium">Dashboard</span>
@@ -502,6 +504,19 @@ export default function Dashboard() {
               </button>
             ))}
           </nav>
+
+          {/* Logout Button pinned to sidebar bottom */}
+          <div className="p-4">
+            <button
+              onClick={() => {
+                logout();
+                navigate('/login');
+              }}
+              className="w-full px-4 py-2 rounded-lg font-semibold shadow transition-colors duration-200 text-base bg-orange-500 text-white hover:bg-orange-600"
+            >
+              Logout
+            </button>
+          </div>
         </aside>
 
         {renderMainContent()}

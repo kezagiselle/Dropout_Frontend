@@ -147,133 +147,15 @@ function MyClasses() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-          {/* Left Section - Mobile Menu Button and School Name */}
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800 text-sm sm:text-base">Westfield High School</span>
-              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
-            </div>
-          </div>
-
-          {/* Search Bar - Hidden on mobile, visible on tablet and up */}
-          <div className="hidden md:block relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-
-          {/* Right Section - Calendar, Notifications, Profile */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            {/* Calendar - Hidden on mobile, visible on tablet and up */}
-            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="w-4 h-4" />
-              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
-              <ChevronDown className="w-4 h-4 hidden lg:block" />
-            </div>
-
-            {/* Notifications */}
-            <div className="relative">
-              <Bell className="w-5 h-5 text-gray-600" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
-            </div>
-
-            {/* Profile - Compact on mobile */}
-            <div className="flex items-center gap-2">
-              <img src={userr} alt="User profile" className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover" />
-              <span className="text-sm font-medium hidden sm:block">Sarah Wilson</span>
-              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
-            </div>
-          </div>
+   <div className="min-h-screen bg-gray-50 w-full">
+      <div className="w-full max-w-none p-4 sm:p-6">
+        {/* Page Header */}
+        <div className="mb-6 w-full">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">My Classes</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Monitoring my classes</p>
         </div>
 
-        {/* Mobile Search Bar - Visible only on mobile */}
-        <div className="md:hidden px-4 pb-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-gray-600 mr-2">Filters</span>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Grades <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Classes <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            Current Term <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            <Calendar className="w-4 h-4" />
-            Date Filter
-          </button>
-        </div>
-      </div>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
-        `}>
-          {/* Mobile Close Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-          
-          <nav className="p-4 relative z-50 bg-white h-full">
-            {menuItems.map((item, idx) => (
-              <button 
-                key={idx} 
-                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                  activeTab === item.label 
-                    ? 'bg-orange-500 text-white' 
-                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                }`}
-                onClick={() => handleNavigation(item.path, item.label)}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6">
-          {/* Page Header */}
-          <div className="mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">My Classes</h1>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">Monitoring my classes</p>
-          </div>
-
-          {/* Stats Cards */}
+        {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
             <div className="bg-white rounded-lg p-4 sm:p-5 relative shadow-sm border border-gray-200">
               <div className="flex justify-between items-start mb-3">
@@ -477,9 +359,8 @@ function MyClasses() {
               ))}
             </div>
           </div>
-        </main>
+        </div>
       </div>
-    </div>
   );
 }
 

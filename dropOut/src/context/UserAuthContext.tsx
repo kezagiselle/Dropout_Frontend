@@ -1,13 +1,19 @@
 import React, { createContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
+interface Course {
+  courseName: string;
+  courseId: string;
+}
+
 interface DecodedToken {
   role: string;
-  schoolId?: string;
+  schoolId: string;
   name: string;
-  schoolName?: string;
+  schoolName: string;
   userId: string;
   email: string;
+  courses?: Course[]; // Teacher-specific: array of courses they teach
   iat: number;
   exp: number;
 }
@@ -17,6 +23,10 @@ interface UserAuthContextType {
   user: DecodedToken | null;
   login: (token: string) => void;
   logout: () => void;
+  // Helper properties for easier access
+  isTeacher: boolean;
+  isPrincipal: boolean;
+  teacherCourses: Course[];
 }
 
 const UserAuthContext = createContext<UserAuthContextType | undefined>(undefined);
@@ -39,8 +49,21 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.removeItem("token");
   };
 
+  // Helper values for easier access
+  const isTeacher = user?.role === 'TEACHER';
+  const isPrincipal = user?.role === 'PRINCIPAL'; 
+  const teacherCourses = user?.courses || [];
+
   return (
-    <UserAuthContext.Provider value={{ token, user, login, logout }}>
+    <UserAuthContext.Provider value={{ 
+      token, 
+      user, 
+      login, 
+      logout,
+      isTeacher,
+      isPrincipal,
+      teacherCourses
+    }}>
       {children}
     </UserAuthContext.Provider>
   );

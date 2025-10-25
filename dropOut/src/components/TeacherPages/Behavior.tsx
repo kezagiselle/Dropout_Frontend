@@ -1,14 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
-import { Download, Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight, BarChart3, Bell, Search, Calendar, Menu, X } from 'lucide-react';
-import { LiaChalkboardTeacherSolid } from "react-icons/lia";
-import { FaClipboardCheck } from "react-icons/fa6";
-import { TbReport } from "react-icons/tb";
-import { IoIosPeople } from "react-icons/io";
-import { IoMdSettings } from "react-icons/io";
-import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
-import userr from "../../../src/img/userr.png";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Report {
   id: number;
@@ -24,8 +16,6 @@ type ReportType = 'Commendation' | 'Minor Incident' | 'Major Incident';
 type ColorType = 'green' | 'orange' | 'red';
 
 export default function Behavior() {
-  const [activeTab, setActiveTab] = useState('Behavior Reports');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<string>('All Students');
   const [selectedClass, setSelectedClass] = useState<string>('All Classes');
   const [selectedType, setSelectedType] = useState<string>('All Types');
@@ -33,29 +23,11 @@ export default function Behavior() {
   const [sortBy, setSortBy] = useState<string>('Date (Latest)');
   
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleNavigation = (path: string, tabName: string) => {
-    setActiveTab(tabName);
-    navigate(path);
-    setSidebarOpen(false); // Close sidebar on mobile after navigation
-  };
 
   // Add this function to handle navigation to LogBehaviorReport
   const handleLogNewReport = () => {
     navigate('/log-behavior-report');
   };
-
-  // Updated menuItems to include Marks
-  const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', path: '/' },
-    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
-    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
-    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
-    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
-  ];
 
   const reports: Report[] = [
     {

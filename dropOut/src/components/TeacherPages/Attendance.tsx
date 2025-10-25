@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import { ChevronDown, Users, TrendingUp, UserX, Clock } from 'lucide-react';
 import { useUserAuth } from '../../context/useUserAuth';
@@ -34,11 +33,15 @@ interface AttendanceResponse {
   totalAbsentToday: number;
   overallAttendancePercentage: number;
   weeklyTrends: WeeklyTrend[];
+  students: Array<{
+    name: string;
+    attendance: number;
+  }>;
 }
 
 const Attendance = () => {
   const [selectedWeek, setSelectedWeek] = useState<string>('This Week');
-  const [selectedGrade, setSelectedGrade] = useState<string>('Grade 5A');
+  const [selectedGrade] = useState<string>('Grade 5A');
   const [attendanceData, setAttendanceData] = useState<AttendanceResponse | null>(null);
   const { token, user } = useUserAuth();
   const navigate = useNavigate();
@@ -74,40 +77,53 @@ const Attendance = () => {
     { week: 'Week 4', grade5A: 96, grade5B: 89, grade6A: 93 }
   ];
 
-  const students: Student[] = [
-    {
-      id: 1,
-      name: 'Emma Johnson',
-      studentId: 'Student ID: 2024001',
-      avatar: pe1,
-      statuses: ['Present', 'Absent', 'Late', 'Excused'],
-      activeStatus: 'Present' 
-    },
-    {
-      id: 2,
-      name: 'Michael Chen',
-      studentId: 'Student ID: 2024002',
-      avatar: pe2,
-      statuses: ['Present', 'Absent', 'Late', 'Excused'],
-      activeStatus: 'Absent'
-    },
-    {
-      id: 3,
-      name: 'Sarah Williams',
-      studentId: 'Student ID: 2024003',
-      avatar: pe3,
-      statuses: ['Present', 'Absent', 'Late', 'Excused'],
-      activeStatus: 'Present' 
-    },
-    {
-      id: 4,
-      name: 'David Martinez',
-      studentId: 'Student ID: 2024004',
-      avatar: pe1,
-      statuses: ['Present', 'Absent', 'Late', 'Excused'],
-      activeStatus: 'Late' 
+  // Generate students from API data or use fallback
+  const generateStudentsFromAPI = (): Student[] => {
+    if (!attendanceData?.students || !Array.isArray(attendanceData.students)) {
+      // Fallback data if no API response
+      return [
+        {
+          id: 1,
+          name: 'Emma Johnson',
+          studentId: 'Student ID: 2024001',
+          avatar: pe1,
+          statuses: ['Present', 'Absent', 'Late', 'Excused'],
+          activeStatus: 'Present' 
+        },
+        {
+          id: 2,
+          name: 'Michael Chen',
+          studentId: 'Student ID: 2024002',
+          avatar: pe2,
+          statuses: ['Present', 'Absent', 'Late', 'Excused'],
+          activeStatus: 'Absent'
+        },
+        {
+          id: 3,
+          name: 'Sarah Williams',
+          studentId: 'Student ID: 2024003',
+          avatar: pe3,
+          statuses: ['Present', 'Absent', 'Late', 'Excused'],
+          activeStatus: 'Present' 
+        }
+      ];
     }
-  ];
+
+    // Map API students to Student interface
+    return attendanceData.students.map((apiStudent, index) => ({
+      id: index + 1,
+      name: apiStudent.name,
+      studentId: `Student ID: ${(2024001 + index)}`,
+      avatar: [pe1, pe2, pe3][index % 3], // Cycle through avatars
+      statuses: ['Present', 'Absent', 'Late', 'Excused'],
+      activeStatus: apiStudent.attendance > 0 ? 'Present' : 'Absent'
+    }));
+  };
+
+  const allStudents: Student[] = generateStudentsFromAPI();
+  
+  // Limit to 3 students for initial display
+  const students: Student[] = allStudents.slice(0, 3);
 
   const chronicAbsences: ChronicAbsence[] = [
     { name: 'Alex Thompson', grade: 'Grade 5A', days: '12 day', risk: 'High Risk', avatar: pe2 },
@@ -159,7 +175,13 @@ const Attendance = () => {
   };
 
   const handleMarkAllPresent = () => {
-    navigate('/daily-attendance');
+    // Pass all students data to daily attendance page
+    navigate('/daily-attendance', { 
+      state: { 
+        studentsData: allStudents,
+        attendanceData: attendanceData
+      }
+    });
   };
 
   return (
@@ -461,7 +483,10 @@ const Attendance = () => {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 w-full">
             <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 w-full">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900">Daily Attendance Recording</h2>
+                <div className="flex-1">
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900">Daily Attendance Recording</h2>
+                  <p className="text-xs sm:text-sm text-gray-600">Showing {students.length} of {allStudents.length} students</p>
+                </div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   <button className="px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded-lg text-xs sm:text-sm flex items-center gap-2 hover:bg-gray-50 w-full sm:w-auto justify-center">
                     {selectedGrade}
@@ -508,7 +533,7 @@ const Attendance = () => {
                   className="px-4 sm:px-5 py-2 sm:py-2.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-sm sm:text-base w-full sm:w-auto"
                   onClick={handleMarkAllPresent}
                 >
-                  See All
+                  See All {allStudents.length} Students
                 </button>
               </div>
             </div>

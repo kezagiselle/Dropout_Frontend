@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../../context/useUserAuth';
 
 interface Report {
   id: number;
@@ -21,61 +22,50 @@ export default function Behavior() {
   const [selectedType, setSelectedType] = useState<string>('All Types');
   const [dateFilter, setDateFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('Date (Latest)');
-  
+  const [stats, setStats] = useState<null | {
+    totalReports: number;
+    totalMajorIncidents: number;
+    totalMinorIncidents: number;
+    reports: Array<{
+      studentName: string;
+      severityLevel: string;
+      incidentType: string;
+      notes: string;
+    }>;
+  }>(null);
+
   const navigate = useNavigate();
+  const { token, user } = useUserAuth();
 
   // Add this function to handle navigation to LogBehaviorReport
   const handleLogNewReport = () => {
     navigate('/log-behavior-report');
   };
 
-  const reports: Report[] = [
-    {
-      id: 1,
-      name: 'Emma Johnson',
-      type: 'Commendation',
-      grade: 'Grade 10B',
-      time: 'Today, 2:30 PM',
-      description: 'Excellent participation in class discussion and helped struggling classmates with math problems.',
-      color: 'green'
-    },
-    {
-      id: 2,
-      name: 'Michael Brown',
-      type: 'Minor Incident',
-      grade: 'Grade 9A',
-      time: 'Today, 1:15 PM',
-      description: 'Disrupting class by talking during lesson. Student was given a verbal warning.',
-      color: 'orange'
-    },
-    {
-      id: 3,
-      name: 'James Wilson',
-      type: 'Major Incident',
-      grade: 'Grade 11C',
-      time: 'Yesterday, 3:45 PM',
-      description: 'Physical altercation with another student during lunch break. Parents contacted, detention assigned.',
-      color: 'red'
-    },
-    {
-      id: 4,
-      name: 'Sarah Davis',
-      type: 'Commendation',
-      grade: 'Grade 10A',
-      time: 'Yesterday, 11:20 AM',
-      description: 'Outstanding leadership during group project and demonstrated excellent teamwork skills.',
-      color: 'green'
-    },
-    {
-      id: 5,
-      name: 'Alex Martinez',
-      type: 'Minor Incident',
-      grade: 'Grade 9B',
-      time: '2 days ago, 8:15 AM',
-      description: 'Late to class for the third time this week. Student counseled about punctuality.',
-      color: 'orange'
-    }
-  ];
+  // Fetch behavior incident stats for the logged-in user and replace hardcoded data
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!token || !user?.userId) return;
+      
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      try {
+        const res = await fetch(`${baseUrl}/api/behavior-incidents/stats/${user.userId}`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setStats(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching behavior stats:', err);
+        setStats(null);
+      }
+    };
+    fetchStats();
+  }, [token, user]);
 
   const getIconBg = (color: ColorType): string => {
     const colors = {
@@ -123,6 +113,25 @@ export default function Behavior() {
       'Major Incident': 'bg-red-100 text-red-700'
     };
     return badges[type];
+  };
+
+  // Map severity level from API to color type used in UI
+  const severityToColor = (severity: string): ColorType => {
+    if (!severity) return 'orange';
+    const s = severity.toUpperCase();
+    if (s === 'LOW') return 'orange';
+    if (s === 'MEDIUM') return 'red';
+    if (s === 'HIGH') return 'red';
+    return 'orange';
+  };
+
+  // Map incident type to a simple badge style
+  const getIncidentBadge = (incidentType: string): string => {
+    const t = (incidentType || '').toUpperCase();
+    if (t === 'VIOLENCE') return 'bg-red-100 text-red-700';
+    if (t === 'BULLYING') return 'bg-orange-100 text-orange-700';
+    if (t === 'DISRESPECT') return 'bg-orange-100 text-orange-700';
+    return 'bg-gray-100 text-gray-700';
   };
 
   return (
@@ -231,15 +240,15 @@ export default function Behavior() {
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-1">24</div>
-                <div className="text-xs sm:text-sm text-gray-600">Commendations</div>
+                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-1">{stats?.totalReports ?? 0}</div>
+                <div className="text-xs sm:text-sm text-gray-600">Behavior Reports</div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-orange-500 mb-1">8</div>
+                <div className="text-2xl sm:text-4xl font-bold text-orange-500 mb-1">{stats?.totalMinorIncidents ?? 0}</div>
                 <div className="text-xs sm:text-sm text-gray-600">Minor Incidents</div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-red-500 mb-1">3</div>
+                <div className="text-2xl sm:text-4xl font-bold text-red-500 mb-1">{stats?.totalMajorIncidents ?? 0}</div>
                 <div className="text-xs sm:text-sm text-gray-600">Major Incidents</div>
               </div>
             </div>
@@ -248,49 +257,46 @@ export default function Behavior() {
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Behavior Reports</h2>
               <div className="space-y-4">
-                {reports.map((report) => (
-                  <div 
-                    key={report.id}
-                    className={`bg-white rounded-lg shadow-sm border-l-4 ${getBorderColor(report.color)} p-4 sm:p-6 hover:shadow-md transition-shadow`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${getIconBg(report.color)} flex items-center justify-center flex-shrink-0`}>
-                        {getIcon(report.color)}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{report.name}</h3>
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${getTypeBadge(report.type)} w-fit`}>
-                              {report.type}
-                            </span>
-                          </div>
-                          <button className="text-gray-400 hover:text-gray-600 self-start sm:self-auto">
-                            <MoreVertical className="w-5 h-5" />
-                          </button>
+                {(stats?.reports || []).map((r, idx) => {
+                  const color = severityToColor(r.severityLevel);
+                  return (
+                    <div
+                      key={`${r.studentName}-${idx}`}
+                      className={`bg-white rounded-lg shadow-sm border-l-4 ${getBorderColor(color)} p-4 sm:p-6 hover:shadow-md transition-shadow`}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${getIconBg(color)} flex items-center justify-center flex-shrink-0`}>
+                          {getIcon(color)}
                         </div>
-                        
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3">
-                          <div className="flex items-center gap-1">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
-                            </svg>
-                            <span>{report.grade}</span>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                              <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{r.studentName}</h3>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${getIncidentBadge(r.incidentType)} w-fit`}>
+                                {r.incidentType}
+                              </span>
+                            </div>
+                            <button className="text-gray-400 hover:text-gray-600 self-start sm:self-auto">
+                              <MoreVertical className="w-5 h-5" />
+                            </button>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                            </svg>
-                            <span>{report.time}</span>
+
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mb-3">
+                            <div className="flex items-center gap-1">
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                              </svg>
+                              <span className="uppercase">{r.severityLevel}</span>
+                            </div>
                           </div>
+
+                          <p className="text-xs sm:text-sm text-gray-700">{r.notes}</p>
                         </div>
-                        
-                        <p className="text-xs sm:text-sm text-gray-700">{report.description}</p>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

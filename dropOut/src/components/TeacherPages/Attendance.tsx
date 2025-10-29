@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import { ChevronDown, Users, TrendingUp, UserX, Clock } from 'lucide-react';
 import { useUserAuth } from '../../context/useUserAuth';
@@ -32,11 +33,13 @@ interface AttendanceResponse {
   totalPresentToday: number;
   totalAbsentToday: number;
   overallAttendancePercentage: number;
+  lateArrivals?: number;
   weeklyTrends: WeeklyTrend[];
   students: Array<{
     name: string;
     attendance: number;
   }>;
+  chronicAbsences?: ChronicAbsence[];
 }
 
 const Attendance = () => {
@@ -69,44 +72,11 @@ const Attendance = () => {
     fetchAttendanceStats(); 
   }, [token, user]);
 
-  // Weekly attendance data
-  const weeklyData = [
-    { week: 'Week 1', grade5A: 97, grade5B: 92, grade6A: 95 },
-    { week: 'Week 2', grade5A: 95, grade5B: 88, grade6A: 93 },
-    { week: 'Week 3', grade5A: 99, grade5B: 87, grade6A: 92 },
-    { week: 'Week 4', grade5A: 96, grade5B: 89, grade6A: 93 }
-  ];
-
   // Generate students from API data or use fallback
   const generateStudentsFromAPI = (): Student[] => {
     if (!attendanceData?.students || !Array.isArray(attendanceData.students)) {
-      // Fallback data if no API response
-      return [
-        {
-          id: 1,
-          name: 'Emma Johnson',
-          studentId: 'Student ID: 2024001',
-          avatar: pe1,
-          statuses: ['Present', 'Absent', 'Late', 'Excused'],
-          activeStatus: 'Present' 
-        },
-        {
-          id: 2,
-          name: 'Michael Chen',
-          studentId: 'Student ID: 2024002',
-          avatar: pe2,
-          statuses: ['Present', 'Absent', 'Late', 'Excused'],
-          activeStatus: 'Absent'
-        },
-        {
-          id: 3,
-          name: 'Sarah Williams',
-          studentId: 'Student ID: 2024003',
-          avatar: pe3,
-          statuses: ['Present', 'Absent', 'Late', 'Excused'],
-          activeStatus: 'Present' 
-        }
-      ];
+      // No API data available, return empty array
+      return [];
     }
 
     // Map API students to Student interface
@@ -125,30 +95,20 @@ const Attendance = () => {
   // Limit to 3 students for initial display
   const students: Student[] = allStudents.slice(0, 3);
 
-  const chronicAbsences: ChronicAbsence[] = [
-    { name: 'Alex Thompson', grade: 'Grade 5A', days: '12 day', risk: 'High Risk', avatar: pe2 },
-    { name: 'Jessica Lee', grade: 'Grade 5B', days: '8 day', risk: 'Medium Risk', avatar: pe3 },
-    { name: 'Ryan Garcia', grade: 'Grade 6A', days: '6 day', risk: 'Watch List', avatar: pe1 }
-  ];
+  // Chronic absences will be fetched from API or removed - placeholder for now
+  const chronicAbsences: ChronicAbsence[] = attendanceData?.chronicAbsences || [];
 
   const getStatusStyle = (status: string, student: Student): string => {
     if (status === student.activeStatus) {
       switch(status) {
         case 'Present': 
-          if (student.name === 'Michael Chen') {
-            return 'bg-gray-300 text-gray-700';
-          }
           return 'bg-green-400 text-white'; 
         case 'Absent':
-          if (student.name === 'Michael Chen') {
-            return 'bg-orange-500 text-white';
-          }
-          return 'bg-gray-300 text-gray-700';
+          return 'bg-orange-500 text-white';
         case 'Late':
-          if (student.name === 'David Martinez') {
-            return 'bg-yellow-600 text-white'; 
-          }
-          return 'bg-gray-300 text-gray-700'; 
+          return 'bg-yellow-600 text-white'; 
+        case 'Excused':
+          return 'bg-blue-500 text-white';
         default:
           return 'bg-gray-300 text-gray-700'; 
       }
@@ -200,7 +160,7 @@ const Attendance = () => {
                 <div>
                   <p className="text-xs font-semibold text-gray-600 mb-1">Overall Attendance</p>
                   <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                    {attendanceData?.overallAttendancePercentage?.toFixed(1) ?? '94.2'}%
+                    {attendanceData?.overallAttendancePercentage?.toFixed(1) ?? '0.0'}%
                   </p>
                 </div>
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -215,14 +175,14 @@ const Attendance = () => {
                 <div>
                   <p className="text-xs font-semibold text-gray-600 mb-1">Present Today</p>
                   <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                    {attendanceData?.totalPresentToday ?? 127}
+                    {attendanceData?.totalPresentToday ?? 0}
                   </p>
                 </div>
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                 </div>
               </div>
-              <p className="text-xs text-gray-600">Out of {(attendanceData?.totalPresentToday ?? 127) + (attendanceData?.totalAbsentToday ?? 8)} students</p>
+              <p className="text-xs text-gray-600">Out of {(attendanceData?.totalPresentToday ?? 0) + (attendanceData?.totalAbsentToday ?? 0)} students</p>
             </div>
 
             <div className="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-gray-200">
@@ -230,7 +190,7 @@ const Attendance = () => {
                 <div>
                   <p className="text-xs font-semibold text-gray-600 mb-1">Absent Today</p>
                   <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                    {attendanceData?.totalAbsentToday ?? 8}
+                    {attendanceData?.totalAbsentToday ?? 0}
                   </p>
                 </div>
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -250,7 +210,9 @@ const Attendance = () => {
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
                 </div>
               </div>
-              <p className="text-xs text-red-600">↗ +1 from yesterday</p>
+              <p className="text-xs text-red-600">
+                {attendanceData?.lateArrivals ? `↗ +${Math.max(0, attendanceData.lateArrivals - 4)} from yesterday` : 'No data available'}
+              </p>
             </div>
           </div>
 
@@ -350,56 +312,15 @@ const Attendance = () => {
                     );
                   })
                 ) : (
-                  // Fallback to static data
-                  <>
-                    {/* Grade 5A - Teal */}
-                    <polyline
-                      points={weeklyData.map((d, i) => `${120 + i * 150},${280 - (d.grade5A - 70) * 7}`).join(' ')}
-                      fill="none"
-                      stroke="#14b8a6"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                    {weeklyData.map((d, i) => (
-                      <g key={i}>
-                        <circle cx={120 + i * 150} cy={280 - (d.grade5A - 70) * 7} r="6" fill="white" stroke="#14b8a6" strokeWidth="3" />
-                        <circle cx={120 + i * 150} cy={280 - (d.grade5A - 70) * 7} r="3" fill="#14b8a6" />
-                        <text x={120 + i * 150} y={275 - (d.grade5A - 70) * 7 - 15} className="text-xs fill-gray-700 font-semibold" textAnchor="middle">{d.grade5A}%</text>
-                      </g>
-                    ))}
-
-                    {/* Grade 5B - Orange */}
-                    <polyline
-                      points={weeklyData.map((d, i) => `${120 + i * 150},${280 - (d.grade5B - 70) * 7}`).join(' ')}
-                      fill="none"
-                      stroke="#f97316"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                    {weeklyData.map((d, i) => (
-                      <g key={i}>
-                        <circle cx={120 + i * 150} cy={280 - (d.grade5B - 70) * 7} r="6" fill="white" stroke="#f97316" strokeWidth="3" />
-                        <circle cx={120 + i * 150} cy={280 - (d.grade5B - 70) * 7} r="3" fill="#f97316" />
-                        <text x={120 + i * 150} y={275 - (d.grade5B - 70) * 7 - 15} className="text-xs fill-gray-700 font-semibold" textAnchor="middle">{d.grade5B}%</text>
-                      </g>
-                    ))}
-
-                    {/* Grade 6A - Blue */}
-                    <polyline
-                      points={weeklyData.map((d, i) => `${120 + i * 150},${280 - (d.grade6A - 70) * 7}`).join(' ')}
-                      fill="none"
-                      stroke="#3b82f6"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                    {weeklyData.map((d, i) => (
-                      <g key={i}>
-                        <circle cx={120 + i * 150} cy={280 - (d.grade6A - 70) * 7} r="6" fill="white" stroke="#3b82f6" strokeWidth="3" />
-                        <circle cx={120 + i * 150} cy={280 - (d.grade6A - 70) * 7} r="3" fill="#3b82f6" />
-                        <text x={120 + i * 150} y={275 - (d.grade6A - 70) * 7 - 15} className="text-xs fill-gray-700 font-semibold" textAnchor="middle">{d.grade6A}%</text>
-                      </g>
-                    ))}
-                  </>
+                  // No data available
+                  <text 
+                    x="400" 
+                    y="150" 
+                    className="text-lg fill-gray-500 font-medium" 
+                    textAnchor="middle"
+                  >
+                    No attendance data available
+                  </text>
                 )}
 
                 {/* X-axis labels */}
@@ -416,20 +337,7 @@ const Attendance = () => {
                       Week {weekIndex + 1}
                     </text>
                   ))
-                ) : (
-                  // Fallback to static labels
-                  weeklyData.map((d, i) => (
-                    <text 
-                      key={i} 
-                      x={120 + i * 150} 
-                      y="270" 
-                      className="text-sm fill-gray-600 font-medium" 
-                      textAnchor="middle"
-                    >
-                      {d.week}
-                    </text>
-                  ))
-                )}
+                ) : null}
 
                 {/* Y-axis label */}
                 <text 

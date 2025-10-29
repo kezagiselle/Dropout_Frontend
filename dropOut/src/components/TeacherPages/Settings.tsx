@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
-import { FaUser, FaCog, FaEdit, FaChevronDown, FaArrowLeft, FaClipboardCheck, FaBook, FaBars, FaTimes } from 'react-icons/fa';
+import { FaUser, FaCog, FaEdit, FaChevronDown, FaArrowLeft, FaClipboardCheck } from 'react-icons/fa';
 import { IoIosPeople, IoMdSettings } from "react-icons/io";
-import { TbReport, TbWorld } from "react-icons/tb";
-import { BsThermometerSun } from "react-icons/bs";
+import { TbReport } from "react-icons/tb";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { BarChart3, Bell, Search, Calendar, ChevronDown } from 'lucide-react';
 import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
 import { useTheme } from '../Hod';
 import pe3 from "../../img/pe3.png";
-import userr from "../../../src/img/userr.png";
 import Profile from './ProfileForm';
 import { useNavigate } from 'react-router-dom';
 

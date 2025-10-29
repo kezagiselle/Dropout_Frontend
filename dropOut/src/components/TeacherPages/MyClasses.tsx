@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Calendar, Users, BookOpen, BarChart3, Bell, Search, Grid, List, ChevronLeft, ChevronRight, TrendingUp, AlertTriangle, Menu, X } from 'lucide-react';
+import { BookOpen, BarChart3,TrendingUp, AlertTriangle } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
-import { TbReport, TbWorld } from "react-icons/tb";
+import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
-import { BsThermometerSun } from "react-icons/bs";
-import { FaBook } from "react-icons/fa";
 import { FaCalculator } from "react-icons/fa6";
 import { FaRegChartBar } from "react-icons/fa"; 
-import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 import { AiFillMessage } from "react-icons/ai";
 import { useUserAuth } from '../../context/useUserAuth';
@@ -44,10 +41,6 @@ interface CoursesResponse {
 }
 
 function MyClasses() {
-  const [periodFilter, setPeriodFilter] = useState('All Periods');
-  const [subjectFilter, setSubjectFilter] = useState('All Subjects');
-  const [statusFilter, setStatusFilter] = useState('All Status');
-  const [viewMode, setViewMode] = useState('grid');
   const [activeTab, setActiveTab] = useState('My Classes');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [coursesData, setCoursesData] = useState<CoursesResponse | null>(null);

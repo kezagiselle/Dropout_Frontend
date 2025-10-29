@@ -1,19 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../context/useUserAuth';
 
-interface Report {
-  id: number;
-  name: string;
-  type: 'Commendation' | 'Minor Incident' | 'Major Incident';
-  grade: string;
-  time: string;
-  description: string;
-  color: 'green' | 'orange' | 'red';
-}
 
-type ReportType = 'Commendation' | 'Minor Incident' | 'Major Incident';
 type ColorType = 'green' | 'orange' | 'red';
 
 export default function Behavior() {
@@ -106,14 +97,7 @@ export default function Behavior() {
     return colors[color];
   };
 
-  const getTypeBadge = (type: ReportType): string => {
-    const badges = {
-      'Commendation': 'bg-green-100 text-green-700',
-      'Minor Incident': 'bg-orange-100 text-orange-700',
-      'Major Incident': 'bg-red-100 text-red-700'
-    };
-    return badges[type];
-  };
+  
 
   // Map severity level from API to color type used in UI
   const severityToColor = (severity: string): ColorType => {
@@ -125,13 +109,19 @@ export default function Behavior() {
     return 'orange';
   };
 
-  // Map incident type to a simple badge style
+  // Map incident type to a simple badge style (no colors)
   const getIncidentBadge = (incidentType: string): string => {
-    const t = (incidentType || '').toUpperCase();
-    if (t === 'VIOLENCE') return 'bg-red-100 text-red-700';
-    if (t === 'BULLYING') return 'bg-orange-100 text-orange-700';
-    if (t === 'DISRESPECT') return 'bg-orange-100 text-orange-700';
     return 'bg-gray-100 text-gray-700';
+  };
+
+  // Map severity level to colorful badge style
+  const getSeverityBadge = (severity: string): string => {
+    const s = (severity || '').toUpperCase();
+    if (s === 'LOW') return 'bg-green-500 text-white';
+    if (s === 'MEDIUM') return 'bg-yellow-500 text-white';
+    if (s === 'HIGH') return 'bg-orange-500 text-white';
+    if (s === 'CRITICAL') return 'bg-red-500 text-white';
+    return 'bg-gray-500 text-white';
   };
 
   return (
@@ -273,8 +263,8 @@ export default function Behavior() {
                           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                               <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{r.studentName}</h3>
-                              <span className={`px-2 py-1 rounded text-xs font-medium ${getIncidentBadge(r.incidentType)} w-fit`}>
-                                {r.incidentType}
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${getSeverityBadge(r.severityLevel)} uppercase`}>
+                                {r.severityLevel}
                               </span>
                             </div>
                             <button className="text-gray-400 hover:text-gray-600 self-start sm:self-auto">
@@ -287,7 +277,9 @@ export default function Behavior() {
                               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                               </svg>
-                              <span className="uppercase">{r.severityLevel}</span>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${getIncidentBadge(r.incidentType)}`}>
+                                {r.incidentType}
+                              </span>
                             </div>
                           </div>
 

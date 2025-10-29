@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import { useState, useEffect, useCallback} from 'react';
 import type { ChangeEvent } from 'react';
 import { ArrowLeft, User, AlertTriangle, FileText } from 'lucide-react';
 import { IoMdSave } from "react-icons/io";
@@ -116,21 +116,20 @@ export default function LogBehaviorReport() {
         },
         body: JSON.stringify(behaviorReportData)
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to save behavior report');
-      }
-
-      const result = await response.json();
       
-      if (result.success) {
+      
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        
         toast.success(result.message);
-      } else {
-        toast.error(`Failed to save behavior report: ${result.message || 'Unknown error'}`);
+      } 
+      else {
+        toast.error(`Failed to save behavior report: ${result.message}`);
       }
     } catch (error) {
       console.error('Error saving behavior report:', error);
-      toast.error('Failed to save behavior report. Please try again.');
+      toast.error('Failed to save behavior report. lease try again.');
     }
   };
 
@@ -254,7 +253,7 @@ export default function LogBehaviorReport() {
                     <option value="CHEATING">Cheating</option>
                     <option value="DISRESPECT">Disrespect</option>
                     <option value="VIOLENCE">Violence</option>
-                    <option value="OTHERS">Others</option>
+                    <option value="OTHER">Others</option>
                   </select>
                   <svg className="w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

@@ -20,6 +20,7 @@ import StudentProfiles from "./components/TeacherPages/StudentProfiles.tsx";
 import Settings from "./components/TeacherPages/Settings.tsx";
 import Marks from "./components/TeacherPages/Marks.tsx";
 import ViewMarks from "./components/TeacherPages/ViewMarks.tsx";
+import StudentDashboard from "./components/StudentPages/StudentDashboard.tsx"
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path="/hod-dashboard" element={<Hod />} />
            <Route path="/teacher-dashboard" element={<Dashboard />} />
            <Route path="/my-classes" element={<MyClasses />} />
+            <Route path="/student-dashboard" element={<StudentDashboard />} />
            
         </Routes>
         <ToastContainer 

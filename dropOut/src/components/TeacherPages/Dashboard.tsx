@@ -47,7 +47,7 @@ export default function Dashboard() {
         return <StudentProfiles />;
       case '/settings':
         return <Settings />;
-      case '/marks': // Added Marks route
+      case '/marks':
         return <Marks />;
       default:
         return <DashboardContent />;

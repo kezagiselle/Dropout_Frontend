@@ -1,108 +1,62 @@
-import React, { useState } from 'react';
-import { Download, Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight, BarChart3, Bell, Search, Calendar, Menu, X } from 'lucide-react';
-import { LiaChalkboardTeacherSolid } from "react-icons/lia";
-import { FaClipboardCheck } from "react-icons/fa6";
-import { TbReport } from "react-icons/tb";
-import { IoIosPeople } from "react-icons/io";
-import { IoMdSettings } from "react-icons/io";
-import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
-import userr from "../../../src/img/userr.png";
-import { useNavigate, useLocation } from 'react-router-dom';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState, useEffect } from 'react';
+import { Eye, ChevronDown, Filter, Plus, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../../context/useUserAuth';
 
-interface Report {
-  id: number;
-  name: string;
-  type: 'Commendation' | 'Minor Incident' | 'Major Incident';
-  grade: string;
-  time: string;
-  description: string;
-  color: 'green' | 'orange' | 'red';
-}
 
-type ReportType = 'Commendation' | 'Minor Incident' | 'Major Incident';
 type ColorType = 'green' | 'orange' | 'red';
 
 export default function Behavior() {
-  const [activeTab, setActiveTab] = useState('Behavior Reports');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<string>('All Students');
   const [selectedClass, setSelectedClass] = useState<string>('All Classes');
   const [selectedType, setSelectedType] = useState<string>('All Types');
   const [dateFilter, setDateFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('Date (Latest)');
-  
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [stats, setStats] = useState<null | {
+    totalReports: number;
+    totalMajorIncidents: number;
+    totalMinorIncidents: number;
+    reports: Array<{
+      studentName: string;
+      severityLevel: string;
+      incidentType: string;
+      notes: string;
+    }>;
+  }>(null);
 
-  const handleNavigation = (path: string, tabName: string) => {
-    setActiveTab(tabName);
-    navigate(path);
-    setSidebarOpen(false); // Close sidebar on mobile after navigation
-  };
+  const navigate = useNavigate();
+  const { token, user } = useUserAuth();
 
   // Add this function to handle navigation to LogBehaviorReport
   const handleLogNewReport = () => {
     navigate('/log-behavior-report');
   };
 
-  // Updated menuItems to include Marks
-  const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', path: '/' },
-    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
-    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, // Added Marks
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
-    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
-    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
-  ];
-
-  const reports: Report[] = [
-    {
-      id: 1,
-      name: 'Emma Johnson',
-      type: 'Commendation',
-      grade: 'Grade 10B',
-      time: 'Today, 2:30 PM',
-      description: 'Excellent participation in class discussion and helped struggling classmates with math problems.',
-      color: 'green'
-    },
-    {
-      id: 2,
-      name: 'Michael Brown',
-      type: 'Minor Incident',
-      grade: 'Grade 9A',
-      time: 'Today, 1:15 PM',
-      description: 'Disrupting class by talking during lesson. Student was given a verbal warning.',
-      color: 'orange'
-    },
-    {
-      id: 3,
-      name: 'James Wilson',
-      type: 'Major Incident',
-      grade: 'Grade 11C',
-      time: 'Yesterday, 3:45 PM',
-      description: 'Physical altercation with another student during lunch break. Parents contacted, detention assigned.',
-      color: 'red'
-    },
-    {
-      id: 4,
-      name: 'Sarah Davis',
-      type: 'Commendation',
-      grade: 'Grade 10A',
-      time: 'Yesterday, 11:20 AM',
-      description: 'Outstanding leadership during group project and demonstrated excellent teamwork skills.',
-      color: 'green'
-    },
-    {
-      id: 5,
-      name: 'Alex Martinez',
-      type: 'Minor Incident',
-      grade: 'Grade 9B',
-      time: '2 days ago, 8:15 AM',
-      description: 'Late to class for the third time this week. Student counseled about punctuality.',
-      color: 'orange'
-    }
-  ];
+  // Fetch behavior incident stats for the logged-in user and replace hardcoded data
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!token || !user?.userId) return;
+      
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      try {
+        const res = await fetch(`${baseUrl}/api/behavior-incidents/stats/${user.userId}`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setStats(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching behavior stats:', err);
+        setStats(null);
+      }
+    };
+    fetchStats();
+  }, [token, user]);
 
   const getIconBg = (color: ColorType): string => {
     const colors = {
@@ -143,140 +97,39 @@ export default function Behavior() {
     return colors[color];
   };
 
-  const getTypeBadge = (type: ReportType): string => {
-    const badges = {
-      'Commendation': 'bg-green-100 text-green-700',
-      'Minor Incident': 'bg-orange-100 text-orange-700',
-      'Major Incident': 'bg-red-100 text-red-700'
-    };
-    return badges[type];
+  
+
+  // Map severity level from API to color type used in UI
+  const severityToColor = (severity: string): ColorType => {
+    if (!severity) return 'orange';
+    const s = severity.toUpperCase();
+    if (s === 'LOW') return 'orange';
+    if (s === 'MEDIUM') return 'red';
+    if (s === 'HIGH') return 'red';
+    return 'orange';
+  };
+
+  // Map incident type to a simple badge style (no colors)
+  const getIncidentBadge = (incidentType: string): string => {
+    return 'bg-gray-100 text-gray-700';
+  };
+
+  // Map severity level to colorful badge style
+  const getSeverityBadge = (severity: string): string => {
+    const s = (severity || '').toUpperCase();
+    if (s === 'LOW') return 'bg-green-500 text-white';
+    if (s === 'MEDIUM') return 'bg-yellow-500 text-white';
+    if (s === 'HIGH') return 'bg-orange-500 text-white';
+    if (s === 'CRITICAL') return 'bg-red-500 text-white';
+    return 'bg-gray-500 text-white';
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-          {/* Left Section - Mobile Menu Button and School Name */}
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800 text-sm sm:text-base">Westfield High School</span>
-              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
-            </div>
-          </div>
-
-          {/* Search Bar - Hidden on mobile, visible on tablet and up */}
-          <div className="hidden md:block relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-
-          {/* Right Section - Calendar, Notifications, Profile */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            {/* Calendar - Hidden on mobile, visible on tablet and up */}
-            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="w-4 h-4" />
-              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
-              <ChevronDown className="w-4 h-4 hidden lg:block" />
-            </div>
-
-            {/* Notifications */}
-            <div className="relative">
-              <Bell className="w-5 h-5 text-gray-600" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
-            </div>
-
-            {/* Profile - Compact on mobile */}
-            <div className="flex items-center gap-2">
-              <img src={userr} alt="User profile" className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover" />
-              <span className="text-sm font-medium hidden sm:block">Sarah Wilson</span>
-              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Search Bar - Visible only on mobile */}
-        <div className="md:hidden px-4 pb-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-gray-600 mr-2">Filters</span>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Grades <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Classes <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            Current Term <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            <Calendar className="w-4 h-4" />
-            Date Filter
-          </button>
-        </div>
-      </div>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
-        `}>
-          {/* Mobile Close Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-          
-          <nav className="p-4 relative z-50 bg-white h-full">
-            {menuItems.map((item, idx) => (
-              <button 
-                key={idx} 
-                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                  activeTab === item.label 
-                    ? 'bg-orange-500 text-white' 
-                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                }`}
-                onClick={() => handleNavigation(item.path, item.label)}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6">
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-2">
+    <div className="min-h-screen bg-gray-50 w-full">
+      <div className="w-full max-w-none p-4 sm:p-6">
+        {/* Header */}
+        <div className="mb-6 w-full">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-2 w-full">
                 <div>
                   <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Behavior Reports</h1>
                   <p className="text-xs sm:text-sm text-gray-600 mt-1">Track and manage student behavior incidents and commendations</p>
@@ -377,15 +230,15 @@ export default function Behavior() {
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-1">24</div>
-                <div className="text-xs sm:text-sm text-gray-600">Commendations</div>
+                <div className="text-2xl sm:text-4xl font-bold text-blue-600 mb-1">{stats?.totalReports ?? 0}</div>
+                <div className="text-xs sm:text-sm text-gray-600">Behavior Reports</div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-orange-500 mb-1">8</div>
+                <div className="text-2xl sm:text-4xl font-bold text-orange-500 mb-1">{stats?.totalMinorIncidents ?? 0}</div>
                 <div className="text-xs sm:text-sm text-gray-600">Minor Incidents</div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-red-500 mb-1">3</div>
+                <div className="text-2xl sm:text-4xl font-bold text-red-500 mb-1">{stats?.totalMajorIncidents ?? 0}</div>
                 <div className="text-xs sm:text-sm text-gray-600">Major Incidents</div>
               </div>
             </div>
@@ -394,49 +247,48 @@ export default function Behavior() {
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Behavior Reports</h2>
               <div className="space-y-4">
-                {reports.map((report) => (
-                  <div 
-                    key={report.id}
-                    className={`bg-white rounded-lg shadow-sm border-l-4 ${getBorderColor(report.color)} p-4 sm:p-6 hover:shadow-md transition-shadow`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${getIconBg(report.color)} flex items-center justify-center flex-shrink-0`}>
-                        {getIcon(report.color)}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{report.name}</h3>
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${getTypeBadge(report.type)} w-fit`}>
-                              {report.type}
-                            </span>
-                          </div>
-                          <button className="text-gray-400 hover:text-gray-600 self-start sm:self-auto">
-                            <MoreVertical className="w-5 h-5" />
-                          </button>
+                {(stats?.reports || []).map((r, idx) => {
+                  const color = severityToColor(r.severityLevel);
+                  return (
+                    <div
+                      key={`${r.studentName}-${idx}`}
+                      className={`bg-white rounded-lg shadow-sm border-l-4 ${getBorderColor(color)} p-4 sm:p-6 hover:shadow-md transition-shadow`}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${getIconBg(color)} flex items-center justify-center flex-shrink-0`}>
+                          {getIcon(color)}
                         </div>
-                        
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3">
-                          <div className="flex items-center gap-1">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
-                            </svg>
-                            <span>{report.grade}</span>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                              <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{r.studentName}</h3>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${getSeverityBadge(r.severityLevel)} uppercase`}>
+                                {r.severityLevel}
+                              </span>
+                            </div>
+                            <button className="text-gray-400 hover:text-gray-600 self-start sm:self-auto">
+                              <MoreVertical className="w-5 h-5" />
+                            </button>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                            </svg>
-                            <span>{report.time}</span>
+
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mb-3">
+                            <div className="flex items-center gap-1">
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                              </svg>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${getIncidentBadge(r.incidentType)}`}>
+                                {r.incidentType}
+                              </span>
+                            </div>
                           </div>
+
+                          <p className="text-xs sm:text-sm text-gray-700">{r.notes}</p>
                         </div>
-                        
-                        <p className="text-xs sm:text-sm text-gray-700">{report.description}</p>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -460,8 +312,6 @@ export default function Behavior() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
+        </div>
   );
 }

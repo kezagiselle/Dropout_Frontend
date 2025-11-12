@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react'
 import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt } from 'react-icons/fa'
 import { FaHouseChimney } from "react-icons/fa6";
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import StudentProfile from './StudentProfile';
+import { useUserAuth } from '../../context/useUserAuth';
 
 interface StudentProps {
   onBack: () => void;
@@ -11,6 +12,8 @@ interface StudentProps {
 
 function Student({ onBack }: StudentProps) {
   const [showStudentProfile, setShowStudentProfile] = useState(false);
+  const { user, token } = useUserAuth();
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [formData, setFormData] = useState({
     // Parent Information
     parentName: '',
@@ -40,6 +43,12 @@ function Student({ onBack }: StudentProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate user context and schoolId
+    if (!user?.schoolId) {
+      toast.error('School information not found. Please log in again.');
+      return;
+    }
     
     // Validate form
     if (!formData.parentName || !formData.parentEmail || !formData.parentPassword || 
@@ -87,15 +96,29 @@ function Student({ onBack }: StudentProps) {
         dateOfBirth: formData.dateOfBirth,
         gender: formData.gender.toUpperCase(),
         enrollmentYear: parseInt(formData.enrollmentYear),
-        schoolId: "678f192d-07ba-4dc9-b834-4a9ca15c4380" // You can make this dynamic later
+        schoolId: user?.schoolId 
       };
 
       console.log('Sending student payload:', payload); // Debug log
 
-      await axios.post('http://localhost:8080/api/students/create-with-parent', payload);
-      
-      toast.success('Student and parent created successfully!');
-      
+      const response = await fetch(`${baseUrl}/api/students/create-with-parent`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload)
+      });
+      const res = await response.json();
+
+      if (!res.success && !res.data) {
+
+        toast.error(res.message);
+
+      }
+
+      toast.success(res.message);
+
       // Reset form
       setFormData({
         parentName: '',
@@ -119,31 +142,8 @@ function Student({ onBack }: StudentProps) {
       
     } catch (error: any) {
       console.error('Error creating student:', error);
+      toast.error(error.message || 'An error occurred. Please try again.');
       
-      // Handle specific error cases
-      if (error.response) {
-        // Server responded with error status
-        const status = error.response.status;
-        const message = error.response.data?.message || error.response.data?.error || 'Server error';
-        
-        if (status === 400) {
-          toast.error(`Validation error: ${message}`);
-        } else if (status === 401) {
-          toast.error('Unauthorized. Please check your credentials.');
-        } else if (status === 409) {
-          toast.error('Student or parent with this email already exists.');
-        } else if (status === 500) {
-          toast.error('Server error. Please try again later.');
-        } else {
-          toast.error(`Error ${status}: ${message}`);
-        }
-      } else if (error.request) {
-        // Network error
-        toast.error('Network error. Please check your connection.');
-      } else {
-        // Other error
-        toast.error('An unexpected error occurred. Please try again.');
-      }
     } finally {
       setIsSubmitting(false);
     }

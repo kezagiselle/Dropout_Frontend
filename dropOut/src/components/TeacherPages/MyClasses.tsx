@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import { ChevronDown, Calendar, Users, BookOpen, BarChart3, Bell, Search, Grid, List, ChevronLeft, ChevronRight, TrendingUp, AlertTriangle, Menu, X } from 'lucide-react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState, useEffect } from 'react';
+import { BookOpen, BarChart3,TrendingUp, AlertTriangle } from 'lucide-react';
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaClipboardCheck } from "react-icons/fa6";
-import { TbReport, TbWorld } from "react-icons/tb";
+import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
-import { BsThermometerSun } from "react-icons/bs";
-import { FaBook } from "react-icons/fa";
 import { FaCalculator } from "react-icons/fa6";
 import { FaRegChartBar } from "react-icons/fa"; 
-import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 import { AiFillMessage } from "react-icons/ai";
+import { useUserAuth } from '../../context/useUserAuth';
 
 
 interface ClassItem {
@@ -19,7 +18,7 @@ interface ClassItem {
   grade: string;
   period: string;
   room: string;
-  status: 'Normal' | 'Low Attendance' | 'High Risk';
+  status: 'Active' | 'Inactive' ;
   students: number;
   attendance: number;
   icon: React.ReactNode;
@@ -27,14 +26,49 @@ interface ClassItem {
   alert?: string;
 }
 
+interface CourseData {
+  courseName: string;
+  totalStudents: number;
+  todayAttendancePercentage: number;
+  active: boolean;
+}
+
+interface CoursesResponse {
+  totalCourses: number;
+  overallStudents: number;
+  averageAttendance: number;
+  courses: CourseData[];
+}
+
 function MyClasses() {
-  const [periodFilter, setPeriodFilter] = useState('All Periods');
-  const [subjectFilter, setSubjectFilter] = useState('All Subjects');
-  const [statusFilter, setStatusFilter] = useState('All Status');
-  const [viewMode, setViewMode] = useState('grid');
   const [activeTab, setActiveTab] = useState('My Classes');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [coursesData, setCoursesData] = useState<CoursesResponse | null>(null);
   const navigate = useNavigate();
+  const { token, user } = useUserAuth();
+
+  useEffect(() => {
+    const fetchCoursesStats = async () => {
+      if (!token || !user?.userId) return;
+      
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      try {
+        const res = await fetch(`${baseUrl}/api/teachers/courses-stats/${user.userId}`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setCoursesData(data.data);
+        }
+      } catch (err) {
+        // Optionally handle error
+      }
+    };
+    fetchCoursesStats(); 
+  }, [token, user]);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -43,7 +77,7 @@ function MyClasses() {
   };
 
   // Function to handle View Students button click
-  const handleViewStudents = (classItem: ClassItem) => {
+  const handleViewStudents = (_classItem: ClassItem) => {
     navigate('/view-marks');
   };
 
@@ -58,76 +92,40 @@ function MyClasses() {
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
-  const classes: ClassItem[] = [
-    {
-      id: 1,
-      grade: 'Grade 10 – Mathematics',
-      period: '2nd Period',
-      room: 'Room 204',
-      status: 'Normal',
-      students: 32,
-      attendance: 92,
-      icon: <div className="p-2 bg-blue-100 rounded-lg"><FaCalculator className="w-5 h-5 text-blue-700" /></div>,
-      upcoming: [
-        { title: 'Quiz: Algebra Basics', due: 'Tomorrow', color: 'text-orange-500' },
-        { title: 'Assignment: Chapter 5', due: 'Due Friday', color: 'text-blue-500' }
-      ]
-    },
-    {
-      id: 2,
-      grade: 'Grade 9 – Biology',
-      period: '3rd Period',
-      room: 'Lab 101',
-      status: 'Low Attendance',
-      students: 28,
-      attendance: 73,
-      icon: <div className="p-2 bg-green-100 rounded-lg"><BsThermometerSun className="w-6 h-6 text-green-700" /></div>,
-      upcoming: [
-        { title: 'Lab: Cell Structure', due: 'Today', color: 'text-orange-500' },
-        { title: 'Test: Genetics', due: 'Next Week', color: 'text-blue-500' }
-      ]
-    },
-    {
-      id: 3,
-      grade: 'Grade 11 – English Literature',
-      period: '1st Period',
-      room: 'Room 108',
-      status: 'Normal',
-      students: 25,
-      attendance: 88,
-      icon: <div className="p-2 bg-purple-100 rounded-lg"><FaBook className="w-5 h-5 text-purple-700" /></div>,
-      upcoming: [
-        { title: 'Essay: Shakespeare Analysis', due: 'Due Monday', color: 'text-orange-500' },
-        { title: 'Discussion: Hamlet Act 3', due: 'Wednesday', color: 'text-blue-500' }
-      ]
-    },
-    {
-      id: 4,
-      grade: 'Grade 12 – World History',
-      period: '4th Period',
-      room: 'Room 302',
-      status: 'High Risk',
-      students: 30,
-      attendance: 68,
-      icon: <div className="p-2 bg-red-100 rounded-lg"><TbWorld className="w-6 h-6 text-red-700" /></div>,
-      upcoming: [
-        { title: 'Midterm Exam', due: 'Tomorrow', color: 'text-orange-500' },
-        { title: 'Project: WWI Research', due: 'Due Friday', color: 'text-blue-500' }
-      ]
+  // Generate classes from API data
+  const generateClassesFromAPI = (): ClassItem[] => {
+    if (!coursesData?.courses || !Array.isArray(coursesData.courses)) {
+      // Return empty array if no API data
+      return [];
     }
-  ];
 
-  // Separate classes for left and right columns
-  const leftColumnClasses = classes.filter(classItem => 
-    classItem.grade.includes('Grade 10') || classItem.grade.includes('Grade 11')
-  );
-  
-  const rightColumnClasses = classes.filter(classItem => 
-    classItem.grade.includes('Grade 9') || classItem.grade.includes('Grade 12')
-  );
+    // Map API courses to ClassItem format
+    return coursesData.courses.map((course: CourseData, index: number) => ({
+      id: index + 1,
+      grade: course.courseName,
+      period: `${index + 1}${index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th'} Period`, // Static period
+      room: `Room ${200 + index}`,
+      status: course.active ? 'Active' : 'Inactive',
+      students: course.totalStudents || 0,
+      attendance: Math.round(course.todayAttendancePercentage || 0),
+      icon: <div className="p-2 bg-blue-100 rounded-lg"><FaCalculator className="w-5 h-5 text-blue-700" /></div>, // Static icon
+      upcoming: [ // Static upcoming assignments
+        { title: 'Assignment: Current Topic', due: 'Due Friday', color: 'text-orange-500' },
+        { title: 'Quiz: Review', due: 'Next Week', color: 'text-blue-500' }
+      ]
+    }));
+  };
 
-  const getStatusColor = (status: 'Normal' | 'Low Attendance' | 'High Risk'): string => {
+  const classes: ClassItem[] = generateClassesFromAPI();
+
+  // Separate classes for left and right columns - distribute evenly
+  const leftColumnClasses = classes.filter((_, index) => index % 2 === 0); // Even indices (0, 2, 4...)
+  const rightColumnClasses = classes.filter((_, index) => index % 2 === 1); // Odd indices (1, 3, 5...)
+
+  const getStatusColor = (status: 'Active' | 'Inactive' | 'Normal' | 'Low Attendance' | 'High Risk'): string => {
     switch(status) {
+      case 'Active': return 'bg-green-100 text-green-700';
+      case 'Inactive': return 'bg-gray-100 text-gray-700';
       case 'Normal': return 'bg-green-100 text-green-700';
       case 'Low Attendance': return 'bg-orange-100 text-orange-700';
       case 'High Risk': return 'bg-red-100 text-red-700';
@@ -142,139 +140,21 @@ function MyClasses() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-          {/* Left Section - Mobile Menu Button and School Name */}
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800 text-sm sm:text-base">Westfield High School</span>
-              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
-            </div>
-          </div>
-
-          {/* Search Bar - Hidden on mobile, visible on tablet and up */}
-          <div className="hidden md:block relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-
-          {/* Right Section - Calendar, Notifications, Profile */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            {/* Calendar - Hidden on mobile, visible on tablet and up */}
-            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="w-4 h-4" />
-              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
-              <ChevronDown className="w-4 h-4 hidden lg:block" />
-            </div>
-
-            {/* Notifications */}
-            <div className="relative">
-              <Bell className="w-5 h-5 text-gray-600" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
-            </div>
-
-            {/* Profile - Compact on mobile */}
-            <div className="flex items-center gap-2">
-              <img src={userr} alt="User profile" className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover" />
-              <span className="text-sm font-medium hidden sm:block">Sarah Wilson</span>
-              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
-            </div>
-          </div>
+   <div className="min-h-screen bg-gray-50 w-full">
+      <div className="w-full max-w-none p-4 sm:p-6">
+        {/* Page Header */}
+        <div className="mb-6 w-full">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">My Classes</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Monitoring my classes</p>
         </div>
 
-        {/* Mobile Search Bar - Visible only on mobile */}
-        <div className="md:hidden px-4 pb-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-gray-600 mr-2">Filters</span>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Grades <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Classes <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            Current Term <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            <Calendar className="w-4 h-4" />
-            Date Filter
-          </button>
-        </div>
-      </div>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
-        `}>
-          {/* Mobile Close Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-          
-          <nav className="p-4 relative z-50 bg-white h-full">
-            {menuItems.map((item, idx) => (
-              <button 
-                key={idx} 
-                className={`w-full px-4 py-3 rounded-lg flex items-center gap-3 mb-2 ${
-                  activeTab === item.label 
-                    ? 'bg-orange-500 text-white' 
-                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                }`}
-                onClick={() => handleNavigation(item.path, item.label)}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6">
-          {/* Page Header */}
-          <div className="mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">My Classes</h1>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">Monitoring my classes</p>
-          </div>
-
-          {/* Stats Cards */}
+        {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
             <div className="bg-white rounded-lg p-4 sm:p-5 relative shadow-sm border border-gray-200">
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">Total Courses</p>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">8</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">{coursesData?.totalCourses ?? 0}</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
                   <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
@@ -287,7 +167,7 @@ function MyClasses() {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">Total Students</p>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">247</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">{coursesData?.overallStudents ?? 0}</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
                   <IoIosPeople className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
@@ -300,7 +180,7 @@ function MyClasses() {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">Avg Attendance</p>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">89%</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">{coursesData?.averageAttendance ? `${coursesData.averageAttendance.toFixed(1)}%` : '0%'}</h3>
                 </div>
                 <div className="bg-white p-2 rounded-lg border border-gray-200">
                   <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
@@ -472,9 +352,8 @@ function MyClasses() {
               ))}
             </div>
           </div>
-        </main>
+        </div>
       </div>
-    </div>
   );
 }
 

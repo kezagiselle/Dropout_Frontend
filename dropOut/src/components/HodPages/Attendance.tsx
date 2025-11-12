@@ -1,30 +1,59 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect } from 'react';
 import { useTheme } from '../Hod';
+import { useUserAuth } from '../../context/useUserAuth';
 import { FaFileAlt, FaCheck, FaTimes, FaClock, FaExclamationTriangle, FaInfoCircle, FaStar, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { FaDownload } from "react-icons/fa6";
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
-// Chart data and colors
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+// API Response Interfaces
+interface AttendanceKPIs {
+  presentToday: number;
+  absentToday: number;
+}
+
+interface DailyStat {
+  day: string;
+  averageAttendance: number;
+  date: string;
+}
+
+interface WeeklyTrends {
+  dailyStats: DailyStat[];
+  weeklyAverages: {
+    averageAttendance: number;
+    totalAbsences: number;
+  };
+}
+
+interface SubjectPerformance {
+  subjectName: string;
+  currentAverage: number;
+}
+
+interface PerformanceTrends {
+  subjectPerformance: SubjectPerformance[];
+  overallStats: {
+    averageGPA: number;
+    highestScore: number;
+    lowestScore: number;
+  };
+}
+
+interface AttendanceOverviewResponse {
+  success: boolean;
+  message: string;
+  data: {
+    attendanceKPIs: AttendanceKPIs;
+    weeklyTrends: WeeklyTrends;
+    performanceTrends: PerformanceTrends;
+  };
+}
+
+// Chart colors
 const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink'];
-
-const attendanceData = [
-  { name: 'Mon', present: 95, absent: 5, late: 3 },
-  { name: 'Tue', present: 88, absent: 12, late: 7 },
-  { name: 'Wed', present: 92, absent: 8, late: 4 },
-  { name: 'Thu', present: 87, absent: 13, late: 6 },
-  { name: 'Fri', present: 90, absent: 10, late: 5 },
-  { name: 'Sat', present: 85, absent: 15, late: 8 },
-  { name: 'Sun', present: 78, absent: 22, late: 12 }
-];
-
-const performanceData = [
-  { name: 'Math', score: 85, average: 75, target: 90 },
-  { name: 'Science', score: 92, average: 80, target: 95 },
-  { name: 'English', score: 78, average: 85, target: 88 },
-  { name: 'History', score: 88, average: 82, target: 85 },
-  { name: 'Art', score: 95, average: 90, target: 92 },
-  { name: 'PE', score: 82, average: 78, target: 85 }
-];
 
 const getPath = (x: number, y: number, width: number, height: number) => {
   return `M${x},${y + height}C${x + width / 3},${y + height} ${x + width / 2},${y + height / 3}
@@ -40,12 +69,59 @@ const TriangleBar = (props: any) => {
 
 const Attendance = () => {
   const { theme } = useTheme();
+  const { user, token } = useUserAuth();
+  
+  // State for API data
+  const [attendanceData, setAttendanceData] = useState<AttendanceOverviewResponse['data'] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const [filters, setFilters] = useState({
     course: 'All Courses',
     startDate: '2024-01-01',
     endDate: '2024-12-31',
     classSection: 'All Classes'
   });
+
+  // Fetch attendance overview data
+  useEffect(() => {
+    const fetchAttendanceOverview = async () => {
+      const schoolId = user?.schoolId;
+      if (!schoolId || !token) {
+        setError('No schoolId or token found');
+        setLoading(false);
+        return;
+      }
+      
+      setLoading(true);
+      try {
+        const response = await fetch(`${baseUrl}/api/attendance/stats-overview/${schoolId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const data: AttendanceOverviewResponse = await response.json();
+        
+        if (data.success) {
+          setAttendanceData(data.data);
+          setError(null);
+        } else {
+          setError(data.message || 'Failed to fetch attendance overview');
+          console.error('Failed to fetch attendance overview:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching attendance overview:', error);
+        setError('Failed to fetch attendance data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAttendanceOverview();
+  }, [token, user?.schoolId]);
 
   const handleFilterChange = (field: string, value: string) => {
     setFilters(prev => ({
@@ -58,6 +134,53 @@ const Attendance = () => {
     console.log(`Exporting ${type}...`);
     // Add export logic here
   };
+
+  // Transform daily stats for chart
+  const chartData = attendanceData?.weeklyTrends?.dailyStats?.map((stat: DailyStat) => ({
+    name: stat.day,
+    present: stat.averageAttendance,
+    absent: 100 - stat.averageAttendance,
+    date: stat.date
+  })) || [];
+
+  // Transform performance data for chart
+  const performanceChartData = attendanceData?.performanceTrends?.subjectPerformance?.map((subject: SubjectPerformance) => ({
+    name: subject.subjectName,
+    score: subject.currentAverage,
+    average: subject.currentAverage,
+    target: subject.currentAverage + 10 // Adding target for visualization
+  })) || [];
+
+  if (loading) {
+    return (
+      <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded-lg"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
+        <div className="text-center py-8">
+          <p className="text-red-500">Error: {error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
@@ -97,9 +220,11 @@ const Attendance = () => {
               }`}>
                 Present Today
               </p>
-              <p className="text-3xl font-bold mt-2 text-green-400">847</p>
+              <p className="text-3xl font-bold mt-2 text-green-400">
+                {attendanceData?.attendanceKPIs?.presentToday || 0}
+              </p>
               <div className="flex items-center mt-2">
-                <span className="text-sm text-green-600 font-medium">+2.3% from yesterday</span>
+                <span className="text-sm text-green-600 font-medium">Real-time data</span>
               </div>
             </div>
             <FaCheck className="w-5 h-5 text-green-600 ml-4" />
@@ -119,9 +244,11 @@ const Attendance = () => {
               }`}>
                 Absent Today
               </p>
-              <p className="text-3xl font-bold mt-2 text-red-400">23</p>
+              <p className="text-3xl font-bold mt-2 text-red-400">
+                {attendanceData?.attendanceKPIs?.absentToday || 0}
+              </p>
               <div className="flex items-center mt-2">
-                <span className="text-sm text-red-600 font-medium">+5 from yesterday</span>
+                <span className="text-sm text-red-600 font-medium">Needs attention</span>
               </div>
             </div>
             <FaTimes className="w-5 h-5 text-red-600 ml-4" />
@@ -203,10 +330,9 @@ const Attendance = () => {
                 }`}
               >
                 <option>All Courses</option>
-                <option>Mathematics</option>
-                <option>Science</option>
-                <option>English</option>
-                <option>History</option>
+                {attendanceData?.performanceTrends?.subjectPerformance?.map((subject: SubjectPerformance, index: number) => (
+                  <option key={index} value={subject.subjectName}>{subject.subjectName}</option>
+                ))}
               </select>
             </div>
             
@@ -329,33 +455,39 @@ const Attendance = () => {
            <div className="p-3 sm:p-4 lg:p-6">
              {/* Attendance Trends Chart */}
              <div className="h-64 mb-6">
-               <ResponsiveContainer width="100%" height="100%">
-                 <BarChart
-                   data={attendanceData}
-                   margin={{
-                     top: 20,
-                     right: 30,
-                     left: 20,
-                     bottom: 5,
-                   }}
-                 >
-                   <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
-                   <XAxis 
-                     dataKey="name" 
-                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
-                     fontSize={12}
-                   />
-                   <YAxis 
-                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
-                     fontSize={12}
-                   />
-                   <Bar dataKey="present" fill="#10b981" shape={<TriangleBar />} label={{ position: 'top' }}>
-                     {attendanceData.map((_, index) => (
-                       <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-                     ))}
-                   </Bar>
-                 </BarChart>
-               </ResponsiveContainer>
+               {chartData.length > 0 ? (
+                 <ResponsiveContainer width="100%" height="100%">
+                   <BarChart
+                     data={chartData}
+                     margin={{
+                       top: 20,
+                       right: 30,
+                       left: 20,
+                       bottom: 5,
+                     }}
+                   >
+                     <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                     <XAxis 
+                       dataKey="name" 
+                       stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                       fontSize={12}
+                     />
+                     <YAxis 
+                       stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                       fontSize={12}
+                     />
+                     <Bar dataKey="present" fill="#10b981" shape={<TriangleBar />} label={{ position: 'top' }}>
+                       {chartData.map((_: any, index: number) => (
+                         <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                       ))}
+                     </Bar>
+                   </BarChart>
+                 </ResponsiveContainer>
+               ) : (
+                 <div className="flex items-center justify-center h-full">
+                   <p className="text-gray-500">No attendance data available</p>
+                 </div>
+               )}
              </div>
              
              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -369,7 +501,9 @@ const Attendance = () => {
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                    }`}>Average Attendance</p>
                  </div>
-                 <p className="text-3xl font-bold text-green-600">87.5%</p>
+                 <p className="text-3xl font-bold text-green-600">
+                   {attendanceData?.weeklyTrends?.weeklyAverages?.averageAttendance?.toFixed(1) || 0}%
+                 </p>
                </div>
                
                {/* Total Absences Card */}
@@ -382,7 +516,9 @@ const Attendance = () => {
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                    }`}>Total Absences</p>
                  </div>
-                 <p className="text-3xl font-bold text-red-600">234</p>
+                 <p className="text-3xl font-bold text-red-600">
+                   {attendanceData?.weeklyTrends?.weeklyAverages?.totalAbsences || 0}
+                 </p>
                </div>
              </div>
            </div>
@@ -433,33 +569,39 @@ const Attendance = () => {
            <div className="p-3 sm:p-4 lg:p-6">
              {/* Performance Trends Chart */}
              <div className="h-64 mb-6">
-               <ResponsiveContainer width="100%" height="100%">
-                 <BarChart
-                   data={performanceData}
-                   margin={{
-                     top: 20,
-                     right: 30,
-                     left: 20,
-                     bottom: 5,
-                   }}
-                 >
-                   <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
-                   <XAxis 
-                     dataKey="name" 
-                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
-                     fontSize={12}
-                   />
-                   <YAxis 
-                     stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
-                     fontSize={12}
-                   />
-                   <Bar dataKey="score" fill="#3b82f6" shape={<TriangleBar />} label={{ position: 'top' }}>
-                     {performanceData.map((_, index) => (
-                       <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-                     ))}
-                   </Bar>
-                 </BarChart>
-               </ResponsiveContainer>
+               {performanceChartData.length > 0 ? (
+                 <ResponsiveContainer width="100%" height="100%">
+                   <BarChart
+                     data={performanceChartData}
+                     margin={{
+                       top: 20,
+                       right: 30,
+                       left: 20,
+                       bottom: 5,
+                     }}
+                   >
+                     <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                     <XAxis 
+                       dataKey="name" 
+                       stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                       fontSize={12}
+                     />
+                     <YAxis 
+                       stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'}
+                       fontSize={12}
+                     />
+                     <Bar dataKey="score" fill="#3b82f6" shape={<TriangleBar />} label={{ position: 'top' }}>
+                       {performanceChartData.map((_: any, index: number) => (
+                         <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                       ))}
+                     </Bar>
+                   </BarChart>
+                 </ResponsiveContainer>
+               ) : (
+                 <div className="flex items-center justify-center h-full">
+                   <p className="text-gray-500">No performance data available</p>
+                 </div>
+               )}
              </div>
              
              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-16">
@@ -473,7 +615,9 @@ const Attendance = () => {
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                    }`}>Average GPA</p>
                  </div>
-                 <p className="text-2xl font-bold text-blue-600">3.2</p>
+                 <p className="text-2xl font-bold text-blue-600">
+                   {attendanceData?.performanceTrends?.overallStats?.averageGPA?.toFixed(2) || '0.00'}
+                 </p>
                </div>
                
                {/* Highest Score Card */}
@@ -486,7 +630,9 @@ const Attendance = () => {
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                    }`}>Highest Score</p>
                  </div>
-                 <p className="text-2xl font-bold text-green-600">98%</p>
+                 <p className="text-2xl font-bold text-green-600">
+                   {attendanceData?.performanceTrends?.overallStats?.highestScore?.toFixed(1) || '0.0'}
+                 </p>
                </div>
                
                {/* Lowest Score Card */}
@@ -499,7 +645,9 @@ const Attendance = () => {
                      theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                    }`}>Lowest Score</p>
                  </div>
-                 <p className="text-2xl font-bold text-orange-600">45%</p>
+                 <p className="text-2xl font-bold text-orange-600">
+                   {attendanceData?.performanceTrends?.overallStats?.lowestScore?.toFixed(1) || '0.0'}
+                 </p>
                </div>
              </div>
            </div>

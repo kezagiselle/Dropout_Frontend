@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { useUserAuth } from '../../context/useUserAuth';
 import { FaArrowLeft } from 'react-icons/fa';

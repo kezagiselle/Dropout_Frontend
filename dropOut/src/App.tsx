@@ -3,6 +3,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import LoginPage from "./components/LoginPage";
+import LogBehaviorReport from "./components/TeacherPages/LogBehaviorReport";
+import DailyAttendance from "./components/TeacherPages/DailyAttendance";
 import { UserAuthProvider } from "./context/UserAuthContext";
 import SignUpPage from "./components/SignUp";
 import ResetPasswordSimple from "./components/ResetPassword";
@@ -11,16 +13,7 @@ import PasswordChangedConfirmation from "./components/PasswordChange";
 import LandingPage from "./components/LandingPage";
 import Hod from "./components/Hod";
 import Dashboard from "./components/TeacherPages/Dashboard";
-import MyClasses from './components/TeacherPages/MyClasses';
-import Attendance from "./components/TeacherPages/Attendance";
-import DailyAttendance from "./components/TeacherPages/DailyAttendance";
-import Behavior from "./components/TeacherPages/Behavior.tsx";
-import LogBehaviorReport from "./components/TeacherPages/LogBehaviorReport.tsx";
-import StudentProfiles from "./components/TeacherPages/StudentProfiles.tsx";
-import Settings from "./components/TeacherPages/Settings.tsx";
-import Marks from "./components/TeacherPages/Marks.tsx";
-import ViewMarks from "./components/TeacherPages/ViewMarks.tsx";
-import StudentDashboard from "./components/StudentPages/StudentDashboard.tsx"
+import ViewMarks from "./components/TeacherPages/ViewMarks";
 
 function App() {
   return (
@@ -33,18 +26,18 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordSimple />} />
           <Route path="/new-password-reset" element={<NewPasswordReset />} />
           <Route path="/password-changed" element={<PasswordChangedConfirmation />} />
-           <Route path="/attendance" element={<Attendance />} />
-            <Route path="/daily-attendance" element={<DailyAttendance/>} />
-             <Route path="/behavior-reports" element={<Behavior/>} />
-             <Route path="/view-marks" element={<ViewMarks />} />
-             <Route path="/log-behavior-report" element={<LogBehaviorReport />} />
-              <Route path="/student-profiles" element={<StudentProfiles />} />
-                 <Route path="/marks" element={<Marks />} />
-               <Route path="/settings" element={<Settings />} />
-          <Route path="/hod-dashboard" element={<Hod />} />
-           <Route path="/teacher-dashboard" element={<Dashboard />} />
-           <Route path="/my-classes" element={<MyClasses />} />
-            <Route path="/student-dashboard" element={<StudentDashboard />} />
+           <Route path="/hod-dashboard" element={<Hod />} />
+          {/* All teacher routes go through Dashboard component */}
+          <Route path="/teacher-dashboard" element={<Dashboard />} />
+          <Route path="/attendance" element={<Dashboard />} />
+          <Route path="/my-classes" element={<Dashboard />} />
+            <Route path="/daily-attendance" element={<DailyAttendance />} />
+          <Route path="/behavior-reports" element={<Dashboard />} />
+          <Route path="/view-marks" element={<ViewMarks />} />
+            <Route path="/log-behavior-report" element={<LogBehaviorReport />} />
+          <Route path="/student-profiles" element={<Dashboard />} />
+          <Route path="/marks" element={<Dashboard />} />
+          <Route path="/settings" element={<Dashboard />} />
            
         </Routes>
         <ToastContainer 

@@ -14,6 +14,7 @@ import LandingPage from "./components/LandingPage";
 import Hod from "./components/Hod";
 import Dashboard from "./components/TeacherPages/Dashboard";
 import ViewMarks from "./components/TeacherPages/ViewMarks";
+import StudentDashboard from "./components/StudentPages/StudentDashboard";
 
 function App() {
   return (
@@ -38,6 +39,8 @@ function App() {
           <Route path="/student-profiles" element={<Dashboard />} />
           <Route path="/marks" element={<Dashboard />} />
           <Route path="/settings" element={<Dashboard />} />
+          <Route path="/student-dash" element={<StudentDashboard />} />
+
            
         </Routes>
         <ToastContainer 

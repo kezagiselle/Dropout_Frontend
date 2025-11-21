@@ -15,10 +15,12 @@ import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import { TbWaveSawTool } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
+import Attendance from "./Attendance";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showAttendance, setShowAttendance] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); 
 
@@ -30,7 +32,7 @@ export default function StudentDashboard() {
 
   // Student-specific menu items - added My Classes
   const menuItems = [
-    { icon: SiGoogleclassroom, label: 'My Classes', path: '/my-classes' },
+    { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
     { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
@@ -211,7 +213,7 @@ export default function StudentDashboard() {
               <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">3.7</div>
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Average GPA</div>
               <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2 mt-2 sm:mt-3">
-                <div className="bg-blue-500 h-1.5 sm:h-2 rounded-full" style={{ width: '92.5%' }}></div>
+                <div className="bg-blue-500 h-1.5 sm:h-2 rounded-full" style={{ width: '75%' }}></div>
               </div>
             </div>
 
@@ -401,7 +403,10 @@ export default function StudentDashboard() {
                 <FileText className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                 <span className="font-semibold">View Assignments</span>
               </button>
-              <button className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <button
+                className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                onClick={() => setShowAttendance(true)}
+              >
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                 <span className="font-semibold">View Attendance</span>
               </button>
@@ -415,6 +420,21 @@ export default function StudentDashboard() {
               </button>
             </div>
           </div>
+
+          {/* Attendance Modal */}
+          {showAttendance && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-3 sm:px-4">
+              <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative">
+                <button
+                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
+                  onClick={() => setShowAttendance(false)}
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <Attendance />
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

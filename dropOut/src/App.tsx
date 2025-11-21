@@ -15,6 +15,10 @@ import Hod from "./components/Hod";
 import Dashboard from "./components/TeacherPages/Dashboard";
 import ViewMarks from "./components/TeacherPages/ViewMarks";
 import StudentDashboard from "./components/StudentPages/StudentDashboard";
+import StudentClasses from "./components/StudentPages/StudentClasses";
+import Timetable from "./components/StudentPages/Timetable";
+import Assignments from "./components/StudentPages/Assignments";
+
 
 function App() {
   return (
@@ -40,6 +44,9 @@ function App() {
           <Route path="/marks" element={<Dashboard />} />
           <Route path="/settings" element={<Dashboard />} />
           <Route path="/student-dash" element={<StudentDashboard />} />
+          <Route path="/student-class" element={<StudentClasses />} />
+          <Route path="/timetable" element={<Timetable />} />
+          <Route path="/my-assignments" element={<Assignments />} />
 
            
         </Routes>

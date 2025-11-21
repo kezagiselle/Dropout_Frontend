@@ -30,11 +30,11 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - added My Classes
+  // Student-specific menu items - FIXED ROUTES
   const menuItems = [
     { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
+    { icon: TbReport, label: 'Behavior Reports', path: '/behaviorStudent' }, 
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
@@ -53,8 +53,8 @@ export default function StudentDashboard() {
     { name: 'Wed', present: 80, absent: 15, late: 5 },
     { name: 'Thu', present: 100, absent: 0, late: 0 },
     { name: 'Fri', present: 98, absent: 2, late: 0 },
-    { name: 'Sat', present: 0, absent: 0, late: 0 }, // Weekend
-    { name: 'Sun', present: 0, absent: 0, late: 0 }  // Weekend
+    { name: 'Sat', present: 0, absent: 0, late: 0 },
+    { name: 'Sun', present: 0, absent: 0, late: 0 }  
   ];
 
   const assignments = [
@@ -157,7 +157,7 @@ export default function StudentDashboard() {
                   ? 'bg-orange-500 text-white' 
                   : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
               }`}
-              onClick={() => handleNavigation('/', 'Dashboard')}
+              onClick={() => handleNavigation('/student-dash', 'Dashboard')}
             >
               <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="font-medium text-sm sm:text-base">Dashboard</span>
@@ -352,7 +352,12 @@ export default function StudentDashboard() {
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <h2 className="text-base sm:text-lg font-bold text-gray-900">Recent Behavior</h2>
-                <button className="text-blue-600 text-xs sm:text-sm font-medium hover:underline">View All</button>
+                <button 
+                  className="text-blue-600 text-xs sm:text-sm font-medium hover:underline"
+                  onClick={() => handleNavigation('/behaviorStudent', 'Behavior Reports')}
+                >
+                  View All
+                </button>
               </div>
               <div className="space-y-2 sm:space-y-3">
                 {behaviors.map((behavior, i) => (
@@ -399,7 +404,10 @@ export default function StudentDashboard() {
           <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
-              <button className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <button 
+                className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                onClick={() => handleNavigation('/my-assignments', 'My Assignments')}
+              >
                 <FileText className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                 <span className="font-semibold">View Assignments</span>
               </button>

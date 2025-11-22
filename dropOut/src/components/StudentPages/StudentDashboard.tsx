@@ -34,11 +34,10 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - FIXED ROUTES
+  // Student-specific menu items - FIXED ROUTES (Settings removed)
   const menuItems = [
     { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
+    { icon: FileText, label: 'My Assignments', path: '/my-assignments' }
   ];
 
   // Updated performance data for Recharts
@@ -206,7 +205,7 @@ export default function StudentDashboard() {
             </div>
 
             {/* Average GPA */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+            <div className="bg-white rounded-lg shadowSm p-4 sm:p-6">
               <div className="flex items-start justify-between mb-3 sm:mb-4">
                 <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
                   <TbWaveSawTool className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
@@ -364,7 +363,7 @@ export default function StudentDashboard() {
               </div>
               <div className="space-y-2 sm:space-y-3">
                 {behaviors.map((behavior, i) => (
-                  <div key={i} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-gray-50 shadow-sm border border-gray-100 cursor-pointer group">
+                  <div key={i} className="flex items-start gap=2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-gray-50 shadow-sm border border-gray-100 cursor-pointer group">
                     <span className="text-sm sm:text-base">{behavior.icon}</span>
                     <div className="min-w-0 flex-1">
                       <div className="font-medium text-gray-700 font-bold text-sm sm:text-base">{behavior.title}</div>

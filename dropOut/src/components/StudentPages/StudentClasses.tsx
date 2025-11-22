@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, Calendar, BarChart3, Bell, Search, Menu, X, FileText, Clock, MapPin, MessageSquare } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
-import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 
@@ -55,11 +54,10 @@ const StudentClasses = () => {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - Behavior Reports removed
+  // Student-specific menu items - Settings removed
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/my-classes' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
+    { icon: FileText, label: 'My Assignments', path: '/my-assignments' }
   ];
 
   const classes: ClassItem[] = [

@@ -88,109 +88,109 @@ const BehaviorReports: React.FC = () => {
       <main className="p-3 sm:p-4 lg:p-6">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Behavior Reports</h1>
-            <p className="text-gray-600">Review your conduct, commendations, and counseling records</p>
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Behavior Reports</h1>
+            <p className="text-gray-600 text-sm sm:text-base">Review your conduct, commendations, and counseling records</p>
           </div>
 
           {/* Filters */}
-          <div className="flex gap-4 mb-8">
-            <div className="relative">
+          <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="relative flex-1 min-w-0">
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="appearance-none bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 pr-8 sm:pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
               >
                 <option>All Types</option>
                 <option>Commendations</option>
                 <option>Warnings</option>
                 <option>Incidents</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-400 pointer-events-none" />
             </div>
-            <div className="relative">
+            <div className="relative flex-1 min-w-0">
               <select
                 value={termFilter}
                 onChange={(e) => setTermFilter(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="appearance-none bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 pr-8 sm:pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
               >
                 <option>Current Term</option>
                 <option>Last Term</option>
                 <option>All Terms</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {/* Commendations */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+              <div className="flex items-start justify-between mb-3 sm:mb-4">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-600">Commendations</h3>
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Commendations</h3>
                     <p className="text-xs text-gray-500">Positive conduct</p>
                   </div>
                 </div>
               </div>
               <div className="flex items-end justify-between">
                 <div>
-                  <div className="text-3xl font-bold text-gray-900">12</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">12</div>
                   <div className="text-xs text-green-600 mt-1">↑ 3 from last term</div>
                 </div>
-                <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                <button className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 font-medium whitespace-nowrap">
                   View Details
                 </button>
               </div>
             </div>
 
             {/* Warnings */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <AlertCircle className="w-5 h-5 text-orange-600" />
+            <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+              <div className="flex items-start justify-between mb-3 sm:mb-4">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-600">Warnings</h3>
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Warnings</h3>
                     <p className="text-xs text-gray-500">Minor infractions</p>
                   </div>
                 </div>
               </div>
               <div className="flex items-end justify-between">
                 <div>
-                  <div className="text-3xl font-bold text-gray-900">3</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">3</div>
                   <div className="text-xs text-gray-500 mt-1">Same as last term</div>
                 </div>
-                <button className="text-sm text-orange-600 hover:text-orange-700 font-medium">
+                <button className="text-xs sm:text-sm text-orange-600 hover:text-orange-700 font-medium whitespace-nowrap">
                   View Details
                 </button>
               </div>
             </div>
 
             {/* Serious Incidents */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                    <XCircle className="w-5 h-5 text-red-600" />
+            <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+              <div className="flex items-start justify-between mb-3 sm:mb-4">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-600">Serious Incidents</h3>
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Serious Incidents</h3>
                     <p className="text-xs text-gray-500">Major violations</p>
                   </div>
                 </div>
               </div>
               <div className="flex items-end justify-between">
                 <div>
-                  <div className="text-3xl font-bold text-gray-900">1</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">1</div>
                   <div className="text-xs text-green-600 mt-1">↓ 1 from last term</div>
                 </div>
-                <button className="text-sm text-red-600 hover:text-red-700 font-medium">
+                <button className="text-xs sm:text-sm text-red-600 hover:text-red-700 font-medium whitespace-nowrap">
                   View Details
                 </button>
               </div>
@@ -198,40 +198,42 @@ const BehaviorReports: React.FC = () => {
           </div>
 
           {/* Behavior Timeline */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Behavior Timeline</h2>
-            <div className="space-y-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Behavior Timeline</h2>
+            <div className="space-y-3 sm:space-y-4">
               {timelineItems.map((item) => (
                 <div
                   key={item.id}
-                  className={`border rounded-lg p-4 flex items-start justify-between ${
+                  className={`border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3 ${
                     item.type === 'positive'
                       ? 'bg-green-50 border-green-200'
                       : 'bg-orange-50 border-orange-200'
                   }`}
                 >
-                  <div className="flex items-start gap-3 flex-1">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                         item.type === 'positive' ? 'bg-green-500' : 'bg-orange-500'
                       }`}
                     >
                       {item.type === 'positive' ? (
-                        <CheckCircle className="w-5 h-5 text-white" />
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                       ) : (
-                        <AlertCircle className="w-5 h-5 text-white" />
+                        <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                       )}
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
-                      <p className="text-sm text-gray-700 mb-2">{item.description}</p>
-                      <p className="text-xs text-gray-600">{item.teacher}</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 truncate">{item.title}</h3>
+                      <p className="text-xs sm:text-sm text-gray-700 mb-2 line-clamp-2">{item.description}</p>
+                      <p className="text-xs text-gray-600 truncate">{item.teacher}</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 flex-shrink-0">
-                    <span className="text-sm text-gray-500">{item.date}</span>
-                    <button className="text-gray-400 hover:text-gray-600">
-                      <ExternalLink className="w-4 h-4" />
+                  <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 flex-shrink-0">
+                    <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                      {window.innerWidth < 640 ? item.date.split(' ')[0] : item.date}
+                    </span>
+                    <button className="text-gray-400 hover:text-gray-600 flex-shrink-0">
+                      <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                   </div>
                 </div>
@@ -240,15 +242,15 @@ const BehaviorReports: React.FC = () => {
           </div>
 
           {/* Counseling Notes */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Counseling Notes</h2>
-            <div className="space-y-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Counseling Notes</h2>
+            <div className="space-y-3 sm:space-y-4">
               {counselingNotes.map((note) => (
-                <div key={note.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-gray-900">{note.title}</h3>
+                <div key={note.id} className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{note.title}</h3>
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                         note.status === 'completed'
                           ? 'bg-green-100 text-green-700'
                           : 'bg-orange-100 text-orange-700'
@@ -257,10 +259,10 @@ const BehaviorReports: React.FC = () => {
                       {note.status === 'completed' ? 'Completed' : 'In Progress'}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2">{note.description}</p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs text-gray-600">{note.counselor}</p>
-                    <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                  <p className="text-xs sm:text-sm text-gray-700 mb-2 line-clamp-2">{note.description}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <p className="text-xs text-gray-600 truncate">{note.counselor}</p>
+                    <button className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 font-medium whitespace-nowrap self-start sm:self-auto">
                       View Full Notes
                     </button>
                   </div>
@@ -270,14 +272,14 @@ const BehaviorReports: React.FC = () => {
           </div>
 
           {/* Behavioral Insights */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Users className="w-5 h-5 text-blue-600" />
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-2">Behavioral Insights</h3>
-                <p className="text-sm text-gray-700 mb-2">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-2">Behavioral Insights</h3>
+                <p className="text-xs sm:text-sm text-gray-700 mb-2">
                   Your recent positive behavior has significantly improved your overall conduct record. Keep up the
                   excellent work with peer tutoring and class participation!
                 </p>
@@ -289,18 +291,18 @@ const BehaviorReports: React.FC = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-3">
-            <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
-              View Counseling Notes
+          <div className="flex flex-col xs:flex-row flex-wrap gap-2 sm:gap-3">
+            <button className="bg-green-500 hover:bg-green-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-medium text-xs sm:text-sm transition-colors flex items-center gap-2 justify-center">
+              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="whitespace-nowrap">View Counseling Notes</span>
             </button>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              View All Reports
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-medium text-xs sm:text-sm transition-colors flex items-center gap-2 justify-center">
+              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="whitespace-nowrap">View All Reports</span>
             </button>
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" />
-              Contact Counselor
+            <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-medium text-xs sm:text-sm transition-colors flex items-center gap-2 justify-center">
+              <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="whitespace-nowrap">Contact Counselor</span>
             </button>
           </div>
         </div>

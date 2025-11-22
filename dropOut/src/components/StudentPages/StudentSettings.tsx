@@ -36,7 +36,7 @@ const StudentSettings = () => {
                 <FaArrowLeft className="text-sm" />
               </button>
               
-              <div className="min-w-0"> {/* Prevents text overflow */}
+              <div className="min-w-0">
                 <h1 className={`text-2xl sm:text-3xl font-bold transition-colors duration-200 truncate ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}>

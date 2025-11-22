@@ -49,7 +49,7 @@ function App() {
           <Route path="/timetable" element={<Timetable />} />
           <Route path="/my-assignments" element={<Assignments />} />
           <Route path="/behaviorStudent" element={<BehaviorReports />} />
-           {/* <Route path="/behavior-student" element={<Dashboard />} /> */}
+           
 
            
         </Routes>

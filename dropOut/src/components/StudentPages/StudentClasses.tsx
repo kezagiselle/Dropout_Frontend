@@ -4,7 +4,7 @@ import { SiGoogleclassroom } from "react-icons/si";
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 
-// Type definitions
+
 type ClassStatus = 'missing' | 'active' | 'pending' | 'completed';
 
 interface ClassItem {
@@ -54,7 +54,7 @@ const StudentClasses = () => {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - Settings removed
+  
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/my-classes' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' }

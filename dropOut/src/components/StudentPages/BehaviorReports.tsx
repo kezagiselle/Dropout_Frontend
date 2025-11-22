@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle, XCircle, ChevronDown, ExternalLink, Users, Calendar, Bell, Menu, X, BarChart3, FileText } from 'lucide-react';
-import { SiGoogleclassroom } from "react-icons/si";
-import { TbReport } from "react-icons/tb";
-import { IoMdSettings } from "react-icons/io";
-import userr from "../../../src/img/userr.png";
-import { useNavigate } from 'react-router-dom';
+
 
 interface TimelineItem {
   id: string;

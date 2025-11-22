@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, Calendar, BarChart3, Bell, Search, Menu, X, FileText, Clock, MapPin, MessageSquare } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
-import { TbReport } from "react-icons/tb";
 import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
@@ -56,11 +55,10 @@ const StudentClasses = () => {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items
+  // Student-specific menu items - Behavior Reports removed
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/my-classes' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 

@@ -16,11 +16,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { TbWaveSawTool } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
 import Attendance from "./Attendance";
+import BehaviorReports from "./BehaviorReports"; // Import the BehaviorReports component
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showAttendance, setShowAttendance] = useState(false);
+  const [showBehavior, setShowBehavior] = useState(false); // New state for behavior modal
   const navigate = useNavigate();
   const location = useLocation(); 
 
@@ -34,7 +36,6 @@ export default function StudentDashboard() {
   const menuItems = [
     { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: TbReport, label: 'Behavior Reports', path: '/behaviorStudent' }, 
     { icon: IoMdSettings, label: 'Settings', path: '/settings' }
   ];
 
@@ -354,7 +355,7 @@ export default function StudentDashboard() {
                 <h2 className="text-base sm:text-lg font-bold text-gray-900">Recent Behavior</h2>
                 <button 
                   className="text-blue-600 text-xs sm:text-sm font-medium hover:underline"
-                  onClick={() => handleNavigation('/behaviorStudent', 'Behavior Reports')}
+                  onClick={() => setShowBehavior(true)}
                 >
                   View All
                 </button>
@@ -418,9 +419,12 @@ export default function StudentDashboard() {
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                 <span className="font-semibold">View Attendance</span>
               </button>
-              <button className="bg-orange-400 hover:bg-orange-500 text-white font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <button 
+                className="bg-orange-400 hover:bg-orange-500 text-white font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                onClick={() => setShowBehavior(true)}
+              >
                 <Bell className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-                <span className="font-semibold">Check Messages</span>
+                <span className="font-semibold">Check Behavior</span>
               </button>
               <button className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
                 <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
@@ -440,6 +444,21 @@ export default function StudentDashboard() {
                   <X className="w-5 h-5" />
                 </button>
                 <Attendance />
+              </div>
+            </div>
+          )}
+
+          {/* Behavior Reports Modal */}
+          {showBehavior && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-3 sm:px-4">
+              <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] overflow-y-auto">
+                <button
+                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 z-10"
+                  onClick={() => setShowBehavior(false)}
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <BehaviorReports />
               </div>
             </div>
           )}

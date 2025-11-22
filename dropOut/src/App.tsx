@@ -37,7 +37,7 @@ function App() {
           <Route path="/teacher-dashboard" element={<Dashboard />} />
           <Route path="/attendance" element={<Dashboard />} />
           <Route path="/my-classes" element={<Dashboard />} />
-            <Route path="/daily-attendance" element={<DailyAttendance />} />
+          <Route path="/daily-attendance" element={<DailyAttendance />} />
           <Route path="/behavior-reports" element={<Dashboard />} />
           <Route path="/view-marks" element={<ViewMarks />} />
             <Route path="/log-behavior-report" element={<LogBehaviorReport />} />

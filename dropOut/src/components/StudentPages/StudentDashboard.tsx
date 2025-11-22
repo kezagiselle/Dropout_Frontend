@@ -24,7 +24,7 @@ export default function StudentDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showAttendance, setShowAttendance] = useState(false);
   const [showBehavior, setShowBehavior] = useState(false);
-  const [showSettings, setShowSettings] = useState(false); // New state for settings modal
+  const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); 
 
@@ -34,7 +34,7 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - FIXED ROUTES (Settings removed)
+  // Student-specific menu items
   const menuItems = [
     { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' }
@@ -124,16 +124,16 @@ export default function StudentDashboard() {
       {/* Filters */}
       <div className="bg-white border-b border-gray-200 px-3 py-2 sm:px-4 sm:py-3 lg:px-6">
         <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-          <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">Filters</span>
-          <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap">
-            All Subjects <ChevronDown className="w-2 h-2 sm:w-3 sm:h-3" />
+          <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2 whitespace-nowrap">Filters</span>
+          <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap min-w-[100px] sm:min-w-0">
+            All Subjects <ChevronDown className="w-2 h-2 sm:w-3 sm:h-3 flex-shrink-0" />
           </button>
-          <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap">
-            Current Term <ChevronDown className="w-2 h-2 sm:w-3 sm:h-3" />
+          <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap min-w-[100px] sm:min-w-0">
+            Current Term <ChevronDown className="w-2 h-2 sm:w-3 sm:h-3 flex-shrink-0" />
           </button>
-          <button className="px-3 py-1 sm:px-4 sm:py-1 bg-orange-500 text-white rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap">
-            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-            Date Filter
+          <button className="px-2 py-1 sm:px-3 sm:py-1 bg-orange-500 text-white rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap min-w-[100px] sm:min-w-0">
+            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+            <span>Date Filter</span>
           </button>
         </div>
       </div>
@@ -190,58 +190,58 @@ export default function StudentDashboard() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
             {/* Attendance Rate */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-start justify-between mb-3 sm:mb-4">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-teal-100 p-1.5 sm:p-2 rounded-lg">
-                  <FaCalendarCheck className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
+                  <FaCalendarCheck className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-teal-600" />
                 </div>
-                <span className="text-emerald-600 text-xs sm:text-sm font-semibold">↑ +2.5%</span>
+                <span className="text-emerald-600 text-xs sm:text-sm font-semibold whitespace-nowrap">↑ +2.5%</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">92%</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">92%</div>
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Attendance Rate</div>
               <div className="text-gray-500 text-xs mt-1">vs last term</div>
             </div>
 
             {/* Average GPA */}
-            <div className="bg-white rounded-lg shadowSm p-4 sm:p-6">
-              <div className="flex items-start justify-between mb-3 sm:mb-4">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
-                  <TbWaveSawTool className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                  <TbWaveSawTool className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-blue-600" />
                 </div>
-                <span className="bg-blue-50 text-blue-600 text-xs font-medium px-1 py-0.5 rounded">↑ +0.3</span>
+                <span className="bg-blue-50 text-blue-600 text-xs font-medium px-1 py-0.5 rounded whitespace-nowrap">↑ +0.3</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">3.7</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">3.7</div>
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Average GPA</div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2 mt-2 sm:mt-3">
+              <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2 mt-2">
                 <div className="bg-blue-500 h-1.5 sm:h-2 rounded-full" style={{ width: '75%' }}></div>
               </div>
             </div>
 
             {/* Commendations */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-start justify-between mb-3 sm:mb-4">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-amber-100 p-1.5 sm:p-2 rounded-lg">
-                  <FaStar className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+                  <FaStar className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-amber-600" />
                 </div>
-                <span className="text-orange-600 text-xs sm:text-sm font-semibold">↓ -1</span>
+                <span className="text-orange-600 text-xs sm:text-sm font-semibold whitespace-nowrap">↓ -1</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-                8 <span className="text-gray-400 text-lg sm:text-xl">/ 2</span>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                8 <span className="text-gray-400 text-base sm:text-lg lg:text-xl">/ 2</span>
               </div>
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Commendations / Incidents</div>
             </div>
 
             {/* Risk Level */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-start justify-between mb-3 sm:mb-4">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-emerald-100 p-1.5 sm:p-2 rounded-lg">
-                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-emerald-600" />
                 </div>
-                <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">LOW</span>
+                <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded whitespace-nowrap">LOW</span>
               </div>
-              <div className="text-xl sm:text-2xl font-bold text-emerald-600 mb-1">Low Risk</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-600 mb-1">Low Risk</div>
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Dropout Risk Level</div>
               <div className="text-gray-500 text-xs mt-1">Keep up the good work!</div>
             </div>
@@ -249,33 +249,33 @@ export default function StudentDashboard() {
 
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            {/* Performance Trend - Updated with Recharts LineChart */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900">Performance Trend</h2>
-                <span className="text-emerald-600 text-xs sm:text-sm flex items-center gap-1">
+            {/* Performance Trend */}
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+                <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900">Performance Trend</h2>
+                <span className="text-emerald-600 text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
                   <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">Your grades are improving</span>
                   <span className="sm:hidden">Improving</span>
                 </span>
               </div>
-              <div className="h-48 sm:h-56 lg:h-64">
+              <div className="h-40 sm:h-48 lg:h-56 xl:h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
                     data={performanceData}
                     margin={{
                       top: 10,
-                      right: 20,
-                      left: 10,
+                      right: 10,
+                      left: 0,
                       bottom: 5,
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" fontSize={12} />
+                    <XAxis dataKey="name" fontSize={10} />
                     <YAxis 
                       domain={[0, 4]}
                       ticks={[0, 1, 2, 3, 4]}
-                      fontSize={12}
+                      fontSize={10}
                     />
                     <Tooltip />
                     <Line 
@@ -283,40 +283,40 @@ export default function StudentDashboard() {
                       dataKey="grade" 
                       stroke="#3b82f6" 
                       strokeWidth={2}
-                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6 }}
+                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 3 }}
+                      activeDot={{ r: 5 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            {/* Attendance Overview - Updated with Recharts */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">Weekly Attendance</h2>
-              <div className="h-48 sm:h-56 lg:h-64">
+            {/* Attendance Overview */}
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6">Weekly Attendance</h2>
+              <div className="h-40 sm:h-48 lg:h-56 xl:h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={attendanceData}
                     margin={{
                       top: 10,
-                      right: 20,
-                      left: 10,
+                      right: 10,
+                      left: 0,
                       bottom: 5,
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" fontSize={12} />
-                    <YAxis fontSize={12} />
+                    <XAxis dataKey="name" fontSize={10} />
+                    <YAxis fontSize={10} />
                     <Tooltip />
-                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} />
                     <Bar dataKey="present" stackId="a" fill="#10b981" name="Present %" />
                     <Bar dataKey="absent" stackId="a" fill="#ef4444" name="Absent %" />
                     <Bar dataKey="late" fill="#f59e0b" name="Late %" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              <div className="mt-3 sm:mt-4 bg-emerald-50 border border-emerald-200 rounded-lg p-2 sm:p-3">
+              <div className="mt-2 sm:mt-3 lg:mt-4 bg-emerald-50 border border-emerald-200 rounded-lg p-2 sm:p-3">
                 <p className="text-emerald-700 text-xs sm:text-sm font-semibold">✓ Great attendance this week: 95% average</p>
               </div>
             </div>
@@ -325,24 +325,24 @@ export default function StudentDashboard() {
           {/* Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {/* Upcoming Assignments */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900">Upcoming Assignments</h2>
-                <span className="bg-blue-500 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs font-semibold">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
+                <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900">Upcoming Assignments</h2>
+                <span className="bg-blue-500 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 flex items-center justify-center text-xs font-semibold">
                   3
                 </span>
               </div>
               <div className="space-y-2 sm:space-y-3">
                 {assignments.map((assignment, i) => (
                   <div key={i} className="flex items-center justify-between p-2 sm:p-3 rounded-lg bg-blue-50 shadow-sm border border-blue-100 cursor-pointer group">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <FileText className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-blue-500 flex-shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <div className="font-medium text-blue-700 font-bold text-sm sm:text-base truncate">{assignment.title}</div>
-                        <div className="text-blue-600 text-xs sm:text-sm">{assignment.due}</div>
+                        <div className="font-medium text-blue-700 font-bold text-xs sm:text-sm lg:text-base truncate">{assignment.title}</div>
+                        <div className="text-blue-600 text-xs sm:text-sm truncate">{assignment.due}</div>
                       </div>
                     </div>
-                    <span className={`text-xs font-semibold px-2 py-0.5 sm:px-3 sm:py-1 rounded-full ${assignment.color} scale-105 flex-shrink-0 ml-2`}>
+                    <span className={`text-xs font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full ${assignment.color} scale-105 flex-shrink-0 ml-2 whitespace-nowrap`}>
                       {assignment.status}
                     </span>
                   </div>
@@ -351,11 +351,11 @@ export default function StudentDashboard() {
             </div>
 
             {/* Recent Behavior */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900">Recent Behavior</h2>
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
+                <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900">Recent Behavior</h2>
                 <button 
-                  className="text-blue-600 text-xs sm:text-sm font-medium hover:underline"
+                  className="text-blue-600 text-xs sm:text-sm font-medium hover:underline whitespace-nowrap"
                   onClick={() => setShowBehavior(true)}
                 >
                   View All
@@ -363,11 +363,11 @@ export default function StudentDashboard() {
               </div>
               <div className="space-y-2 sm:space-y-3">
                 {behaviors.map((behavior, i) => (
-                  <div key={i} className="flex items-start gap=2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-gray-50 shadow-sm border border-gray-100 cursor-pointer group">
-                    <span className="text-sm sm:text-base">{behavior.icon}</span>
+                  <div key={i} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-gray-50 shadow-sm border border-gray-100 cursor-pointer group">
+                    <span className="text-sm sm:text-base flex-shrink-0">{behavior.icon}</span>
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-gray-700 font-bold text-sm sm:text-base">{behavior.title}</div>
-                      <div className="text-gray-600 text-xs sm:text-sm">{behavior.time}</div>
+                      <div className="font-medium text-gray-700 font-bold text-xs sm:text-sm lg:text-base truncate">{behavior.title}</div>
+                      <div className="text-gray-600 text-xs sm:text-sm truncate">{behavior.time}</div>
                     </div>
                   </div>
                 ))}
@@ -375,23 +375,23 @@ export default function StudentDashboard() {
             </div>
 
             {/* Messages */}
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Messages</h2>
-              <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+              <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-2 sm:mb-3 lg:mb-4">Messages</h2>
+              <div className="space-y-2 sm:space-y-3 mb-2 sm:mb-3 lg:mb-4">
                 {messages.map((message, i) => (
                   <div key={i} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-blue-50 shadow-sm border border-blue-100 cursor-pointer group">
-                    <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mt-1.5 sm:mt-2 ${message.unread ? 'bg-red-500' : 'bg-gray-300'} scale-125`}></div>
+                    <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mt-1.5 sm:mt-2 flex-shrink-0 ${message.unread ? 'bg-red-500' : 'bg-gray-300'} scale-125`}></div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-blue-700 font-bold text-sm sm:text-base">{message.title}</div>
+                      <div className="font-medium text-blue-700 font-bold text-xs sm:text-sm lg:text-base truncate">{message.title}</div>
                       <div className="text-blue-600 text-xs sm:text-sm">{message.time}</div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 sm:p-3 lg:p-4">
                 <div className="flex items-start gap-1 sm:gap-2">
-                  <span className="text-blue-600">💡</span>
-                  <div>
+                  <span className="text-blue-600 flex-shrink-0">💡</span>
+                  <div className="min-w-0 flex-1">
                     <div className="font-medium text-blue-900 text-xs sm:text-sm font-bold">AI Suggestion</div>
                     <div className="text-blue-700 text-xs sm:text-sm mt-0.5 sm:mt-1">
                       You missed 2 English classes this week. Review lesson notes to stay on track.
@@ -403,79 +403,77 @@ export default function StudentDashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+            <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-2 sm:mb-3 lg:mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
               <button 
-                className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 px-2 sm:py-2.5 sm:px-4 lg:py-3 lg:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap"
                 onClick={() => handleNavigation('/my-assignments', 'My Assignments')}
               >
-                <FileText className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-                <span className="font-semibold">View Assignments</span>
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold truncate">View Assignments</span>
               </button>
               <button
-                className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-medium py-2 px-2 sm:py-2.5 sm:px-4 lg:py-3 lg:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap"
                 onClick={() => setShowAttendance(true)}
               >
-                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-                <span className="font-semibold">View Attendance</span>
+                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold truncate">View Attendance</span>
               </button>
               <button 
-                className="bg-orange-400 hover:bg-orange-500 text-white font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                className="bg-orange-400 hover:bg-orange-500 text-white font-medium py-2 px-2 sm:py-2.5 sm:px-4 lg:py-3 lg:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap"
                 onClick={() => setShowBehavior(true)}
               >
-                <Bell className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-                <span className="font-semibold">Check Behavior</span>
+                <Bell className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold truncate">Check Behavior</span>
               </button>
               <button 
-                className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-3 sm:py-3 sm:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-2 sm:py-2.5 sm:px-4 lg:py-3 lg:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap"
                 onClick={() => setShowSettings(true)}
               >
-                <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-                <span className="font-semibold">Update Profile</span>
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold truncate">Update Profile</span>
               </button>
             </div>
           </div>
 
-          {/* Attendance Modal */}
+          {/* Modals */}
           {showAttendance && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-3 sm:px-4">
-              <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-2 sm:px-3 lg:px-4">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
                 <button
-                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
+                  className="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-400 hover:text-gray-600 z-10"
                   onClick={() => setShowAttendance(false)}
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <Attendance />
               </div>
             </div>
           )}
 
-          {/* Behavior Reports Modal */}
           {showBehavior && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-3 sm:px-4">
-              <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] overflow-y-auto">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-2 sm:px-3 lg:px-4">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] overflow-y-auto">
                 <button
-                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 z-10"
+                  className="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-400 hover:text-gray-600 z-10"
                   onClick={() => setShowBehavior(false)}
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <BehaviorReports />
               </div>
             </div>
           )}
 
-          {/* Student Settings Modal */}
           {showSettings && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-3 sm:px-4">
-              <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] overflow-y-auto">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-2 sm:px-3 lg:px-4">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] overflow-y-auto">
                 <button
-                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 z-10"
+                  className="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-400 hover:text-gray-600 z-10"
                   onClick={() => setShowSettings(false)}
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <StudentSettings />
               </div>

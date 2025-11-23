@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, CheckCircle2, AlertCircle, ChevronDown, ArrowUpRight, BarChart3, Bell, Menu, X, FileText } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
+import { TbReport } from "react-icons/tb";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -77,7 +78,8 @@ const Assignments: React.FC = () => {
 
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' }
+    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' } // Added My Behavior
   ];
 
   return (

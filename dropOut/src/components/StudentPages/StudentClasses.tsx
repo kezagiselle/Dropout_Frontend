@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, Calendar, BarChart3, Bell, Search, Menu, X, FileText, Clock, MapPin, MessageSquare } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
+import { TbReport } from "react-icons/tb";
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 
@@ -57,7 +58,8 @@ const StudentClasses = () => {
   
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/my-classes' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' }
+    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' } // Added My Behavior
   ];
 
   const classes: ClassItem[] = [

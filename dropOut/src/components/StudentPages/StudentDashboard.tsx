@@ -16,7 +16,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { TbWaveSawTool } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
 import Attendance from "./Attendance";
-import BehaviorReports from "./BehaviorReports"; 
+import BehaviorReports from "./StudentBehavior"; 
 import StudentSettings from "./StudentSettings";
 
 export default function StudentDashboard() {
@@ -34,10 +34,11 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items
+  // Student-specific menu items - UPDATED to include My Behavior
   const menuItems = [
     { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' }
+    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' } // Added My Behavior
   ];
 
   // Updated performance data for Recharts

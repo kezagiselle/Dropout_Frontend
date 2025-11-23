@@ -34,12 +34,13 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - UPDATED to include My Attendance and My Behavior
+  // Student-specific menu items - UPDATED to include My Profile
   const menuItems = [
     { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' }, // Added My Attendance
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' }
+    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
+    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
   ];
 
   // Updated performance data for Recharts
@@ -197,7 +198,7 @@ export default function StudentDashboard() {
             <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-teal-100 p-1.5 sm:p-2 rounded-lg">
-                  <FaCalendarCheck className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-teal-600" />
+                  <FaCalendarCheck className="w-3 h-3 sm:w-4 sm:h-4 text-teal-600" />
                 </div>
                 <span className="text-emerald-600 text-xs sm:text-sm font-semibold whitespace-nowrap">↑ +2.5%</span>
               </div>
@@ -210,7 +211,7 @@ export default function StudentDashboard() {
             <div className="bg-white rounded-lg shadowSm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
-                  <TbWaveSawTool className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-blue-600" />
+                  <TbWaveSawTool className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
                 </div>
                 <span className="bg-blue-50 text-blue-600 text-xs font-medium px-1 py-0.5 rounded whitespace-nowrap">↑ +0.3</span>
               </div>
@@ -225,7 +226,7 @@ export default function StudentDashboard() {
             <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-amber-100 p-1.5 sm:p-2 rounded-lg">
-                  <FaStar className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-amber-600" />
+                  <FaStar className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600" />
                 </div>
                 <span className="text-orange-600 text-xs sm:text-sm font-semibold whitespace-nowrap">↓ -1</span>
               </div>
@@ -239,7 +240,7 @@ export default function StudentDashboard() {
             <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-emerald-100 p-1.5 sm:p-2 rounded-lg">
-                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-emerald-600" />
+                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-600" />
                 </div>
                 <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded whitespace-nowrap">LOW</span>
               </div>
@@ -431,10 +432,10 @@ export default function StudentDashboard() {
               </button>
               <button 
                 className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-2 sm:py-2.5 sm:px-4 lg:py-3 lg:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap"
-                onClick={() => setShowSettings(true)}
+                onClick={() => handleNavigation('/student-settings', 'My Profile')}
               >
-                <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                <span className="font-semibold truncate">Update Profile</span>
+                <IoMdSettings className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold truncate">My Profile</span>
               </button>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { ArrowDownRight, ArrowUpRight, ChevronDown, Calendar, Bell, Menu, X, Bar
 import { SiGoogleclassroom } from "react-icons/si";
 import { TbReport } from "react-icons/tb";
 import { FaCalendarCheck } from 'react-icons/fa';
+import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -32,7 +33,8 @@ const StudentAttendance: React.FC = () => {
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
     { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' }
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
+    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
   ];
 
   return (
@@ -73,6 +75,12 @@ const StudentAttendance: React.FC = () => {
                 className="hover:text-orange-600 transition-colors"
               >
                 Assignments
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-settings', 'My Profile')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                My Profile
               </button>
             </div>
           </div>
@@ -157,6 +165,48 @@ const StudentAttendance: React.FC = () => {
             <div className="mb-6 sm:mb-8">
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">My Attendance</h1>
               <p className="text-gray-600 text-sm sm:text-base">Track your attendance across all subjects</p>
+            </div>
+
+            {/* Summary Stats - MOVED TO TOP */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Overall Attendance</p>
+                    <p className="text-2xl font-bold text-gray-900">89%</p>
+                  </div>
+                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <ArrowUpRight className="w-5 h-5 text-emerald-600" />
+                  </div>
+                </div>
+                <p className="text-xs text-emerald-600 mt-1">+2% from last month</p>
+              </div>
+
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Present</p>
+                    <p className="text-2xl font-bold text-gray-900">41</p>
+                  </div>
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 text-sm">✓</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">Out of 46 sessions</p>
+              </div>
+
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Absent</p>
+                    <p className="text-2xl font-bold text-gray-900">5</p>
+                  </div>
+                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <span className="text-orange-600 text-sm">✗</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">Need improvement</p>
+              </div>
             </div>
 
             {/* Attendance Table */}
@@ -283,46 +333,29 @@ const StudentAttendance: React.FC = () => {
               </div>
             </div>
 
-            {/* Summary Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Overall Attendance</p>
-                    <p className="text-2xl font-bold text-gray-900">89%</p>
-                  </div>
-                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                    <ArrowUpRight className="w-5 h-5 text-emerald-600" />
-                  </div>
-                </div>
-                <p className="text-xs text-emerald-600 mt-1">+2% from last month</p>
-              </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Total Present</p>
-                    <p className="text-2xl font-bold text-gray-900">41</p>
-                  </div>
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600 text-sm">✓</span>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Out of 46 sessions</p>
-              </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Total Absent</p>
-                    <p className="text-2xl font-bold text-gray-900">5</p>
-                  </div>
-                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <span className="text-orange-600 text-sm">✗</span>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Need improvement</p>
-              </div>
+            {/* Action Buttons */}
+            <div className="flex flex-row flex-wrap gap-3 justify-center sm:justify-start mt-6">
+              <button 
+                onClick={() => handleNavigation('/student-class', 'My Classes')}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap"
+              >
+                <SiGoogleclassroom className="w-4 h-4" />
+                <span>My Classes</span>
+              </button>
+              <button 
+                onClick={() => handleNavigation('/my-assignments', 'My Assignments')}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap"
+              >
+                <FileText className="w-4 h-4" />
+                <span>My Assignments</span>
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-settings', 'My Profile')}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap"
+              >
+                <IoMdSettings className="w-4 h-4" />
+                <span>My Profile</span>
+              </button>
             </div>
           </div>
         </main>

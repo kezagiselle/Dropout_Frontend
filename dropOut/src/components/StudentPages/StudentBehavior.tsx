@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AlertCircle, CheckCircle, XCircle, ChevronDown, ExternalLink, Users, Calendar, Bell, Menu, X, BarChart3, FileText } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
 import { TbReport } from "react-icons/tb";
+import { FaCalendarCheck } from 'react-icons/fa';
+import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -45,7 +47,9 @@ const StudentBehavior: React.FC = () => {
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' }
+    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
+    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
   ];
 
   const timelineItems: TimelineItem[] = [
@@ -401,21 +405,28 @@ const StudentBehavior: React.FC = () => {
               </div>
             </div>
 
-            {/* Action Buttons - Updated to be smaller and in one line */}
-           <div className="flex flex-row flex-wrap gap-3 justify-center sm:justify-start">
-             <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap">
-               <CheckCircle className="w-4 h-4" />
-               <span>Counseling Notes</span>
-            </button>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap">
-            <Users className="w-4 h-4" />
-            <span>All Reports</span>
-          </button>
-        <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap">
-        <AlertCircle className="w-4 h-4" />
-        <span>Contact Counselor</span>
-       </button>
-      </div>
+            {/* Action Buttons - Updated to include My Profile */}
+            <div className="flex flex-row flex-wrap gap-3 justify-center sm:justify-start">
+              <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap">
+                <CheckCircle className="w-4 h-4" />
+                <span>Counseling Notes</span>
+              </button>
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap">
+                <Users className="w-4 h-4" />
+                <span>All Reports</span>
+              </button>
+              <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap">
+                <AlertCircle className="w-4 h-4" />
+                <span>Contact Counselor</span>
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-settings', 'My Profile')}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 whitespace-nowrap"
+              >
+                <IoMdSettings className="w-4 h-4" />
+                <span>My Profile</span>
+              </button>
+            </div>
           </div>
         </main>
       </div>

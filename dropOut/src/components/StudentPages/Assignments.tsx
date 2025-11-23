@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Calendar, CheckCircle2, AlertCircle, ChevronDown, ArrowUpRight, BarChart3, Bell, Menu, X, FileText } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
 import { TbReport } from "react-icons/tb";
+import { FaCalendarCheck } from 'react-icons/fa';
+import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 
@@ -79,7 +81,9 @@ const Assignments: React.FC = () => {
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' } // Added My Behavior
+    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
+    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
   ];
 
   return (
@@ -99,6 +103,34 @@ const Assignments: React.FC = () => {
             <div className="flex items-center gap-1 sm:gap-2">
               <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">Westfield High School</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
+            </div>
+
+            {/* Header Navigation Links */}
+            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
+              <button 
+                onClick={() => handleNavigation('/student-dash', 'Dashboard')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-class', 'My Classes')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Classes
+              </button>
+              <button 
+                onClick={() => handleNavigation('/my-assignments', 'My Assignments')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Assignments
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-settings', 'My Profile')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                My Profile
+              </button>
             </div>
           </div>
 
@@ -372,7 +404,7 @@ const Assignments: React.FC = () => {
               </div>
             </section>
 
-            {/* Bottom Actions */}
+            {/* Bottom Actions - Updated to include My Profile */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-gray-100 pt-4">
               <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                 <button className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-blue-100 text-blue-700 text-xs sm:text-sm font-semibold whitespace-nowrap">
@@ -380,6 +412,13 @@ const Assignments: React.FC = () => {
                 </button>
                 <button className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-emerald-100 text-emerald-700 text-xs sm:text-sm font-semibold whitespace-nowrap">
                   View Graded Tasks
+                </button>
+                <button 
+                  onClick={() => handleNavigation('/student-settings', 'My Profile')}
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 whitespace-nowrap"
+                >
+                  <IoMdSettings className="w-3 h-3 sm:w-4 sm:h-4" />
+                  My Profile
                 </button>
               </div>
               <button className="px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-orange-500 hover:bg-orange-300 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 whitespace-nowrap">

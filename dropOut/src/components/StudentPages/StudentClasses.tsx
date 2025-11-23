@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ChevronDown, Calendar, BarChart3, Bell, Search, Menu, X, FileText, Clock, MapPin, MessageSquare } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
 import { TbReport } from "react-icons/tb";
+import { FaCalendarCheck } from 'react-icons/fa';
+import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 
@@ -59,7 +61,9 @@ const StudentClasses = () => {
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/my-classes' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' } // Added My Behavior
+    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
+    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
   ];
 
   const classes: ClassItem[] = [
@@ -411,9 +415,12 @@ const StudentClasses = () => {
               <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
               Message Teacher
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm sm:text-base">
-              <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
-              View Assignments
+            <button 
+              onClick={() => handleNavigation('/student-settings', 'My Profile')}
+              className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
+            >
+              <IoMdSettings className="w-4 h-4 sm:w-5 sm:h-5" />
+              My Profile
             </button>
           </div>
         </main>

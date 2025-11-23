@@ -20,6 +20,7 @@ import Timetable from "./components/StudentPages/Timetable";
 import Assignments from "./components/StudentPages/Assignments";
 import StudentBehavior from "./components/StudentPages/StudentBehavior"
 import Student from "./components/Forms/Student";
+import StudentAttendance from "./components/StudentPages/StudentAttendance";
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
           <Route path="/timetable" element={<Timetable />} />
           <Route path="/my-assignments" element={<Assignments />} />
           <Route path="/student-behavior" element={<StudentBehavior />} />
+            <Route path="/student-attendance" element={<StudentAttendance />} />
            
 
            

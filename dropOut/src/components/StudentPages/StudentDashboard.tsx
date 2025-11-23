@@ -15,7 +15,7 @@ import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import { TbWaveSawTool } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
-import Attendance from "./Attendance";
+import Attendance from "./StudentAttendance";
 import BehaviorReports from "./StudentBehavior"; 
 import StudentSettings from "./StudentSettings";
 
@@ -34,11 +34,12 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - UPDATED to include My Behavior
+  // Student-specific menu items - UPDATED to include My Attendance and My Behavior
   const menuItems = [
     { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' } // Added My Behavior
+    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' }, // Added My Attendance
+    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' }
   ];
 
   // Updated performance data for Recharts
@@ -206,7 +207,7 @@ export default function StudentDashboard() {
             </div>
 
             {/* Average GPA */}
-            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+            <div className="bg-white rounded-lg shadowSm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
                   <TbWaveSawTool className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-blue-600" />
@@ -416,14 +417,14 @@ export default function StudentDashboard() {
               </button>
               <button
                 className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-medium py-2 px-2 sm:py-2.5 sm:px-4 lg:py-3 lg:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap"
-                onClick={() => setShowAttendance(true)}
+                onClick={() => handleNavigation('/student-attendance', 'My Attendance')}
               >
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                 <span className="font-semibold truncate">View Attendance</span>
               </button>
               <button 
                 className="bg-orange-400 hover:bg-orange-500 text-white font-medium py-2 px-2 sm:py-2.5 sm:px-4 lg:py-3 lg:px-6 rounded-lg transition flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap"
-                onClick={() => setShowBehavior(true)}
+                onClick={() => handleNavigation('/student-behavior', 'My Behavior')}
               >
                 <Bell className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                 <span className="font-semibold truncate">Check Behavior</span>

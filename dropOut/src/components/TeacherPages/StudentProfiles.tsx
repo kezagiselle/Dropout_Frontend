@@ -7,7 +7,6 @@ import { TbReport } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import { FaRegChartBar } from "react-icons/fa"; 
-import userr from "../../../src/img/userr.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 import pe1 from "../../../src/img/pe1.png";
 import pe2 from "../../../src/img/pe2.png";

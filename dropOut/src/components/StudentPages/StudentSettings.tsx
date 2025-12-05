@@ -182,12 +182,12 @@ import StudentSidebar from './StudentSidebar';const StudentSettings = () => {
                         <h3 className={`text-lg sm:text-xl font-semibold transition-colors duration-200 ${
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
                         }`}>
-                          Alex Johnson
+                          {user?.name || 'Alex Johnson'}
                         </h3>
                         <p className={`text-sm sm:text-base transition-colors duration-200 ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                         }`}>
-                          Student at Westfield High School
+                          Student at {user?.schoolName || 'Westfield High School'}
                         </p>
                         <button
                           onClick={() => setShowProfile(true)}
@@ -209,7 +209,7 @@ import StudentSidebar from './StudentSidebar';const StudentSettings = () => {
                           </label>
                           <input
                             type="text"
-                            defaultValue="Alex"
+                            defaultValue={user?.name?.split(' ')[0] || 'Alex'}
                             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                               theme === 'dark' 
                                 ? 'bg-gray-700 border-gray-600 text-white' 
@@ -226,7 +226,7 @@ import StudentSidebar from './StudentSidebar';const StudentSettings = () => {
                           </label>
                           <input
                             type="text"
-                            defaultValue="Johnson"
+                            defaultValue={user?.name?.split(' ').slice(1).join(' ') || 'Johnson'}
                             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                               theme === 'dark' 
                                 ? 'bg-gray-700 border-gray-600 text-white' 
@@ -245,7 +245,7 @@ import StudentSidebar from './StudentSidebar';const StudentSettings = () => {
                           </label>
                           <input
                             type="email"
-                            defaultValue="alex.johnson@student.westfield.edu"
+                            defaultValue={user?.email || 'alex.johnson@student.westfield.edu'}
                             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                               theme === 'dark' 
                                 ? 'bg-gray-700 border-gray-600 text-white' 
@@ -258,11 +258,11 @@ import StudentSidebar from './StudentSidebar';const StudentSettings = () => {
                           <label className={`block text-sm font-semibold mb-2 transition-colors duration-200 ${
                             theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
                           }`}>
-                            Phone
+                            Student ID
                           </label>
                           <input
-                            type="tel"
-                            defaultValue="+1 (555) 123-4567"
+                            type="text"
+                            defaultValue={user?.studentId || 'STU001'}
                             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                               theme === 'dark' 
                                 ? 'bg-gray-700 border-gray-600 text-white' 

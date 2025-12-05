@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BarChart3, FileText } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
 import { TbReport } from "react-icons/tb";
 import { FaCalendarCheck } from 'react-icons/fa';
 import { IoMdSettings } from "react-icons/io";
+import { useUserAuth } from '../../context/useUserAuth';
 
 interface MenuItem {
   icon: React.ElementType;
@@ -24,6 +26,9 @@ const StudentSidebar: React.FC<StudentSidebarProps> = ({
   setSidebarOpen,
   handleNavigation
 }) => {
+  const { logout } = useUserAuth();
+  const navigate = useNavigate();
+  
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
     { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
@@ -47,35 +52,50 @@ const StudentSidebar: React.FC<StudentSidebarProps> = ({
         />
       )}
       
-      <nav className="p-3 sm:p-4 relative z-50 bg-white h-full">
-        <button 
-          className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 ${
-            activeTab === 'Dashboard' 
-              ? 'bg-orange-500 text-white' 
-              : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-          }`}
-          onClick={() => handleNavigation('/student-dash', 'Dashboard')}
-        >
-          <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="font-medium text-sm sm:text-base">Dashboard</span>
-        </button>
-        {menuItems.map((item, idx) => {
-          const IconComponent = item.icon;
-          return (
-            <button 
-              key={idx} 
-              className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 ${
-                activeTab === item.label 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation(item.path, item.label)}
-            >
-              <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">{item.label}</span>
-            </button>
-          );
-        })}
+      <nav className="p-3 sm:p-4 relative z-50 bg-white h-full flex flex-col">
+        <div className="flex-1">
+          <button 
+            className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 ${
+              activeTab === 'Dashboard' 
+                ? 'bg-orange-500 text-white' 
+                : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+            }`}
+            onClick={() => handleNavigation('/student-dash', 'Dashboard')}
+          >
+            <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="font-medium text-sm sm:text-base">Dashboard</span>
+          </button>
+          {menuItems.map((item, idx) => {
+            const IconComponent = item.icon;
+            return (
+              <button 
+                key={idx} 
+                className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 ${
+                  activeTab === item.label 
+                    ? 'bg-orange-500 text-white' 
+                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+                }`}
+                onClick={() => handleNavigation(item.path, item.label)}
+              >
+                <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-medium text-sm sm:text-base">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Logout Button pinned to sidebar bottom */}
+        <div className="mt-4 mb-2">
+          <button
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            className="w-full px-4 py-2 rounded-lg font-semibold shadow transition-colors duration-200 text-base bg-orange-500 text-white hover:bg-orange-600"
+          >
+            Logout
+          </button>
+        </div>
       </nav>
     </aside>
   );

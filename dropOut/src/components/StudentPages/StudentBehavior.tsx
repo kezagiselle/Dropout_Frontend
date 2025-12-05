@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { AlertCircle, CheckCircle, XCircle, ChevronDown, ExternalLink, Users, Calendar, Bell, Menu, X } from 'lucide-react';
 import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
@@ -6,14 +7,27 @@ import { useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../context/useUserAuth';
 import StudentSidebar from './StudentSidebar';
 
-interface TimelineItem {
-  id: string;
-  type: 'positive' | 'warning';
-  title: string;
-  description: string;
-  teacher: string;
-  date: string;
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface BehaviorIncident {
+  note: string;
+  incidentType: string;
+  severityLevel: string;
 }
+
+interface BehaviorData {
+  totalIncidents: number;
+  totalMajorIncidents: number;
+  totalLowIncidents: number;
+  incidents: BehaviorIncident[];
+}
+
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data: BehaviorData;
+}
+
 
 interface CounselingNote {
   id: string;
@@ -30,8 +44,49 @@ const StudentBehavior: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState('All Types');
   const [termFilter, setTermFilter] = useState('Current Term');
   const [loading, setLoading] = useState<boolean>(true);
+  const [behaviorData, setBehaviorData] = useState<BehaviorData | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { user } = useUserAuth();
+  const { user, token } = useUserAuth();
+
+  // Fetch behavior data from API
+  useEffect(() => {
+    const fetchBehaviorData = async () => {
+      if (!token || !user?.studentId) return;
+      
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/students/${user.studentId}/behavior-incident-overview`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch behavior data');
+        }
+
+        const result: ApiResponse = await response.json();
+        
+        if (result.success) {
+          setBehaviorData(result.data);
+        } else {
+          throw new Error(result.message || 'Failed to fetch behavior data');
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching behavior data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBehaviorData();
+  }, [token, user?.studentId]);
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,40 +101,7 @@ const StudentBehavior: React.FC = () => {
     setSidebarOpen(false);
   };
 
-  const timelineItems: TimelineItem[] = [
-    {
-      id: '1',
-      type: 'positive',
-      title: 'Outstanding Class Participation',
-      description: 'Exceptional contribution to group discussion in Biology class',
-      teacher: 'Teacher: Ms. Rodriguez',
-      date: 'March 19, 2025'
-    },
-    {
-      id: '2',
-      type: 'warning',
-      title: 'Late Assignment Submission',
-      description: 'Mathematics homework submitted 2 days after deadline',
-      teacher: 'Teacher: Mr. Thompson',
-      date: 'March 18, 2025'
-    },
-    {
-      id: '3',
-      type: 'positive',
-      title: 'Peer Tutoring Recognition',
-      description: 'Volunteered to help fellow classmates with Chemistry concepts',
-      teacher: 'Teacher: Dr. Williams',
-      date: 'March 8, 2025'
-    },
-    {
-      id: '4',
-      type: 'warning',
-      title: 'Disruptive Behavior',
-      description: 'Talking during lecture after being asked to stop',
-      teacher: 'Teacher: Ms. Davis',
-      date: 'February 28, 2025'
-    }
-  ];
+  
 
   const counselingNotes: CounselingNote[] = [
     {
@@ -184,7 +206,7 @@ const StudentBehavior: React.FC = () => {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
-          <div className="max-w-5xl mx-auto">
+          <div>
             {loading ? (
               <>
                 {/* Header Skeleton */}
@@ -283,6 +305,13 @@ const StudentBehavior: React.FC = () => {
                   <p className="text-gray-600 text-sm sm:text-base">Review your conduct, commendations, and counseling records</p>
                 </div>
 
+                {/* Error State */}
+                {error && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                    <p className="text-red-600">Error: {error}</p>
+                  </div>
+                )}
+
             {/* Filters */}
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
               <div className="relative flex-1 min-w-0">
@@ -322,15 +351,15 @@ const StudentBehavior: React.FC = () => {
                       <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Commendations</h3>
-                      <p className="text-xs text-gray-500">Positive conduct</p>
+                      <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Incidents</h3>
+                      <p className="text-xs text-gray-500">All behavior incidents</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-end justify-between">
                   <div>
-                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">12</div>
-                    <div className="text-xs text-green-600 mt-1">↑ 3 from last term</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">{behaviorData?.totalIncidents || 0}</div>
+                    <div className="text-xs text-gray-600 mt-1">Current term</div>
                   </div>
                   <button className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 font-medium whitespace-nowrap">
                     View Details
@@ -338,31 +367,7 @@ const StudentBehavior: React.FC = () => {
                 </div>
               </div>
 
-              {/* Warnings */}
-              <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
-                <div className="flex items-start justify-between mb-3 sm:mb-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Warnings</h3>
-                      <p className="text-xs text-gray-500">Minor infractions</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-end justify-between">
-                  <div>
-                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">3</div>
-                    <div className="text-xs text-gray-500 mt-1">Same as last term</div>
-                  </div>
-                  <button className="text-xs sm:text-sm text-orange-600 hover:text-orange-700 font-medium whitespace-nowrap">
-                    View Details
-                  </button>
-                </div>
-              </div>
-
-              {/* Serious Incidents */}
+              {/* Major Incidents */}
               <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
                 <div className="flex items-start justify-between mb-3 sm:mb-4">
                   <div className="flex items-center gap-2 sm:gap-3">
@@ -370,17 +375,43 @@ const StudentBehavior: React.FC = () => {
                       <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Serious Incidents</h3>
-                      <p className="text-xs text-gray-500">Major violations</p>
+                      <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Major Incidents</h3>
+                      <p className="text-xs text-gray-500">Serious violations</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-end justify-between">
                   <div>
-                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">1</div>
-                    <div className="text-xs text-green-600 mt-1">↓ 1 from last term</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">{behaviorData?.totalMajorIncidents || 0}</div>
+                    <div className={`text-xs mt-1 ${(behaviorData?.totalMajorIncidents || 0) === 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {(behaviorData?.totalMajorIncidents || 0) === 0 ? '✓ No major incidents' : '⚠ Requires attention'}
+                    </div>
                   </div>
                   <button className="text-xs sm:text-sm text-red-600 hover:text-red-700 font-medium whitespace-nowrap">
+                    View Details
+                  </button>
+                </div>
+              </div>
+
+              {/* Low Incidents */}
+              <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-xs sm:text-sm font-medium text-gray-600 truncate">Minor Incidents</h3>
+                      <p className="text-xs text-gray-500">Low-level violations</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-end justify-between">
+                  <div>
+                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">{behaviorData?.totalLowIncidents || 0}</div>
+                    <div className="text-xs text-gray-500 mt-1">Current term</div>
+                  </div>
+                  <button className="text-xs sm:text-sm text-orange-600 hover:text-orange-700 font-medium whitespace-nowrap">
                     View Details
                   </button>
                 </div>
@@ -389,45 +420,63 @@ const StudentBehavior: React.FC = () => {
 
             {/* Behavior Timeline */}
             <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Behavior Timeline</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Behavior Incidents</h2>
               <div className="space-y-3 sm:space-y-4">
-                {timelineItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className={`border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3 ${
-                      item.type === 'positive'
-                        ? 'bg-green-50 border-green-200'
-                        : 'bg-orange-50 border-orange-200'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3 flex-1 min-w-0">
-                      <div
-                        className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          item.type === 'positive' ? 'bg-green-500' : 'bg-orange-500'
-                        }`}
-                      >
-                        {item.type === 'positive' ? (
-                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                        ) : (
-                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                        )}
+                {behaviorData?.incidents && behaviorData.incidents.length > 0 ? (
+                  behaviorData.incidents.map((incident, index) => (
+                    <div
+                      key={index}
+                      className={`border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3 ${
+                        incident.severityLevel === 'LOW'
+                          ? 'bg-orange-50 border-orange-200'
+                          : 'bg-red-50 border-red-200'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <div
+                          className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                            incident.severityLevel === 'LOW' ? 'bg-orange-500' : 'bg-red-500'
+                          }`}
+                        >
+                          {incident.severityLevel === 'LOW' ? (
+                            <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                          ) : (
+                            <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 truncate">
+                            {incident.incidentType.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-gray-700 mb-2 line-clamp-2">{incident.note}</p>
+                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                            incident.severityLevel === 'LOW' 
+                              ? 'bg-orange-100 text-orange-700' 
+                              : 'bg-red-100 text-red-700'
+                          }`}>
+                            {incident.severityLevel} Severity
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 truncate">{item.title}</h3>
-                        <p className="text-xs sm:text-sm text-gray-700 mb-2 line-clamp-2">{item.description}</p>
-                        <p className="text-xs text-gray-600 truncate">{item.teacher}</p>
+                      <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 flex-shrink-0">
+                        <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                          Current Term
+                        </span>
+                        <button className="text-gray-400 hover:text-gray-600 flex-shrink-0">
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </button>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 flex-shrink-0">
-                      <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
-                        {window.innerWidth < 640 ? item.date.split(' ')[0] : item.date}
-                      </span>
-                      <button className="text-gray-400 hover:text-gray-600 flex-shrink-0">
-                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </button>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <CheckCircle className="w-6 h-6 text-green-600" />
                     </div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-1">No Incidents Recorded</h3>
+                    <p className="text-gray-600">Great job! You have no behavior incidents this term.</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
@@ -470,11 +519,20 @@ const StudentBehavior: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-2">Behavioral Insights</h3>
                   <p className="text-xs sm:text-sm text-gray-700 mb-2">
-                    Your recent positive behavior has significantly improved your overall conduct record. Keep up the
-                    excellent work with peer tutoring and class participation!
+                    {behaviorData?.totalIncidents === 0 
+                      ? "Excellent behavior record! You have maintained a clean conduct record this term. Keep up the great work!" 
+                      : `You have ${behaviorData?.totalIncidents || 0} behavior incident${(behaviorData?.totalIncidents || 0) > 1 ? 's' : ''} this term. ${
+                          (behaviorData?.totalMajorIncidents || 0) === 0 
+                            ? "The good news is that you have no major incidents. Focus on improving minor behaviors to maintain a positive record." 
+                            : "Please work with your counselor to address these incidents and improve your behavior."
+                        }`
+                    }
                   </p>
                   <p className="text-xs text-gray-600">
-                    💡 Your project list teaches decreased by 15% this term
+                    💡 {behaviorData?.totalIncidents === 0 
+                      ? "You're setting a great example for other students!" 
+                      : "Remember: positive behavior contributes to a better learning environment for everyone"
+                    }
                   </p>
                 </div>
               </div>

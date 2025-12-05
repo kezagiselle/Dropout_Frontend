@@ -1,68 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import React, { useState } from 'react';
-import { Download, Plus, Search, ChevronDown, ChevronLeft, ChevronRight, BarChart3, Bell, Calendar, Menu, X } from 'lucide-react';
-import { LiaChalkboardTeacherSolid } from "react-icons/lia";
-import { FaClipboardCheck } from "react-icons/fa6";
-import { TbReport } from "react-icons/tb";
-import { IoIosPeople } from "react-icons/io";
-import { IoMdSettings } from "react-icons/io";
-import { FaRegChartBar } from "react-icons/fa"; 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Download, Plus, Search, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import pe1 from "../../../src/img/pe1.png";
 import pe2 from "../../../src/img/pe2.png";
 import pe3 from "../../../src/img/pe3.png";
 
-interface Student {
-  id: string;
-  name: string;
-  avatar: string;
-  grade: string;
-  riskStatus: string;
-  riskColor: 'red' | 'green' | 'yellow';
-  enrollmentStatus: string;
-  enrollmentColor: 'red' | 'green' | 'yellow';
-}
-
 type RiskColor = 'red' | 'green' | 'yellow';
 
 export default function StudentProfiles() {
-  const [activeTab, setActiveTab] = useState('Student Profiles');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedRegion, setSelectedRegion] = useState<string>('All Regions');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>('All Risk Levels');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  
-  const navigate = useNavigate();
-  const location = useLocation();
 
-  const handleNavigation = (path: string, tabName: string) => {
-    setActiveTab(tabName);
-    navigate(path);
-    setSidebarOpen(false); 
-  };
-
-  // Updated menuItems to include Marks
-  const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', path: '/teacher-dashboard' },
-    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
-    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, 
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
-    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
-    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
-  ];
-
-  const students: Student[] = [
+  // Mock student data (in real app, this would come from API)
+  const students = [
     {
       id: 'STU001',
       name: 'John Doe',
       avatar: pe1,
       grade: 'Grade 11',
       riskStatus: 'At-risk',
-      riskColor: 'red',
+      riskColor: 'red' as RiskColor,
       enrollmentStatus: 'Enrolled',
-      enrollmentColor: 'green'
+      enrollmentColor: 'green' as RiskColor
     },
     {
       id: 'STU002',
@@ -70,9 +31,9 @@ export default function StudentProfiles() {
       avatar: pe2,
       grade: 'Grade 12',
       riskStatus: 'Normal',
-      riskColor: 'green',
+      riskColor: 'green' as RiskColor,
       enrollmentStatus: 'Enrolled',
-      enrollmentColor: 'green'
+      enrollmentColor: 'green' as RiskColor
     },
     {
       id: 'STU003',
@@ -80,9 +41,9 @@ export default function StudentProfiles() {
       avatar: pe3,
       grade: 'Grade 10',
       riskStatus: 'At-risk',
-      riskColor: 'red',
+      riskColor: 'red' as RiskColor,
       enrollmentStatus: 'Pending',
-      enrollmentColor: 'yellow'
+      enrollmentColor: 'yellow' as RiskColor
     }
   ];
 

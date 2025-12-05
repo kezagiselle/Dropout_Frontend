@@ -14,6 +14,7 @@ interface DecodedToken {
   userId: string;
   email: string;
   courses?: Course[]; // Teacher-specific: array of courses they teach
+  studentId?: string; // Student-specific: student ID
   iat: number;
   exp: number;
 }
@@ -26,6 +27,7 @@ interface UserAuthContextType {
   // Helper properties for easier access
   isTeacher: boolean;
   isPrincipal: boolean;
+  isStudent: boolean;
   teacherCourses: Course[];
 }
 
@@ -52,6 +54,7 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Helper values for easier access
   const isTeacher = user?.role === 'TEACHER';
   const isPrincipal = user?.role === 'PRINCIPAL'; 
+  const isStudent = user?.role === 'STUDENT';
   const teacherCourses = user?.courses || [];
 
   return (
@@ -62,6 +65,7 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       logout,
       isTeacher,
       isPrincipal,
+      isStudent,
       teacherCourses
     }}>
       {children}

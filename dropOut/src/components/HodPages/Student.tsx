@@ -89,18 +89,6 @@ const Student = () => {
     }
   }
 
-  const getAttendanceColor = (attendance: number) => {
-    if (attendance >= 90) return 'text-green-600'
-    if (attendance >= 70) return 'text-yellow-600'
-    return 'text-red-600'
-  }
-
-  const getGPAColor = (gpa: number) => {
-    if (gpa >= 3.5) return 'text-green-600'
-    if (gpa >= 2.5) return 'text-yellow-600'
-    return 'text-red-600'
-  }
-
   const handleViewProfile = (student: Student) => {
     setSelectedStudent(student)
     setShowStudentProfile(true)

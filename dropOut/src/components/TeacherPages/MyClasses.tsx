@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { BookOpen, BarChart3,TrendingUp, AlertTriangle } from 'lucide-react';
-import { LiaChalkboardTeacherSolid } from "react-icons/lia";
-import { FaClipboardCheck } from "react-icons/fa6";
-import { TbReport } from "react-icons/tb";
-import { IoIosPeople } from "react-icons/io";
-import { IoMdSettings } from "react-icons/io";
+import { BookOpen, TrendingUp, AlertTriangle } from 'lucide-react';
 import { FaCalculator } from "react-icons/fa6";
-import { FaRegChartBar } from "react-icons/fa"; 
+import { IoIosPeople } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { AiFillMessage } from "react-icons/ai";
 import { useUserAuth } from '../../context/useUserAuth';
@@ -41,8 +36,6 @@ interface CoursesResponse {
 }
 
 function MyClasses() {
-  const [activeTab, setActiveTab] = useState('My Classes');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [coursesData, setCoursesData] = useState<CoursesResponse | null>(null);
   const navigate = useNavigate();
   const { token, user } = useUserAuth();
@@ -70,27 +63,10 @@ function MyClasses() {
     fetchCoursesStats(); 
   }, [token, user]);
 
-  const handleNavigation = (path: string, tabName: string) => {
-    setActiveTab(tabName);
-    navigate(path);
-    setSidebarOpen(false); 
-  };
-
   // Function to handle View Students button click
   const handleViewStudents = (_classItem: ClassItem) => {
     navigate('/view-marks');
   };
-
-  
-  const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', path: '/teacher-dashboard' },
-    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
-    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, 
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
-    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
-    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
-  ];
 
   // Generate classes from API data
   const generateClassesFromAPI = (): ClassItem[] => {

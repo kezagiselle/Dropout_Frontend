@@ -6,7 +6,7 @@ interface StudentLastProps {
 }
 
 function StudentLast({ onBack }: StudentLastProps) {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [_selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

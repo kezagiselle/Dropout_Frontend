@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
             navigate("/hod-dashboard");
             break;
           case "STUDENT":
-            navigate("/student-dashboard");
+            navigate("/student-dash");
             break;
           case "TEACHER":
             navigate("/teacher-dashboard");

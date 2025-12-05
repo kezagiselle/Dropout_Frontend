@@ -110,7 +110,7 @@ export default function Behavior() {
   };
 
   // Map incident type to a simple badge style (no colors)
-  const getIncidentBadge = (incidentType: string): string => {
+  const getIncidentBadge = (_incidentType: string): string => {
     return 'bg-gray-100 text-gray-700';
   };
 

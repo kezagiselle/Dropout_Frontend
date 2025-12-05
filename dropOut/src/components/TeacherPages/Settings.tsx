@@ -1,41 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import { useState } from 'react';
-import { FaUser, FaCog, FaEdit, FaChevronDown, FaArrowLeft, FaClipboardCheck } from 'react-icons/fa';
-import { IoIosPeople, IoMdSettings } from "react-icons/io";
-import { TbReport } from "react-icons/tb";
-import { LiaChalkboardTeacherSolid } from "react-icons/lia";
-import { BarChart3, Bell, Search, Calendar, ChevronDown } from 'lucide-react';
-import { FaRegChartBar } from "react-icons/fa"; // Added for Marks icon
+import { FaUser, FaCog, FaEdit, FaChevronDown, FaArrowLeft } from 'react-icons/fa';
 import { useTheme } from '../Hod';
 import pe3 from "../../img/pe3.png";
 import Profile from './ProfileForm';
-import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
   const [timezone, setTimezone] = useState('UTC-5');
   const [language, setLanguage] = useState('English');
   const [showProfile, setShowProfile] = useState(false);
-  const [activeTab, setActiveTab] = useState('Settings');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const handleNavigation = (path: string, tabName: string) => {
-    setActiveTab(tabName);
-    navigate(path);
-    setSidebarOpen(false); 
-  };
-
-  // Updated menuItems to include Marks
-  const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', path: '/teacher-dashboard' },
-    { icon: LiaChalkboardTeacherSolid, label: 'My Classes', path: '/my-classes' },
-    { icon: FaClipboardCheck, label: 'Attendance', path: '/attendance' },
-    { icon: FaRegChartBar, label: 'Marks', path: '/marks' }, 
-    { icon: TbReport, label: 'Behavior Reports', path: '/behavior-reports' },
-    { icon: IoIosPeople, label: 'Student Profiles', path: '/student-profiles' },
-    { icon: IoMdSettings, label: 'Settings', path: '/settings' }
-  ];
 
   if (showProfile) {
     return <Profile onBack={() => setShowProfile(false)} />;

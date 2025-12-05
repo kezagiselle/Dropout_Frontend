@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Calendar, CheckCircle2, AlertCircle, ChevronDown, ArrowUpRight, BarChart3, Bell, Menu, X, FileText } from 'lucide-react';
-import { SiGoogleclassroom } from "react-icons/si";
-import { TbReport } from "react-icons/tb";
-import { FaCalendarCheck } from 'react-icons/fa';
+import { Calendar, CheckCircle2, AlertCircle, ChevronDown, ArrowUpRight, Bell, Menu, X } from 'lucide-react';
 import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../../context/useUserAuth';
+import StudentSidebar from './StudentSidebar';
 
 const summaryCards = [
   {
@@ -61,30 +60,25 @@ const recentFeedback = [
   },
 ];
 
-interface MenuItem {
-  icon: React.ElementType;
-  label: string;
-  path: string;
-}
-
 const Assignments: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('My Assignments');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const { user } = useUserAuth();
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
     setSidebarOpen(false);
   };
-
-  const menuItems: MenuItem[] = [
-    { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
-    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -101,7 +95,7 @@ const Assignments: React.FC = () => {
             </button>
 
             <div className="flex items-center gap-1 sm:gap-2">
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">Westfield High School</span>
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">{user?.schoolName || 'School Name'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
 
@@ -152,7 +146,7 @@ const Assignments: React.FC = () => {
             {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-1 sm:gap-2">
               <img src={userr} alt="User profile" className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full object-cover" />
-              <span className="text-xs sm:text-sm font-medium hidden sm:block">Alex Johnson</span>
+              <span className="text-xs sm:text-sm font-medium hidden sm:block">{user?.name || 'Student'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
@@ -161,63 +155,142 @@ const Assignments: React.FC = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside
-          className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
-        `}
-        >
-          {/* Mobile Close Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-          
-          <nav className="p-3 sm:p-4 relative z-50 bg-white h-full">
-            <button
-              className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 ${
-                activeTab === 'Dashboard'
-                  ? 'bg-orange-500 text-white'
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/student-dash', 'Dashboard')}
-            >
-              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Dashboard</span>
-            </button>
-            {menuItems.map((item, idx) => {
-              const IconComponent = item.icon;
-              return (
-                <button
-                  key={idx}
-                  className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 ${
-                    activeTab === item.label
-                      ? 'bg-orange-500 text-white'
-                      : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                  }`}
-                  onClick={() => handleNavigation(item.path, item.label)}
-                >
-                  <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="font-medium text-sm sm:text-base">{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </aside>
+        <StudentSidebar 
+          activeTab={activeTab}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          handleNavigation={handleNavigation}
+        />
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
           <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-              <div className="flex-1 min-w-0">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">Assignments &amp; Quizzes</h1>
-                <p className="text-gray-500 text-xs sm:text-sm lg:text-base mt-1">
-                  Track, complete, and submit your assignments and quizzes.
-                </p>
-              </div>
+            {loading ? (
+              <>
+                {/* Header Skeleton */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="h-8 sm:h-10 lg:h-12 bg-gray-200 rounded-lg animate-pulse mb-2"></div>
+                    <div className="h-4 sm:h-5 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="h-8 bg-gray-200 rounded-lg animate-pulse w-32"></div>
+                    <div className="h-8 bg-gray-200 rounded-lg animate-pulse w-24"></div>
+                    <div className="h-8 bg-gray-200 rounded-lg animate-pulse w-28"></div>
+                  </div>
+                </div>
+                
+                {/* Summary Cards Skeleton */}
+                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 sm:p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="h-3 bg-gray-200 rounded animate-pulse mb-2 w-24"></div>
+                          <div className="h-6 sm:h-8 bg-gray-200 rounded animate-pulse mb-1 w-12"></div>
+                          <div className="h-3 bg-gray-200 rounded animate-pulse w-20"></div>
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                          {i === 3 && <div className="h-3 bg-gray-200 rounded animate-pulse w-16"></div>}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Upcoming Deadlines Skeleton */}
+                <div className="space-y-3">
+                  <div className="h-5 bg-gray-200 rounded animate-pulse w-40"></div>
+                  <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 sm:p-4 flex gap-3">
+                        <div className="w-1 bg-gray-200 rounded-full animate-pulse"></div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="h-5 bg-gray-200 rounded-full animate-pulse w-16"></div>
+                            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-200 rounded animate-pulse"></div>
+                          </div>
+                          <div className="h-4 bg-gray-200 rounded animate-pulse mb-1 w-20"></div>
+                          <div className="h-3 bg-gray-200 rounded animate-pulse w-16 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded animate-pulse w-18"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Table Skeleton */}
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="px-3 sm:px-4 lg:px-6 py-3 border-b border-gray-100">
+                    <div className="h-5 bg-gray-200 rounded animate-pulse w-48"></div>
+                  </div>
+                  <div className="p-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center gap-4 py-3 border-b border-gray-50 last:border-0">
+                        <div className="w-4 h-4 bg-gray-200 rounded-full animate-pulse"></div>
+                        <div className="h-4 bg-gray-200 rounded animate-pulse flex-1"></div>
+                        <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                        <div className="h-4 bg-gray-200 rounded animate-pulse w-12"></div>
+                        <div className="h-6 bg-gray-200 rounded-full animate-pulse w-20"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Recent Feedback Skeleton */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-4 lg:p-5">
+                      <div className="flex justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded animate-pulse w-32 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded animate-pulse mb-1"></div>
+                          <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded animate-pulse w-24"></div>
+                        </div>
+                        <div className="h-8 w-12 bg-gray-200 rounded-full animate-pulse"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Smart Insights Skeleton */}
+                <div className="bg-blue-50 border border-blue-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6">
+                  <div className="flex items-start gap-2 sm:gap-3 mb-4">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gray-200 rounded animate-pulse mt-1"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-32 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded animate-pulse mb-1"></div>
+                      <div className="h-3 bg-gray-200 rounded animate-pulse w-4/5"></div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="h-8 bg-gray-200 rounded-lg animate-pulse w-28"></div>
+                    <div className="h-8 bg-gray-200 rounded-lg animate-pulse w-32"></div>
+                  </div>
+                </div>
+                
+                {/* Bottom Actions Skeleton */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-gray-100 pt-4">
+                  <div className="flex gap-2">
+                    <div className="h-8 bg-gray-200 rounded-full animate-pulse w-28"></div>
+                    <div className="h-8 bg-gray-200 rounded-full animate-pulse w-32"></div>
+                    <div className="h-8 bg-gray-200 rounded-full animate-pulse w-24"></div>
+                  </div>
+                  <div className="h-8 bg-gray-200 rounded-full animate-pulse w-36"></div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">Assignments &amp; Quizzes</h1>
+                    <p className="text-gray-500 text-xs sm:text-sm lg:text-base mt-1">
+                      Track, complete, and submit your assignments and quizzes.
+                    </p>
+                  </div>
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
                 <div className="relative min-w-[120px] sm:min-w-[140px]">
                   <select className="appearance-none bg-white border border-gray-200 rounded-lg pl-3 pr-8 py-2 shadow-sm text-gray-700 w-full text-xs sm:text-sm">
@@ -426,6 +499,8 @@ const Assignments: React.FC = () => {
                 Submit Assignment
               </button>
             </div>
+              </>
+            )}
           </div>
         </main>
       </div>

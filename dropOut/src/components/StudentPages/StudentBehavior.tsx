@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { AlertCircle, CheckCircle, XCircle, ChevronDown, ExternalLink, Users, Calendar, Bell, Menu, X, BarChart3, FileText } from 'lucide-react';
-import { SiGoogleclassroom } from "react-icons/si";
-import { TbReport } from "react-icons/tb";
-import { FaCalendarCheck } from 'react-icons/fa';
+import { AlertCircle, CheckCircle, XCircle, ChevronDown, ExternalLink, Users, Calendar, Bell, Menu, X } from 'lucide-react';
 import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../../context/useUserAuth';
+import StudentSidebar from './StudentSidebar';
 
 interface TimelineItem {
   id: string;
@@ -25,32 +24,27 @@ interface CounselingNote {
   status: 'completed' | 'in-progress';
 }
 
-interface MenuItem {
-  icon: React.ElementType;
-  label: string;
-  path: string;
-}
-
 const StudentBehavior: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('My Behavior');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [typeFilter, setTypeFilter] = useState('All Types');
   const [termFilter, setTermFilter] = useState('Current Term');
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const { user } = useUserAuth();
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
     setSidebarOpen(false);
   };
-
-  const menuItems: MenuItem[] = [
-    { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
-    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
-  ];
 
   const timelineItems: TimelineItem[] = [
     {
@@ -121,8 +115,36 @@ const StudentBehavior: React.FC = () => {
             </button>
             
             <div className="flex items-center gap-1 sm:gap-2">
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">Westfield High School</span>
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">{user?.schoolName || 'School Name'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
+            </div>
+
+            {/* Header Navigation Links */}
+            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
+              <button 
+                onClick={() => handleNavigation('/student-dash', 'Dashboard')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-class', 'My Classes')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Classes
+              </button>
+              <button 
+                onClick={() => handleNavigation('/my-assignments', 'My Assignments')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Assignments
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-settings', 'My Profile')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                My Profile
+              </button>
             </div>
           </div>
 
@@ -144,7 +166,7 @@ const StudentBehavior: React.FC = () => {
             {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-1 sm:gap-2">
               <img src={userr} alt="User profile" className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full object-cover" />
-              <span className="text-xs sm:text-sm font-medium hidden sm:block">Alex Johnson</span>
+              <span className="text-xs sm:text-sm font-medium hidden sm:block">{user?.name || 'Student'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
@@ -153,60 +175,113 @@ const StudentBehavior: React.FC = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside
-          className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
-        `}
-        >
-          {/* Mobile Close Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-          
-          <nav className="p-3 sm:p-4 relative z-50 bg-white h-full">
-            <button
-              className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 ${
-                activeTab === 'Dashboard'
-                  ? 'bg-orange-500 text-white'
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/student-dash', 'Dashboard')}
-            >
-              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Dashboard</span>
-            </button>
-            {menuItems.map((item, idx) => {
-              const IconComponent = item.icon;
-              return (
-                <button
-                  key={idx}
-                  className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 ${
-                    activeTab === item.label
-                      ? 'bg-orange-500 text-white'
-                      : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                  }`}
-                  onClick={() => handleNavigation(item.path, item.label)}
-                >
-                  <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="font-medium text-sm sm:text-base">{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </aside>
+        <StudentSidebar 
+          activeTab={activeTab}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          handleNavigation={handleNavigation}
+        />
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
           <div className="max-w-5xl mx-auto">
-            {/* Header */}
-            <div className="mb-6 sm:mb-8">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Behavior Reports</h1>
-              <p className="text-gray-600 text-sm sm:text-base">Review your conduct, commendations, and counseling records</p>
-            </div>
+            {loading ? (
+              <>
+                {/* Header Skeleton */}
+                <div className="mb-6 sm:mb-8">
+                  <div className="h-8 sm:h-10 lg:h-12 bg-gray-200 rounded-lg animate-pulse mb-2 w-64"></div>
+                  <div className="h-4 sm:h-5 bg-gray-200 rounded animate-pulse w-96"></div>
+                </div>
+
+                {/* Filters Skeleton */}
+                <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
+                  <div className="h-10 bg-gray-200 rounded-lg animate-pulse flex-1"></div>
+                  <div className="h-10 bg-gray-200 rounded-lg animate-pulse flex-1"></div>
+                </div>
+
+                {/* Stats Cards Skeleton */}
+                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+                      <div className="flex items-start justify-between mb-3 sm:mb-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                          <div className="min-w-0">
+                            <div className="h-4 bg-gray-200 rounded animate-pulse w-20 mb-1"></div>
+                            <div className="h-3 bg-gray-200 rounded animate-pulse w-16"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <div className="h-8 sm:h-10 bg-gray-200 rounded animate-pulse w-8 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded animate-pulse w-24"></div>
+                        </div>
+                        <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Behavior Timeline Skeleton */}
+                <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
+                  <div className="h-6 sm:h-7 bg-gray-200 rounded animate-pulse w-32 mb-4 sm:mb-6"></div>
+                  <div className="space-y-3 sm:space-y-4">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="border rounded-lg p-3 sm:p-4 bg-gray-50">
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                          <div className="flex-1">
+                            <div className="h-4 sm:h-5 bg-gray-200 rounded animate-pulse w-48 mb-2"></div>
+                            <div className="h-3 bg-gray-200 rounded animate-pulse mb-1 w-full"></div>
+                            <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4 mb-2"></div>
+                            <div className="h-3 bg-gray-200 rounded animate-pulse w-24"></div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="h-3 bg-gray-200 rounded animate-pulse w-16"></div>
+                            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-200 rounded animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Counseling Notes Skeleton */}
+                <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
+                  <div className="h-6 sm:h-7 bg-gray-200 rounded animate-pulse w-32 mb-4 sm:mb-6"></div>
+                  <div className="space-y-3 sm:space-y-4">
+                    {[1, 2].map((i) => (
+                      <div key={i} className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                          <div className="h-4 sm:h-5 bg-gray-200 rounded animate-pulse w-48"></div>
+                          <div className="h-5 bg-gray-200 rounded-full animate-pulse w-20"></div>
+                        </div>
+                        <div className="h-3 bg-gray-200 rounded animate-pulse mb-1 w-full"></div>
+                        <div className="h-3 bg-gray-200 rounded animate-pulse w-2/3 mb-2"></div>
+                        <div className="h-3 bg-gray-200 rounded animate-pulse w-24"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom Actions Skeleton */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-gray-100 pt-4">
+                  <div className="flex gap-2">
+                    <div className="h-8 bg-gray-200 rounded-full animate-pulse w-32"></div>
+                    <div className="h-8 bg-gray-200 rounded-full animate-pulse w-28"></div>
+                    <div className="h-8 bg-gray-200 rounded-full animate-pulse w-24"></div>
+                  </div>
+                  <div className="h-8 bg-gray-200 rounded-full animate-pulse w-36"></div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Header */}
+                <div className="mb-6 sm:mb-8">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Behavior Reports</h1>
+                  <p className="text-gray-600 text-sm sm:text-base">Review your conduct, commendations, and counseling records</p>
+                </div>
 
             {/* Filters */}
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
@@ -427,6 +502,8 @@ const StudentBehavior: React.FC = () => {
                 <span>My Profile</span>
               </button>
             </div>
+              </>
+            )}
           </div>
         </main>
       </div>

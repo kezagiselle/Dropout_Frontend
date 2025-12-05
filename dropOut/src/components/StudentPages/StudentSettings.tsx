@@ -1,24 +1,13 @@
-import React, { useState } from 'react';
-import { FaUser, FaCog, FaEdit, FaChevronDown, FaArrowLeft } from 'react-icons/fa';
-import { useTheme } from '../Hod'; 
+import { useState } from 'react';
+import { FaUser, FaCog, FaEdit, FaArrowLeft, FaChevronDown } from 'react-icons/fa';
+import { useTheme } from '../Hod';
 import pe3 from "../../img/pe3.png";
-import Profile from '../TeacherPages/ProfileForm'; 
+import Profile from '../TeacherPages/ProfileForm';
 import { useNavigate } from 'react-router-dom';
-import { SiGoogleclassroom } from "react-icons/si";
-import { TbReport } from "react-icons/tb";
-import { FaCalendarCheck } from 'react-icons/fa';
-import { IoMdSettings } from "react-icons/io";
+import { useUserAuth } from '../../context/useUserAuth';
 import userr from "../../../src/img/userr.png";
-import { Calendar, Bell, Menu, X, BarChart3, FileText } from 'lucide-react';
-
-// Updated MenuItem interface to accept Lucide React icons
-interface MenuItem {
-  icon: React.ComponentType<any>;
-  label: string;
-  path: string;
-}
-
-const StudentSettings = () => {
+import { Calendar, Bell, Menu, X, ChevronDown } from 'lucide-react';
+import StudentSidebar from './StudentSidebar';const StudentSettings = () => {
   const { theme, toggleTheme } = useTheme();
   const [timezone, setTimezone] = useState('UTC-5');
   const [language, setLanguage] = useState('English');
@@ -26,20 +15,13 @@ const StudentSettings = () => {
   const [activeTab, setActiveTab] = useState<string>('My Profile');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { user } = useUserAuth();
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
     setSidebarOpen(false);
   };
-
-  const menuItems: MenuItem[] = [
-    { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
-    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' }
-  ];
 
   if (showProfile) {
     return <Profile onBack={() => setShowProfile(false)} />;
@@ -60,8 +42,8 @@ const StudentSettings = () => {
             </button>
             
             <div className="flex items-center gap-1 sm:gap-2">
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">Westfield High School</span>
-              <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">{user?.schoolName || 'School Name'}</span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
 
             {/* Header Navigation Links */}
@@ -99,7 +81,7 @@ const StudentSettings = () => {
             <div className="hidden sm:flex items-center gap-1 lg:gap-2 text-xs sm:text-sm text-gray-600">
               <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
-              <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4 hidden lg:block" />
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 hidden lg:block" />
             </div>
 
             {/* Notifications */}
@@ -111,8 +93,8 @@ const StudentSettings = () => {
             {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-1 sm:gap-2">
               <img src={userr} alt="User profile" className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full object-cover" />
-              <span className="text-xs sm:text-sm font-medium hidden sm:block">Alex Johnson</span>
-              <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
+              <span className="text-xs sm:text-sm font-medium hidden sm:block">{user?.name || 'Student'}</span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
         </div>
@@ -120,51 +102,12 @@ const StudentSettings = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside
-          className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
-        `}
-        >
-          {/* Mobile Close Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-          
-          <nav className="p-3 sm:p-4 relative z-50 bg-white h-full">
-            <button
-              className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 ${
-                activeTab === 'Dashboard'
-                  ? 'bg-orange-500 text-white'
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/student-dash', 'Dashboard')}
-            >
-              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Dashboard</span>
-            </button>
-            {menuItems.map((item, idx) => {
-              const IconComponent = item.icon;
-              return (
-                <button
-                  key={idx}
-                  className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 ${
-                    activeTab === item.label
-                      ? 'bg-orange-500 text-white'
-                      : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                  }`}
-                  onClick={() => handleNavigation(item.path, item.label)}
-                >
-                  <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="font-medium text-sm sm:text-base">{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </aside>
+        <StudentSidebar 
+          activeTab={activeTab}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          handleNavigation={handleNavigation}
+        />
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">

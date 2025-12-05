@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FaArrowLeft, FaCalendarAlt, FaUser, FaPrint, FaChevronDown, FaUpload } from 'react-icons/fa'
 import StudentLast from './StudentLast';
 
@@ -14,11 +14,6 @@ function StudentRepo({ onBack }: StudentRepoProps) {
   if (showStudentLast) {
     return <StudentLast onBack={() => setShowStudentLast(false)} />;
   }
-
-  const handleUploadReport = () => {
-    // Handle report upload logic here
-    console.log('Uploading report:', { reportType, reportContent });
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">

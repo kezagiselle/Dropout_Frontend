@@ -1,23 +1,41 @@
-import React, { useState } from 'react';
-import { ChevronDown, Calendar, Users, BookOpen, BarChart3, UserCircle, MessageSquare, Bell, Search, Menu, X, TrendingUp, Award, Shield, FileText, Clock } from 'lucide-react';
-import { SiGoogleclassroom } from "react-icons/si";
-import { LiaChalkboardTeacherSolid } from "react-icons/lia";
+import { useState, useEffect } from 'react';
+import { ChevronDown, Calendar, Bell, Menu, X, TrendingUp, Shield, FileText } from 'lucide-react';
 import { FaCalendarCheck } from 'react-icons/fa';
-import { TbReport } from "react-icons/tb";
-import { IoIosPeople } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
-import { FaClipboardCheck } from "react-icons/fa6";
-import { IoMdTv } from "react-icons/io";
-import { TbAlertTriangle } from "react-icons/tb";
-import { FaRegChartBar } from "react-icons/fa"; 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import userr from "../../../src/img/userr.png";
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom'; 
 import { TbWaveSawTool } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
 import Attendance from "./StudentAttendance";
 import BehaviorReports from "./StudentBehavior"; 
 import StudentSettings from "./StudentSettings";
+import { useUserAuth } from '../../context/useUserAuth';
+import StudentSidebar from './StudentSidebar';
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface DashboardData {
+  attendanceRate: number;
+  averageGPA: number;
+  behaviorIncidents: number;
+  riskLevel: string | null;
+  probabilityPercent: number | null;
+  performanceTrend: {
+    gradeType: string;
+    averageMarks: number;
+  }[];
+  attendanceOverview: {
+    day: string;
+    attendance: number;
+  }[];
+}
+
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data: DashboardData;
+}
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -25,8 +43,12 @@ export default function StudentDashboard() {
   const [showAttendance, setShowAttendance] = useState(false);
   const [showBehavior, setShowBehavior] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const { user, token } = useUserAuth(); 
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -34,33 +56,71 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
-  // Student-specific menu items - UPDATED to include My Profile
-  const menuItems = [
-    { icon: SiGoogleclassroom, label: 'My Classes',  path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
-    { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
-    { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
-    { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' } // Added My Profile
-  ];
+  // Fetch dashboard data from API
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!token || !user?.studentId) return;
+      
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/students/dashboard/${user.studentId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
-  // Updated performance data for Recharts
-  const performanceData = [
-    { name: 'Term 1', grade: 3.2 },
-    { name: 'Term 2', grade: 3.5 },
-    { name: 'Term 3', grade: 3.6 },
-    { name: 'Term 4', grade: 3.7 }
-  ];
+        if (!response.ok) {
+          throw new Error('Failed to fetch dashboard data');
+        }
 
-  // Updated attendance data for Recharts
-  const attendanceData = [
-    { name: 'Mon', present: 95, absent: 5, late: 0 },
-    { name: 'Tue', present: 100, absent: 0, late: 0 },
-    { name: 'Wed', present: 80, absent: 15, late: 5 },
-    { name: 'Thu', present: 100, absent: 0, late: 0 },
-    { name: 'Fri', present: 98, absent: 2, late: 0 },
-    { name: 'Sat', present: 0, absent: 0, late: 0 },
-    { name: 'Sun', present: 0, absent: 0, late: 0 }  
-  ];
+        const result: ApiResponse = await response.json();
+        
+        if (result.success) {
+          setDashboardData(result.data);
+        } else {
+          throw new Error(result.message || 'Failed to fetch dashboard data');
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching dashboard data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [token, user?.studentId]);
+
+  // Transform performance data for chart (by grade type instead of terms)
+  const performanceData = dashboardData?.performanceTrend?.map(item => ({
+    name: item.gradeType,
+    averageMarks: item.averageMarks
+  })) || [];
+
+  // Transform attendance data for chart (day by day) - sorted chronologically
+  const attendanceData = dashboardData?.attendanceOverview
+    ?.map(item => {
+      const date = new Date(item.day);
+      const formattedDate = date.toLocaleDateString('en-GB', { 
+        day: '2-digit', 
+        month: '2-digit' 
+      }); // Format as DD/MM
+      return {
+        name: formattedDate, // Use actual date instead of day name
+        day: item.day,
+        present: item.attendance, // API already provides 100.0 or 0.0
+        absent: 100 - item.attendance,
+        late: 0, // Not provided in API, keeping as 0
+        _sortDate: date // Prefix with underscore to indicate internal use
+      };
+    })
+    .sort((a, b) => a._sortDate.getTime() - b._sortDate.getTime())
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .map(({ _sortDate, ...rest }) => rest) || [];
 
   const assignments = [
     { title: 'Math Quiz', due: 'Due: Oct 20', status: 'Pending', color: 'bg-orange-100 text-orange-600' },
@@ -94,8 +154,36 @@ export default function StudentDashboard() {
             </button>
             
             <div className="flex items-center gap-1 sm:gap-2">
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">Westfield High School</span>
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">{user?.schoolName || 'School Name'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
+            </div>
+
+            {/* Header Navigation Links */}
+            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
+              <button 
+                onClick={() => handleNavigation('/student-dash', 'Dashboard')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-class', 'My Classes')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Classes
+              </button>
+              <button 
+                onClick={() => handleNavigation('/my-assignments', 'My Assignments')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Assignments
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-settings', 'My Profile')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                My Profile
+              </button>
             </div>
           </div>
 
@@ -117,123 +205,120 @@ export default function StudentDashboard() {
             {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-1 sm:gap-2">
               <img src={userr} alt="User profile" className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full object-cover" />
-              <span className="text-xs sm:text-sm font-medium hidden sm:block">Alex Johnson</span>
+              <span className="text-xs sm:text-sm font-medium hidden sm:block">{user?.name || 'Student'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
         </div>
       </header>
 
-      {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-3 py-2 sm:px-4 sm:py-3 lg:px-6">
-        <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-          <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2 whitespace-nowrap">Filters</span>
-          <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap min-w-[100px] sm:min-w-0">
-            All Subjects <ChevronDown className="w-2 h-2 sm:w-3 sm:h-3 flex-shrink-0" />
-          </button>
-          <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap min-w-[100px] sm:min-w-0">
-            Current Term <ChevronDown className="w-2 h-2 sm:w-3 sm:h-3 flex-shrink-0" />
-          </button>
-          <button className="px-2 py-1 sm:px-3 sm:py-1 bg-orange-500 text-white rounded text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap min-w-[100px] sm:min-w-0">
-            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-            <span>Date Filter</span>
-          </button>
-        </div>
-      </div>
-
       <div className="flex">
         {/* Sidebar */}
-        <aside className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 min-h-screen transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
-        `}>
-          {/* Mobile Close Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-          
-          <nav className="p-3 sm:p-4 relative z-50 bg-white h-full">
-            <button 
-              className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 ${
-                activeTab === 'Dashboard' 
-                  ? 'bg-orange-500 text-white' 
-                  : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-              }`}
-              onClick={() => handleNavigation('/student-dash', 'Dashboard')}
-            >
-              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Dashboard</span>
-            </button>
-            {menuItems.map((item, idx) => (
-              <button 
-                key={idx} 
-                className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 ${
-                  activeTab === item.label 
-                    ? 'bg-orange-500 text-white' 
-                    : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
-                }`}
-                onClick={() => handleNavigation(item.path, item.label)}
-              >
-                <item.icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="font-medium text-sm sm:text-base">{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
+        <StudentSidebar 
+          activeTab={activeTab}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          handleNavigation={handleNavigation}
+        />
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
           {/* Header */}
           <div className="mb-4 sm:mb-6 lg:mb-8">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Student Dashboard</h1>
-            <p className="text-gray-600 text-sm sm:text-base mt-1">Westfield High School</p>
+            <p className="text-gray-600 text-sm sm:text-base mt-1">{user?.schoolName || 'School Name'}</p>
           </div>
+
+          {/* Loading State */}
+          {loading && (
+            <div className="mb-4 sm:mb-6 lg:mb-8">
+              <div className="animate-pulse">
+                <div className="h-6 sm:h-8 lg:h-9 bg-gray-200 rounded w-48 mb-2"></div>
+                <div className="h-4 sm:h-5 bg-gray-200 rounded w-32"></div>
+              </div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <p className="text-red-600">Error: {error}</p>
+            </div>
+          )}
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-            {/* Attendance Rate */}
-            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
+            {loading ? (
+              // Stats Cards Skeleton
+              [...Array(4)].map((_, i) => (
+                <div key={i} className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 animate-pulse">
+                  <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
+                    <div className="bg-gray-200 p-1.5 sm:p-2 rounded-lg w-8 h-8 sm:w-10 sm:h-10"></div>
+                    <div className="bg-gray-200 rounded w-12 h-4"></div>
+                  </div>
+                  <div className="bg-gray-200 rounded w-16 h-6 sm:h-8 mb-1"></div>
+                  <div className="bg-gray-200 rounded w-24 h-3 sm:h-4 mb-1"></div>
+                  <div className="bg-gray-200 rounded w-20 h-3"></div>
+                </div>
+              ))
+            ) : (
+              <>
+                {/* Attendance Rate */}
+                <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-teal-100 p-1.5 sm:p-2 rounded-lg">
                   <FaCalendarCheck className="w-3 h-3 sm:w-4 sm:h-4 text-teal-600" />
                 </div>
-                <span className="text-emerald-600 text-xs sm:text-sm font-semibold whitespace-nowrap">↑ +2.5%</span>
+                <span className="text-emerald-600 text-xs sm:text-sm font-semibold whitespace-nowrap">
+                  {dashboardData?.attendanceRate && dashboardData.attendanceRate >= 80 ? '↑ Good' : '↓ Low'}
+                </span>
               </div>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">92%</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                {dashboardData?.attendanceRate || 0}%
+              </div>
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Attendance Rate</div>
-              <div className="text-gray-500 text-xs mt-1">vs last term</div>
+              <div className="text-gray-500 text-xs mt-1">Current performance</div>
             </div>
 
             {/* Average GPA */}
-            <div className="bg-white rounded-lg shadowSm p-3 sm:p-4 lg:p-6">
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
                   <TbWaveSawTool className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
                 </div>
-                <span className="bg-blue-50 text-blue-600 text-xs font-medium px-1 py-0.5 rounded whitespace-nowrap">↑ +0.3</span>
+                <span className="bg-blue-50 text-blue-600 text-xs font-medium px-1 py-0.5 rounded whitespace-nowrap">
+                  Average
+                </span>
               </div>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">3.7</div>
-              <div className="text-gray-600 text-xs sm:text-sm font-bold">Average GPA</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                {dashboardData?.averageGPA || 0}
+              </div>
+              <div className="text-gray-600 text-xs sm:text-sm font-bold">Average Marks</div>
               <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2 mt-2">
-                <div className="bg-blue-500 h-1.5 sm:h-2 rounded-full" style={{ width: '75%' }}></div>
+                <div 
+                  className="bg-blue-500 h-1.5 sm:h-2 rounded-full" 
+                  style={{ width: `${Math.min((dashboardData?.averageGPA || 0) * 5, 100)}%` }}
+                ></div>
               </div>
             </div>
 
-            {/* Commendations */}
+            {/* Behavior Incidents */}
             <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
                 <div className="bg-amber-100 p-1.5 sm:p-2 rounded-lg">
                   <FaStar className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600" />
                 </div>
-                <span className="text-orange-600 text-xs sm:text-sm font-semibold whitespace-nowrap">↓ -1</span>
+                <span className={`text-xs sm:text-sm font-semibold whitespace-nowrap ${
+                  (dashboardData?.behaviorIncidents || 0) === 0 ? 'text-green-600' : 'text-orange-600'
+                }`}>
+                  {(dashboardData?.behaviorIncidents || 0) === 0 ? '✓ Good' : '⚠ Alert'}
+                </span>
               </div>
               <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
-                8 <span className="text-gray-400 text-base sm:text-lg lg:text-xl">/ 2</span>
+                {dashboardData?.behaviorIncidents || 0}
               </div>
-              <div className="text-gray-600 text-xs sm:text-sm font-bold">Commendations / Incidents</div>
+              <div className="text-gray-600 text-xs sm:text-sm font-bold">Behavior Incidents</div>
+              <div className="text-gray-500 text-xs mt-1">Current term</div>
             </div>
 
             {/* Risk Level */}
@@ -242,12 +327,20 @@ export default function StudentDashboard() {
                 <div className="bg-emerald-100 p-1.5 sm:p-2 rounded-lg">
                   <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-600" />
                 </div>
-                <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded whitespace-nowrap">LOW</span>
+                <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded whitespace-nowrap">
+                  {dashboardData?.riskLevel || 'LOW'}
+                </span>
               </div>
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-600 mb-1">Low Risk</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-600 mb-1">
+                Low Risk
+              </div>
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Dropout Risk Level</div>
-              <div className="text-gray-500 text-xs mt-1">Keep up the good work!</div>
+              <div className="text-gray-500 text-xs mt-1">
+                {dashboardData?.probabilityPercent ? `${dashboardData.probabilityPercent}% probability` : '0% probability'}
+              </div>
             </div>
+              </>
+            )}
           </div>
 
           {/* Charts Row */}
@@ -276,14 +369,13 @@ export default function StudentDashboard() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" fontSize={10} />
                     <YAxis 
-                      domain={[0, 4]}
-                      ticks={[0, 1, 2, 3, 4]}
+                      domain={[0, 20]}
                       fontSize={10}
                     />
                     <Tooltip />
                     <Line 
                       type="monotone" 
-                      dataKey="grade" 
+                      dataKey="averageMarks" 
                       stroke="#3b82f6" 
                       strokeWidth={2}
                       dot={{ fill: '#3b82f6', strokeWidth: 2, r: 3 }}
@@ -296,31 +388,95 @@ export default function StudentDashboard() {
 
             {/* Attendance Overview */}
             <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
-              <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6">Weekly Attendance</h2>
+              <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6">Daily Attendance</h2>
               <div className="h-40 sm:h-48 lg:h-56 xl:h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
+                  <LineChart
                     data={attendanceData}
                     margin={{
-                      top: 10,
+                      top: 20,
                       right: 10,
                       left: 0,
                       bottom: 5,
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" fontSize={10} />
-                    <YAxis fontSize={10} />
-                    <Tooltip />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} />
-                    <Bar dataKey="present" stackId="a" fill="#10b981" name="Present %" />
-                    <Bar dataKey="absent" stackId="a" fill="#ef4444" name="Absent %" />
-                    <Bar dataKey="late" fill="#f59e0b" name="Late %" />
-                  </BarChart>
+                    <XAxis 
+                      dataKey="name" 
+                      fontSize={10} 
+                    />
+                    <YAxis 
+                      domain={[0, 100]}
+                      tickCount={3}
+                      ticks={[0, 50, 100]}
+                      fontSize={10}
+                      tickFormatter={(value) => {
+                        if (value === 0) return 'Absent';
+                        if (value === 100) return 'Present';
+                        return '';
+                      }}
+                    />
+                    <Tooltip 
+                      formatter={(value) => [Number(value) >= 100 ? 'Present' : 'Absent', 'Status']}
+                      labelFormatter={(label, payload) => {
+                        if (payload && payload.length > 0) {
+                          const fullDate = payload[0].payload.day;
+                          const formattedDate = new Date(fullDate).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                          });
+                          return `Date: ${formattedDate}`;
+                        }
+                        return `Day: ${label}`;
+                      }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="present" 
+                      stroke="#10b981"
+                      strokeWidth={3}
+                      dot={(props) => {
+                        const { cx, cy, payload } = props;
+                        const isPresent = payload.present >= 100; // Handle 100.0 as present
+                        return (
+                          <circle
+                            cx={cx}
+                            cy={cy}
+                            r={6}
+                            fill={isPresent ? '#10b981' : '#ef4444'}
+                            stroke={isPresent ? '#059669' : '#dc2626'}
+                            strokeWidth={2}
+                          />
+                        );
+                      }}
+                      activeDot={{ 
+                        r: 8, 
+                        fill: '#10b981',
+                        stroke: '#059669',
+                        strokeWidth: 2
+                      }}
+                      connectNulls={false}
+                    />
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
               <div className="mt-2 sm:mt-3 lg:mt-4 bg-emerald-50 border border-emerald-200 rounded-lg p-2 sm:p-3">
-                <p className="text-emerald-700 text-xs sm:text-sm font-semibold">✓ Great attendance this week: 95% average</p>
+                <p className="text-emerald-700 text-xs sm:text-sm font-semibold">
+                  ✓ Overall attendance rate: {dashboardData?.attendanceRate ? `${dashboardData.attendanceRate}%` : 'Loading...'}
+                </p>
+              </div>
+              
+              {/* Legend */}
+              <div className="flex justify-center gap-4 mt-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                  <span className="text-xs text-gray-600">Present</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <span className="text-xs text-gray-600">Absent</span>
+                </div>
               </div>
             </div>
           </div>

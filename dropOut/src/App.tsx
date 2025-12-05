@@ -18,10 +18,10 @@ import StudentDashboard from "./components/StudentPages/StudentDashboard";
 import StudentClasses from "./components/StudentPages/StudentClasses";
 import Timetable from "./components/StudentPages/Timetable";
 import Assignments from "./components/StudentPages/Assignments";
-import StudentBehavior from "./components/StudentPages/StudentBehavior"
-import Student from "./components/Forms/Student";
+import StudentBehavior from "./components/StudentPages/StudentBehavior";
 import StudentAttendance from "./components/StudentPages/StudentAttendance";
 import StudentSettings from "./components/StudentPages/StudentSettings";
+import StudentMarks from "./components/StudentPages/StudentMarks";
 
 
 function App() {
@@ -49,6 +49,7 @@ function App() {
           <Route path="/settings" element={<Dashboard />} />
           <Route path="/student-dash" element={<StudentDashboard />} />
           <Route path="/student-class" element={<StudentClasses />} />
+          <Route path="/student-marks" element={<StudentMarks />} />
           <Route path="/timetable" element={<Timetable />} />
           <Route path="/my-assignments" element={<Assignments />} />
           <Route path="/student-behavior" element={<StudentBehavior />} />

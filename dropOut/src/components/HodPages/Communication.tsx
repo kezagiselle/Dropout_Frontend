@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaSearch, FaPlus, FaUser, FaPaperclip, FaSmile, FaEllipsisV } from 'react-icons/fa';
+import { FaSearch, FaPlus, FaUser, FaPaperclip, FaEllipsisV } from 'react-icons/fa';
 import { useTheme } from '../Hod';
 
 const Communication = () => {

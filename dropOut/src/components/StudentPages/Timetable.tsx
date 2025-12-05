@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { ChevronDown, Calendar, Download, MessageSquare, ChevronRight, Clock, BarChart3, Bell, Menu, X, FileText, ArrowLeft } from 'lucide-react';
-import { SiGoogleclassroom } from "react-icons/si";
+import { ChevronDown, Calendar, Download, MessageSquare, ChevronRight, Clock, Bell, ArrowLeft } from 'lucide-react';
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../../context/useUserAuth';
 
 type ClassInfo = {
   status?: 'now' | 'soon' | 'later';
@@ -109,6 +108,7 @@ const schedule: DaySchedule[] = [
 
 const Timetable = () => {
   const navigate = useNavigate();
+  const { user } = useUserAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -118,7 +118,7 @@ const Timetable = () => {
           {/* Left Section - School Name */}
           <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-1 sm:gap-2">
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">Westfield High School</span>
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">{user?.schoolName || 'School Name'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
@@ -141,7 +141,7 @@ const Timetable = () => {
             {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-1 sm:gap-2">
               <img src={userr} alt="User profile" className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full object-cover" />
-              <span className="text-xs sm:text-sm font-medium hidden sm:block">Alex Johnson</span>
+              <span className="text-xs sm:text-sm font-medium hidden sm:block">{user?.name || 'Student'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>

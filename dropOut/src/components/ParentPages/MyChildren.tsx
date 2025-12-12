@@ -255,24 +255,25 @@ export default function MyChildren() {
           </div>
 
           {/* Quick Actions - Responsive */}
-          <div className="bg-white rounded-lg shadow-sm sm:shadow p-4 sm:p-5 lg:p-6">
-            <div className="flex items-start justify-between mb-4 sm:mb-5 lg:mb-6">
+
+          <div className="bg-white rounded-lg shadow-sm sm:shadow p-4 sm:p-5">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1">Quick Actions</h2>
-                <p className="text-xs sm:text-sm text-gray-600">Manage your children's profiles and information</p>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900">Quick Actions</h2>
+                <p className="text-xs text-gray-600">Manage children's profiles</p>
               </div>
-              <div className="bg-indigo-100 p-1.5 sm:p-2 rounded-lg">
-                <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
+              <div className="bg-indigo-100 p-1.5 rounded-lg">
+                <Zap className="w-4 h-4 text-indigo-600" />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
-              <button className="bg-orange-500 hover:bg-orange-600 text-white py-3 sm:py-4 rounded-lg transition font-medium flex items-center justify-center gap-2 text-sm sm:text-base">
-                <List className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="flex justify-between items-center gap-1.5">
+              <button className="flex-1 max-w-[49%] bg-orange-500 hover:bg-orange-600 text-white py-2.5 sm:py-3 rounded-lg transition font-medium flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+                <List className="w-3.5 h-3.5" />
                 View at Risk
               </button>
-              <button className="bg-green-400 hover:bg-green-500 text-green-900 py-3 sm:py-4 rounded-lg transition font-medium flex items-center justify-center gap-2 text-sm sm:text-base">
-                <List className="w-4 h-4 sm:w-5 sm:h-5" />
+              <button className="flex-1 max-w-[49%] bg-green-400 hover:bg-green-500 text-green-900 py-2.5 sm:py-3 rounded-lg transition font-medium flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+                <List className="w-3.5 h-3.5" />
                 View All Children
               </button>
             </div>

@@ -3,6 +3,8 @@ import { Users, AlertTriangle, CheckCircle, Calendar, TrendingUp, User, Zap, Lis
 import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
+import pe1 from "../../img/pe1.png";
+import pe2 from "../../img/pe2.png";
 import { useUserAuth } from '../../context/useUserAuth';
 import ParentSidebar from './ParentSidebar';
 
@@ -45,7 +47,7 @@ export default function MyChildren() {
             {/* Header Navigation Links */}
             <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
               <button 
-                onClick={() => handleNavigation('/parent-dashboard', 'Dashboard')}
+                onClick={() => handleNavigation('/parent-dash', 'Dashboard')}
                 className="hover:text-orange-600 transition-colors"
               >
                 Dashboard
@@ -107,6 +109,18 @@ export default function MyChildren() {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-6">
+          <div className="mb-4">
+            <button
+              onClick={() => handleNavigation('/parent-dash', 'Dashboard')}
+              className="flex items-center gap-2 text-sm text-orange-600 hover:text-orange-700 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Dashboard
+            </button>
+          </div>
+
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Children Overview</h1>
@@ -161,7 +175,7 @@ export default function MyChildren() {
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 bg-gray-300 rounded-full"></div>
+                  <img src={pe1} alt="John Doe" className="w-14 h-14 rounded-full object-cover" />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">John Doe</h3>
                     <p className="text-sm text-gray-600">Grade 10 Student</p>
@@ -207,7 +221,7 @@ export default function MyChildren() {
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 bg-gray-300 rounded-full"></div>
+                  <img src={pe2} alt="Jane Doe" className="w-14 h-14 rounded-full object-cover" />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">Jane Doe</h3>
                     <p className="text-sm text-gray-600">Grade 7 Student</p>

@@ -64,7 +64,7 @@ const ParentSidebar: React.FC<ParentSidebarProps> = ({
                 ? 'bg-orange-500 text-white' 
                 : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
             }`}
-            onClick={() => handleNavigation('/parent-dashboard', 'Dashboard')}
+            onClick={() => handleNavigation('/parent-dash', 'Dashboard')}
           >
             <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="font-medium text-sm sm:text-base">Dashboard</span>

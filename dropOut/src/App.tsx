@@ -23,6 +23,7 @@ import StudentAttendance from "./components/StudentPages/StudentAttendance";
 import StudentSettings from "./components/StudentPages/StudentSettings";
 import StudentMarks from "./components/StudentPages/StudentMarks";
 import ParentDashboard from "./components/ParentPages/ParentDashboard";
+import MyChildren from "./components/ParentPages/MyChildren";
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
           <Route path="/student-attendance" element={<StudentAttendance />} />
           <Route path="/student-settings" element={<StudentSettings />} />
             <Route path="/parent-dash" element={<ParentDashboard />} />
+            <Route path="/children" element={<MyChildren/>} />
 
            
 

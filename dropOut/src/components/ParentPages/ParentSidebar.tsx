@@ -34,7 +34,7 @@ const ParentSidebar: React.FC<ParentSidebarProps> = ({
   const navigate = useNavigate();
   
   const menuItems: MenuItem[] = [
-    { icon: Users, label: 'My Children', path: '/parent-children' },
+    { icon: Users, label: 'My Children', path: '/children' },
     { icon: Calendar, label: 'Attendance', path: '/parent-attendance' },
     { icon: TrendingUp, label: 'Academic Progress', path: '/parent-academics' },
     { icon: Settings, label: 'Settings', path: '/parent-settings' }

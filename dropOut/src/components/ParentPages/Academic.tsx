@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Users, Download, User, ChevronDown, Bell, Menu, X, Calendar} from 'lucide-react';
+import { Users, Download, User, ChevronDown, Bell, Menu, X, Calendar, Zap} from 'lucide-react';
 import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
@@ -382,22 +382,28 @@ export default function Academic() {
             </div>
           </div>
 
-          {/* Quick Actions Section */}
-          <div className="bg-white rounded-lg shadow-sm sm:shadow p-3 xs:p-4 sm:p-5 lg:p-6">
-            <h2 className="text-base xs:text-lg sm:text-xl font-bold text-gray-900 mb-2 xs:mb-3 sm:mb-4">
-              Quick Actions
-            </h2>
-            <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 sm:gap-4">
-              <button className="bg-blue-400 hover:bg-blue-500 text-white px-3 xs:px-4 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-lg transition font-medium flex items-center justify-center gap-1.5 xs:gap-2 text-xs xs:text-sm sm:text-base flex-1 xs:flex-none min-h-[44px]">
-                <Download className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
-                <span className="truncate">Download Report Card</span>
-              </button>
-              <button className="bg-green-400 hover:bg-green-500 text-green-900 px-3 xs:px-4 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-lg transition font-medium flex items-center justify-center gap-1.5 xs:gap-2 text-xs xs:text-sm sm:text-base flex-1 xs:flex-none min-h-[44px]">
-                <User className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
-                <span className="truncate">View Full Academic Profile</span>
-              </button>
-            </div>
-          </div>
+     <div className="bg-white rounded-lg shadow-sm sm:shadow p-4 sm:p-5">
+  <div className="flex items-center justify-between mb-3 sm:mb-4">
+    <div>
+      <h2 className="text-base sm:text-lg font-bold text-gray-900">Quick Actions</h2>
+      <p className="text-xs text-gray-600">Academic management tools</p>
+    </div>
+    <div className="bg-indigo-100 p-1.5 rounded-lg">
+      <Zap className="w-4 h-4 text-indigo-600" />
+    </div>
+  </div>
+
+  <div className="flex justify-between items-center gap-3">
+    <button className="flex-1 bg-blue-300 hover:bg-blue-400 text-blue-900 py-2.5 rounded-lg transition font-medium flex items-center justify-center gap-1.5 text-sm">
+      <Download className="w-4 h-4" />
+      <span>Download Report</span>
+    </button>
+    <button className="flex-1 bg-green-300 hover:bg-green-400 text-green-900 py-2.5 rounded-lg transition font-medium flex items-center justify-center gap-1.5 text-sm">
+      <User className="w-4 h-4" />
+      <span>View Profile</span>
+    </button>
+  </div>
+</div>
         </main>
       </div>
     </div>

@@ -10,7 +10,7 @@ const attendanceData = [
   { day: 'Friday', Present: 75, Absent: 20, Late: 28 },
 ];
 
-export default function AttendanceBehavior() {
+export default function ParentAttendance() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">

@@ -27,6 +27,7 @@ import MyChildren from "./components/ParentPages/MyChildren";
 import ParentAttendance from "./components/ParentPages/ParentAttendance";
 import Academic from "./components/ParentPages/Academic";
 import ParentSettings from "./components/ParentPages/ParentSettings";
+import OrganDashboard from "./components/OrganisationPages/OrganDashboard";
 
 
 function App() {
@@ -60,11 +61,12 @@ function App() {
           <Route path="/student-behavior" element={<StudentBehavior />} />
           <Route path="/student-attendance" element={<StudentAttendance />} />
           <Route path="/student-settings" element={<StudentSettings />} />
-            <Route path="/parent-dash" element={<ParentDashboard />} />
-            <Route path="/children" element={<MyChildren/>} />
-             <Route path="/parent-attendance" element={<ParentAttendance/>} />
-              <Route path="/parent-academics" element={<Academic/>} />
-                <Route path="/parent-settings" element={<ParentSettings/>} />
+          <Route path="/parent-dash" element={<ParentDashboard />} />
+          <Route path="/children" element={<MyChildren/>} />
+          <Route path="/parent-attendance" element={<ParentAttendance/>} />
+           <Route path="/parent-academics" element={<Academic/>} />
+           <Route path="/parent-settings" element={<ParentSettings/>} />
+           <Route path="/org-dash" element={<OrganDashboard/>} />
 
 
            

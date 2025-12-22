@@ -36,7 +36,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
   const navigate = useNavigate();
   
   const menuItems: MenuItem[] = [
-    { icon: Building2, label: 'Schools', path: '/schools' },
+    { icon: Building2, label: 'Schools', path: '/org-schools' },
     { icon: Users, label: 'Students', path: '/students' },
     { icon: GraduationCap, label: 'Teachers', path: '/teachers' },
     { icon: BookOpen, label: 'Courses & Timetable', path: '/courses-timetable' },
@@ -75,7 +75,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
                 ? 'bg-orange-500 text-white' 
                 : 'text-gray-700 hover:bg-orange-100 hover:text-orange-700'
             }`}
-            onClick={() => handleNavigation('/organization-dashboard', 'Dashboard')}
+            onClick={() => handleNavigation('/org-dash', 'Dashboard')}
           >
             <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="font-medium text-sm sm:text-base">Dashboard</span>

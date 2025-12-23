@@ -11,8 +11,38 @@ import ParentSidebar from './ParentSidebar';
 export default function MyChildren() {
   const [activeTab, setActiveTab] = useState('My Children');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  interface AttendanceTrend {
+    weekLabel: string;
+    weeklyAverage: number;
+  }
+  interface ChildData {
+    name: string;
+    grade: string;
+    attendance: number;
+    gpa: number;
+    risk: string;
+    riskColor: string;
+    img?: string;
+    attendanceTrends?: AttendanceTrend[];
+  }
+  interface StatsData {
+    totalChildren: number;
+    attendance: number;
+    gpa: number;
+    incidents: number;
+    commendations: number;
+  }
+  interface DashboardData {
+    children: ChildData[];
+    stats: StatsData;
+  }
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  
   const navigate = useNavigate();
-  const { user, logout } = useUserAuth();
+  const { user, token, parentId, logout } = useUserAuth();
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -24,6 +54,82 @@ export default function MyChildren() {
     logout();
     navigate('/login');
   };
+
+  React.useEffect(() => {
+    const fetchDashboard = async () => {
+      if (!parentId || !token) {
+        setError('Missing parent ID or token');
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        const res = await fetch(`${baseUrl}/api/students/parent-dashboard/${parentId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error('Failed to fetch dashboard data');
+        const response = await res.json();
+        
+        const apiData = response.data;
+        const transformedData: DashboardData = {
+          children: apiData.children.map((child: { 
+            name: string;
+            grade?: string;
+            overallAttendance?: number;
+            gpa?: number;
+            behaviorIncidents?: number;
+            profileImage?: string;
+          }) => {
+            let risk = 'Low Risk';
+            let riskColor = 'green';
+            if ((child.overallAttendance || 0) < 75 || (child.behaviorIncidents || 0) > 2) {
+              risk = 'High Risk';
+              riskColor = 'red';
+            } else if ((child.overallAttendance || 0) < 85 || (child.behaviorIncidents || 0) > 0) {
+              risk = 'Medium Risk';
+              riskColor = 'orange';
+            }
+            
+            return {
+              name: child.name,
+              grade: child.grade || 'N/A',
+              attendance: Math.round(child.overallAttendance || 0),
+              gpa: child.gpa || 0,
+              risk: risk,
+              riskColor: riskColor,
+              img: child.profileImage || undefined
+            };
+          }),
+          stats: {
+            totalChildren: apiData.totalChildren || apiData.children.length,
+            attendance: apiData.children.length > 0 
+              ? Math.round(apiData.children.reduce((sum: number, c: { overallAttendance?: number }) => sum + (c.overallAttendance || 0), 0) / apiData.children.length)
+              : 0,
+            gpa: apiData.children.length > 0
+              ? Number((apiData.children.reduce((sum: number, c: { gpa?: number }) => sum + (c.gpa || 0), 0) / apiData.children.length).toFixed(1))
+              : 0,
+            incidents: apiData.children.reduce((sum: number, c: { behaviorIncidents?: number }) => sum + (c.behaviorIncidents || 0), 0),
+            commendations: apiData.children.reduce((sum: number, c: { commendations?: number }) => sum + (c.commendations || 0), 0)
+          }
+        };
+        
+        setDashboardData(transformedData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error fetching dashboard');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+  }, [parentId, token]);
+
+  const data: DashboardData | null = dashboardData;
+  const atRiskCount = data?.children.filter(c => c.riskColor === 'red' || c.riskColor === 'orange').length || 0;
+  const normalCount = data?.children.filter(c => c.riskColor === 'green').length || 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -125,7 +231,7 @@ export default function MyChildren() {
                 </div>
                 <div>
                   <p className="text-xs sm:text-sm lg:text-base text-gray-600">Total Children</p>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">2</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{data?.stats?.totalChildren ?? '--'}</p>
                 </div>
               </div>
             </div>
@@ -138,7 +244,7 @@ export default function MyChildren() {
                 </div>
                 <div>
                   <p className="text-xs sm:text-sm lg:text-base text-gray-600">At-Risk Children</p>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">1</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{atRiskCount}</p>
                 </div>
               </div>
             </div>
@@ -151,7 +257,7 @@ export default function MyChildren() {
                 </div>
                 <div>
                   <p className="text-xs sm:text-sm lg:text-base text-gray-600">Normal Status</p>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">1</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{normalCount}</p>
                 </div>
               </div>
             </div>
@@ -159,99 +265,64 @@ export default function MyChildren() {
 
           {/* Children Cards - Responsive layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
-            {/* John Doe Card */}
-            <div className="bg-white rounded-lg shadow-sm sm:shadow p-4 sm:p-5 lg:p-6">
-              <div className="flex items-start justify-between mb-4 sm:mb-5 lg:mb-6">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <img src={pe1} alt="John Doe" className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full object-cover" />
-                  <div>
-                    <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900">John Doe</h3>
-                    <p className="text-xs sm:text-sm text-gray-600">Grade 10 Student</p>
-                  </div>
-                </div>
-                <span className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1 bg-orange-100 text-orange-700 text-xs sm:text-sm rounded-full">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full"></span>
-                  <span className="hidden xs:inline">Medium Risk</span>
-                  <span className="xs:hidden">Medium</span>
-                </span>
-              </div>
+            {data?.children && data.children.length > 0 ? (
+              data.children.map((child, idx) => {
+                const progressColor = child.riskColor === 'red' ? 'bg-red-500' : child.riskColor === 'orange' ? 'bg-orange-500' : 'bg-green-500';
+                const bgColor = child.riskColor === 'red' ? 'bg-red-100' : child.riskColor === 'orange' ? 'bg-orange-100' : 'bg-green-100';
+                const textColor = child.riskColor === 'red' ? 'text-red-700' : child.riskColor === 'orange' ? 'text-orange-700' : 'text-green-700';
+                const dotColor = child.riskColor === 'red' ? 'bg-red-500' : child.riskColor === 'orange' ? 'bg-orange-500' : 'bg-green-500';
+                
+                return (
+                  <div key={idx} className="bg-white rounded-lg shadow-sm sm:shadow p-4 sm:p-5 lg:p-6">
+                    <div className="flex items-start justify-between mb-4 sm:mb-5 lg:mb-6">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <img src={child.img || pe1} alt={child.name} className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full object-cover" />
+                        <div>
+                          <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900">{child.name}</h3>
+                          <p className="text-xs sm:text-sm text-gray-600">{child.grade} Student</p>
+                        </div>
+                      </div>
+                      <span className={`flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1 ${bgColor} ${textColor} text-xs sm:text-sm rounded-full`}>
+                        <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 ${dotColor} rounded-full`}></span>
+                        <span className="hidden xs:inline">{child.risk}</span>
+                        <span className="xs:hidden">{child.risk.split(' ')[0]}</span>
+                      </span>
+                    </div>
 
-              <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:gap-6 mb-4 sm:mb-5 lg:mb-6">
-                {/* Attendance */}
-                <div>
-                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
-                    <p className="text-xs sm:text-sm text-gray-600">Attendance</p>
-                  </div>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">88%</p>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
-                    <div className="bg-orange-500 h-1.5 sm:h-2 rounded-full" style={{ width: '88%' }}></div>
-                  </div>
-                </div>
+                    <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:gap-6 mb-4 sm:mb-5 lg:mb-6">
+                      {/* Attendance */}
+                      <div>
+                        <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
+                          <p className="text-xs sm:text-sm text-gray-600">Attendance</p>
+                        </div>
+                        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">{child.attendance}%</p>
+                        <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                          <div className={`${progressColor} h-1.5 sm:h-2 rounded-full`} style={{ width: `${child.attendance}%` }}></div>
+                        </div>
+                      </div>
 
-                {/* GPA */}
-                <div>
-                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                    <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
-                    <p className="text-xs sm:text-sm text-gray-600">GPA</p>
-                  </div>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">3.1</p>
-                  <p className="text-xs text-gray-500">Out of 4.0</p>
-                </div>
-              </div>
+                      {/* GPA */}
+                      <div>
+                        <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                          <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
+                          <p className="text-xs sm:text-sm text-gray-600">GPA</p>
+                        </div>
+                        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">{child.gpa}</p>
+                        <p className="text-xs text-gray-500">Out of 4.0</p>
+                      </div>
+                    </div>
 
-              <button className="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 py-2 sm:py-3 rounded-lg transition font-medium flex items-center justify-center gap-2 text-sm sm:text-base">
-                <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                View Full Profile
-              </button>
-            </div>
-
-            {/* Jane Doe Card */}
-            <div className="bg-white rounded-lg shadow-sm sm:shadow p-4 sm:p-5 lg:p-6">
-              <div className="flex items-start justify-between mb-4 sm:mb-5 lg:mb-6">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <img src={pe2} alt="Jane Doe" className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full object-cover" />
-                  <div>
-                    <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900">Jane Doe</h3>
-                    <p className="text-xs sm:text-sm text-gray-600">Grade 7 Student</p>
+                    <button className="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 py-2 sm:py-3 rounded-lg transition font-medium flex items-center justify-center gap-2 text-sm sm:text-base">
+                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                      View Full Profile
+                    </button>
                   </div>
-                </div>
-                <span className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1 bg-green-100 text-green-700 text-xs sm:text-sm rounded-full">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></span>
-                  <span className="hidden xs:inline">Low Risk</span>
-                  <span className="xs:hidden">Low</span>
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:gap-6 mb-4 sm:mb-5 lg:mb-6">
-                {/* Attendance */}
-                <div>
-                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
-                    <p className="text-xs sm:text-sm text-gray-600">Attendance</p>
-                  </div>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">95%</p>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
-                    <div className="bg-green-500 h-1.5 sm:h-2 rounded-full" style={{ width: '95%' }}></div>
-                  </div>
-                </div>
-
-                {/* GPA */}
-                <div>
-                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                    <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
-                    <p className="text-xs sm:text-sm text-gray-600">GPA</p>
-                  </div>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">3.8</p>
-                  <p className="text-xs text-gray-500">Out of 4.0</p>
-                </div>
-              </div>
-
-              <button className="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 py-2 sm:py-3 rounded-lg transition font-medium flex items-center justify-center gap-2 text-sm sm:text-base">
-                <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                View Full Profile
-              </button>
-            </div>
+                );
+              })
+            ) : (
+              <div className="col-span-2 text-center text-gray-400 py-8">No children data available.</div>
+            )}
           </div>
 
           {/* Quick Actions - Responsive */}

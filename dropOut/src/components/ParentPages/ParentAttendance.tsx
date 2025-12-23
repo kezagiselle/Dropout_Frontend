@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Users, AlertTriangle, Plus, Calendar, ChevronDown, Bell, Menu, X } from 'lucide-react';
 import { IoMdSettings } from "react-icons/io";
@@ -7,19 +7,27 @@ import { useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../context/useUserAuth';
 import ParentSidebar from './ParentSidebar';
 
-const attendanceData = [
-  { day: 'Monday', Present: 90, Absent: 5, Late: 10 },
-  { day: 'Tuesday', Present: 85, Absent: 10, Late: 30 },
-  { day: 'Wednesday', Present: 88, Absent: 5, Late: 25 },
-  { day: 'Thursday', Present: 82, Absent: 12, Late: 25 },
-  { day: 'Friday', Present: 75, Absent: 20, Late: 28 },
-];
+// API Response Interface
+interface AttendanceApiResponse {
+  success: boolean;
+  message: string;
+  data: {
+    overallAttendancePercentage: number;
+    weeklyAttendancePercentages: Record<string, number>;
+    courseAttendancePercentages: Record<string, number>;
+  };
+}
 
 export default function ParentAttendance() {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [activeTab, setActiveTab] = useState('Attendance');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [attendanceData, setAttendanceData] = useState<AttendanceApiResponse['data'] | null>(null);
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { user, logout } = useUserAuth();
+  const { user, token, studentIds } = useUserAuth();
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -28,9 +36,211 @@ export default function ParentAttendance() {
   };
 
   const handleLogout = () => {
-    logout();
     navigate('/login');
   };
+
+  // Set initial selected student
+  useEffect(() => {
+    if (studentIds && studentIds.length > 0 && !selectedStudentId) {
+      setSelectedStudentId(studentIds[0]);
+    }
+  }, [studentIds, selectedStudentId]);
+
+  // Fetch attendance data from API
+  useEffect(() => {
+    const fetchAttendanceData = async () => {
+      try {
+        setLoading(true);
+        
+        if (!token) {
+          console.error('No authentication token found');
+          throw new Error('No authentication token found');
+        }
+        
+        if (!selectedStudentId) {
+          console.log('No student selected yet, waiting...');
+          setLoading(false);
+          return;
+        }
+
+        console.log('Fetching attendance for student:', selectedStudentId);
+        console.log('Using token:', token ? 'Token exists' : 'No token');
+        console.log('API URL:', `${baseUrl}/api/students/${selectedStudentId}/attendance-overview`);
+
+        const response = await fetch(`${baseUrl}/api/students/${selectedStudentId}/attendance-overview`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result: AttendanceApiResponse = await response.json();
+        console.log('API Response:', result);
+        
+        if (result.success) {
+          console.log('Setting attendance data:', result.data);
+          setAttendanceData(result.data);
+        } else {
+          throw new Error(result.message || 'Failed to fetch attendance data');
+        }
+      } catch (err) {
+        console.error('Full error details:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAttendanceData();
+  }, [token, selectedStudentId, baseUrl]);
+
+  // Transform API data for chart - Convert weekly percentages to daily format for existing chart
+  const chartData = attendanceData && attendanceData.weeklyAttendancePercentages ? 
+    Object.entries(attendanceData.weeklyAttendancePercentages)
+      .slice(0, 5)
+      .map(([week, percentage]) => {
+        const present = percentage;
+        const absent = present === 0 ? 0 : (100 - percentage);
+        // Store actual values for tooltip, but use minimum display values for visibility
+        const presentDisplay = present === 0 ? 1.5 : present; // Show small bar at 0
+        const absentDisplay = absent === 0 ? 1.5 : absent; // Show small bar at 0
+        console.log(`Transforming week: ${week}, percentage: ${percentage}, present: ${present}, absent: ${absent}`);
+        return {
+          day: week.replace('Week ', 'W').split(' ')[0],
+          Present: presentDisplay,
+          Absent: absentDisplay,
+          actualPresent: present, // Store actual value for tooltip
+          actualAbsent: absent
+        };
+      })
+    : [
+      { day: 'W1', Present: 1.5, Absent: 1.5, actualPresent: 0, actualAbsent: 0 },
+      { day: 'W2', Present: 1.5, Absent: 1.5, actualPresent: 0, actualAbsent: 0 },
+      { day: 'W3', Present: 1.5, Absent: 1.5, actualPresent: 0, actualAbsent: 0 },
+      { day: 'W4', Present: 1.5, Absent: 1.5, actualPresent: 0, actualAbsent: 0 },
+    ];
+
+  console.log('Final chartData:', chartData);
+  console.log('attendanceData:', attendanceData);
+
+  // Calculate stats from API data
+  const overallAttendance = attendanceData?.overallAttendancePercentage || 0;
+  console.log('Overall attendance:', overallAttendance);
+  const totalPresent = Math.round(overallAttendance);
+  const totalAbsent = Math.round(100 - overallAttendance);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-white border-b border-gray-200">
+          <div className="flex items-center justify-between px-2 py-1.5 xs:px-3 xs:py-2 sm:px-4 sm:py-3 lg:px-6 xl:px-8">
+            <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 md:gap-4">
+              <button 
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-1 xs:p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                {sidebarOpen ? <X className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" /> : <Menu className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />}
+              </button>
+              <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2">
+                <span className="font-semibold text-gray-800 text-xs xs:text-sm sm:text-base lg:text-lg">
+                  {user?.schoolName || 'School Name'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 lg:gap-3 xl:gap-4">
+              <div className="relative p-1 xs:p-1.5 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
+                <Bell className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-gray-600" />
+              </div>
+              <img src={userr} alt="User profile" className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 rounded-full object-cover border border-gray-200" />
+            </div>
+          </div>
+        </header>
+        <div className="flex">
+          <ParentSidebar 
+            activeTab={activeTab}
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            handleNavigation={handleNavigation}
+          />
+          <main className="flex-1 min-w-0 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 rounded w-64 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-48 mb-8"></div>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
+                <div className="h-64 bg-gray-200 rounded mb-4"></div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="h-24 bg-gray-200 rounded"></div>
+                  <div className="h-24 bg-gray-200 rounded"></div>
+                  <div className="h-24 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-white border-b border-gray-200">
+          <div className="flex items-center justify-between px-2 py-1.5 xs:px-3 xs:py-2 sm:px-4 sm:py-3 lg:px-6 xl:px-8">
+            <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 md:gap-4">
+              <button 
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-1 xs:p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                {sidebarOpen ? <X className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" /> : <Menu className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />}
+              </button>
+              <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2">
+                <span className="font-semibold text-gray-800 text-xs xs:text-sm sm:text-base lg:text-lg">
+                  {user?.schoolName || 'School Name'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 lg:gap-3 xl:gap-4">
+              <div className="relative p-1 xs:p-1.5 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
+                <Bell className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-gray-600" />
+              </div>
+              <img src={userr} alt="User profile" className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 rounded-full object-cover border border-gray-200" />
+            </div>
+          </div>
+        </header>
+        <div className="flex">
+          <ParentSidebar 
+            activeTab={activeTab}
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            handleNavigation={handleNavigation}
+          />
+          <main className="flex-1 min-w-0 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+              <div className="text-red-600 mb-2 text-4xl">⚠️</div>
+              <h3 className="text-lg font-semibold text-red-900 mb-2">Error Loading Attendance</h3>
+              <p className="text-red-700 mb-4">{error}</p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -173,9 +383,24 @@ export default function ParentAttendance() {
                 Track student attendance patterns and behavioral records
               </p>
             </div>
-            <div className="flex items-center gap-1.5 xs:gap-2 bg-white px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 rounded-lg shadow-sm sm:shadow min-w-fit">
-              <Users className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-gray-600" />
-              <span className="text-xs xs:text-sm sm:text-base font-medium whitespace-nowrap">2 Children</span>
+            <div className="flex items-center gap-2">
+              {studentIds && studentIds.length > 1 && (
+                <select
+                  value={selectedStudentId || ''}
+                  onChange={(e) => setSelectedStudentId(e.target.value)}
+                  className="bg-white px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 rounded-lg shadow-sm sm:shadow text-xs xs:text-sm sm:text-base font-medium border border-gray-200"
+                >
+                  {studentIds.map((id: string, idx: number) => (
+                    <option key={id} value={id}>
+                      Student {idx + 1}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <div className="flex items-center gap-1.5 xs:gap-2 bg-white px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 rounded-lg shadow-sm sm:shadow min-w-fit">
+                <Users className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-gray-600" />
+                <span className="text-xs xs:text-sm sm:text-base font-medium whitespace-nowrap">{studentIds?.length || 0} {studentIds?.length === 1 ? 'Child' : 'Children'}</span>
+              </div>
             </div>
           </div>
 
@@ -201,18 +426,15 @@ export default function ParentAttendance() {
                       <div className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
                       <span className="whitespace-nowrap">Absent</span>
                     </div>
-                    <div className="flex items-center gap-1 xs:gap-1.5">
-                      <div className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 bg-orange-500 rounded-full"></div>
-                      <span className="whitespace-nowrap">Late</span>
-                    </div>
                   </div>
                 </div>
 
                 <div className="h-48 xs:h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
-                      data={attendanceData}
+                      data={chartData}
                       margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
+                      barCategoryGap="20%"
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                       <XAxis 
@@ -225,6 +447,7 @@ export default function ParentAttendance() {
                         tick={{ fontSize: 10 }}
                         axisLine={{ stroke: '#e5e7eb' }}
                         tickLine={false}
+                        domain={[0, 100]}
                         label={{ 
                           value: 'Attendance (%)', 
                           angle: -90, 
@@ -239,25 +462,29 @@ export default function ParentAttendance() {
                           border: '1px solid #e5e7eb',
                           padding: '8px'
                         }}
-                        formatter={(value) => [`${value}%`, 'Attendance']}
+                        formatter={(value, name, props) => {
+                          // Show actual values in tooltip, not display values
+                          if (name === 'Present') {
+                            return [`${props.payload.actualPresent}%`, 'Present'];
+                          } else if (name === 'Absent') {
+                            return [`${props.payload.actualAbsent}%`, 'Absent'];
+                          }
+                          return [`${value}%`, name];
+                        }}
                       />
                       <Bar 
                         dataKey="Present" 
                         fill="#10b981" 
                         radius={[4, 4, 0, 0]} 
                         name="Present"
+                        maxBarSize={40}
                       />
                       <Bar 
                         dataKey="Absent" 
                         fill="#ef4444" 
                         radius={[4, 4, 0, 0]} 
                         name="Absent"
-                      />
-                      <Bar 
-                        dataKey="Late" 
-                        fill="#f97316" 
-                        radius={[4, 4, 0, 0]} 
-                        name="Late"
+                        maxBarSize={40}
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -265,18 +492,14 @@ export default function ParentAttendance() {
               </div>
 
               {/* Stats Row - Enhanced responsiveness */}
-              <div className="grid grid-cols-3 gap-2 xs:gap-3 sm:gap-4 lg:gap-6">
+              <div className="grid grid-cols-2 gap-2 xs:gap-3 sm:gap-4 lg:gap-6">
                 <div className="text-center p-2 xs:p-3 sm:p-4 rounded-lg bg-green-50">
-                  <p className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-green-600">85%</p>
+                  <p className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-green-600">{totalPresent}%</p>
                   <p className="text-xs xs:text-sm text-gray-600 mt-1 xs:mt-2">Total Present</p>
                 </div>
                 <div className="text-center p-2 xs:p-3 sm:p-4 rounded-lg bg-red-50">
-                  <p className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-red-600">10%</p>
+                  <p className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-red-600">{totalAbsent}%</p>
                   <p className="text-xs xs:text-sm text-gray-600 mt-1 xs:mt-2">Total Absent</p>
-                </div>
-                <div className="text-center p-2 xs:p-3 sm:p-4 rounded-lg bg-orange-50">
-                  <p className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-orange-600">5%</p>
-                  <p className="text-xs xs:text-sm text-gray-600 mt-1 xs:mt-2">Total Late</p>
                 </div>
               </div>
             </div>

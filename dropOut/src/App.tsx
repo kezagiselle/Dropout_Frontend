@@ -27,6 +27,7 @@ import MyChildren from "./components/ParentPages/MyChildren";
 import ParentAttendance from "./components/ParentPages/ParentAttendance";
 import Academic from "./components/ParentPages/Academic";
 import ParentSettings from "./components/ParentPages/ParentSettings";
+import ParentMarksDetail from "./components/ParentPages/ParentMarksDetail";
 import OrganDashboard from "./components/OrganisationPages/OrganDashboard";
 import SchoolsPage from "./components/OrganisationPages/SchoolsPages";
 
@@ -65,9 +66,10 @@ function App() {
           <Route path="/parent-dash" element={<ParentDashboard />} />
           <Route path="/children" element={<MyChildren/>} />
           <Route path="/parent-attendance" element={<ParentAttendance/>} />
-           <Route path="/parent-academics" element={<Academic/>} />
-           <Route path="/parent-settings" element={<ParentSettings/>} />
-           <Route path="/org-dash" element={<OrganDashboard/>} />
+          <Route path="/parent-academics" element={<Academic/>} />
+          <Route path="/parent-academic-marks" element={<ParentMarksDetail/>} />
+          <Route path="/parent-settings" element={<ParentSettings/>} />
+          <Route path="/org-dash" element={<OrganDashboard/>} />
           <Route path="/org-schools" element={<SchoolsPage/>} />
 
 

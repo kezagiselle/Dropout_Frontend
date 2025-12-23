@@ -15,6 +15,8 @@ interface DecodedToken {
   email: string;
   courses?: Course[]; // Teacher-specific: array of courses they teach
   studentId?: string; // Student-specific: student ID
+  parentId?: string; // Parent-specific: parent ID
+  studentIds?: string[]; // Parent-specific: array of student IDs
   iat: number;
   exp: number;
 }
@@ -28,7 +30,10 @@ interface UserAuthContextType {
   isTeacher: boolean;
   isPrincipal: boolean;
   isStudent: boolean;
+  isParent: boolean;
   teacherCourses: Course[];
+  parentId?: string;
+  studentIds?: string[];
 }
 
 const UserAuthContext = createContext<UserAuthContextType | undefined>(undefined);
@@ -42,7 +47,13 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const login = (newToken: string) => {
     setToken(newToken);
     localStorage.setItem("token", newToken);
-    setUser(jwtDecode<DecodedToken>(newToken));
+    const decoded = jwtDecode<DecodedToken>(newToken);
+    // Ensure parentId and studentIds are set if present
+    setUser({
+      ...decoded,
+      parentId: decoded.parentId,
+      studentIds: decoded.studentIds,
+    });
   };
 
   const logout = () => {
@@ -55,7 +66,10 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const isTeacher = user?.role === 'TEACHER';
   const isPrincipal = user?.role === 'PRINCIPAL'; 
   const isStudent = user?.role === 'STUDENT';
+  const isParent = user?.role === 'PARENT';
   const teacherCourses = user?.courses || [];
+  const parentId = user?.parentId;
+  const studentIds = user?.studentIds || [];
 
   return (
     <UserAuthContext.Provider value={{ 
@@ -66,7 +80,10 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       isTeacher,
       isPrincipal,
       isStudent,
-      teacherCourses
+      isParent,
+      teacherCourses,
+      parentId,
+      studentIds
     }}>
       {children}
     </UserAuthContext.Provider>

@@ -63,7 +63,7 @@ const LoginPage: React.FC = () => {
             navigate("/government-dashboard");
             break;
           case "PARENT":
-            navigate("/parent-dashboard");
+            navigate("/parent-dash");
             break;
           default:
             navigate("/");

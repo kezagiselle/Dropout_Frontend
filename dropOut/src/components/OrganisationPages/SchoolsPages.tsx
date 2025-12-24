@@ -131,10 +131,45 @@ export default function SchoolsPage() {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-4 sm:p-6">
-          {/* Schools Page Header */}
-          <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Schools Management</h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Monitor and manage all educational institutions under your organization.</p>
+          {/* Filters Bar */}
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <span className="text-sm font-medium text-gray-700">Filters:</span>
+              
+              {/* All Schools Dropdown */}
+              <div className="relative">
+                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
+                  <span className="text-gray-700">All Schools</span>
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+
+              {/* All Teachers Dropdown */}
+              <div className="relative">
+                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
+                  <span className="text-gray-700">All Teachers</span>
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+
+              {/* All Students Dropdown */}
+              <div className="relative">
+                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
+                  <span className="text-gray-700">All Students</span>
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+
+              {/* Save Filter Button */}
+              <button className="px-3 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium">
+                Save Filter
+              </button>
+            </div>
+
+            {/* Add School Button */}
+            <button className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium whitespace-nowrap">
+              + Add School
+            </button>
           </div>
 
           {/* Header Section */}

@@ -189,12 +189,12 @@ export default function SchoolsPage() {
               </button>
             </div>
 
-            {/* Stats Cards with new icons */}
+            {/* Stats Cards with new icons - Only Schools card has light orange background */}
             <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-              {/* Schools Card - FaSchool icon */}
-              <div className="bg-orange-100 rounded-lg p-3 sm:p-4 flex items-center justify-between">
+              {/* Schools Card - FaSchool icon - Light orange background */}
+              <div className="bg-orange-50 rounded-lg p-3 sm:p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-200 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                     <FaSchool className="text-orange-600 text-lg sm:text-xl" />
                   </div>
                   <span className="text-gray-700 font-medium text-sm sm:text-base">Schools</span>
@@ -202,8 +202,8 @@ export default function SchoolsPage() {
                 <span className="text-xl sm:text-2xl font-bold text-gray-900">3</span>
               </div>
 
-              {/* Total Students Card - IoMdSchool icon */}
-              <div className="bg-blue-50 rounded-lg p-3 sm:p-4 flex items-center justify-between">
+              {/* Total Students Card - IoMdSchool icon - Plain white background */}
+              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                     <IoMdSchool className="text-blue-600 text-lg sm:text-xl" />
@@ -213,8 +213,8 @@ export default function SchoolsPage() {
                 <span className="text-xl sm:text-2xl font-bold text-gray-900">1200</span>
               </div>
 
-              {/* Dropout Rate Card - PiWarningBold icon (orange) */}
-              <div className="bg-orange-50 rounded-lg p-3 sm:p-4 flex items-center justify-between">
+              {/* Dropout Rate Card - PiWarningBold icon - Plain white background */}
+              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                     <PiWarningBold className="text-orange-600 text-lg sm:text-xl" />
@@ -224,8 +224,8 @@ export default function SchoolsPage() {
                 <span className="text-xl sm:text-2xl font-bold text-gray-900">3%</span>
               </div>
 
-              {/* At-Risk Students Card - PiWarningCircle icon (red) */}
-              <div className="bg-red-50 rounded-lg p-3 sm:p-4 flex items-center justify-between">
+              {/* At-Risk Students Card - PiWarningCircle icon - Plain white background */}
+              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center">
                     <PiWarningCircle className="text-red-600 text-lg sm:text-xl" />

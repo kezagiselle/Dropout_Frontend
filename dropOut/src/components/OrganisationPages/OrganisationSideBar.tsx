@@ -62,12 +62,6 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
       
       <nav className="p-3 sm:p-4 relative z-50 bg-white h-full flex flex-col">
         <div className="flex-1">
-          {/* Organization Header */}
-          <div className="mb-6 px-3">
-            <h2 className="text-lg font-semibold text-gray-800">Organization</h2>
-            <p className="text-sm text-gray-500">Management Dashboard</p>
-          </div>
-          
           {/* Dashboard Button */}
           <button 
             className={`w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 ${

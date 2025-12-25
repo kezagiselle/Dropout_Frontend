@@ -170,7 +170,7 @@ export default function OrganDashboard() {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-4 sm:p-6">
-          {/* Filters Bar */}
+          {/* Filters Bar - Added after header */}
           <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <span className="text-sm font-medium text-gray-700">Filters:</span>
@@ -204,109 +204,9 @@ export default function OrganDashboard() {
                 Save Filter
               </button>
             </div>
-
-            {/* Removed Add School Button as requested */}
           </div>
 
-          {/* Header Section */}
-          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
-              {/* Dropdown */}
-              <div className="relative w-full sm:w-64">
-                <button className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
-                  <span className="font-semibold text-gray-900">{selectedRegion}</span>
-                  <ChevronDown className="w-5 h-5 text-gray-500" />
-                </button>
-              </div>
-
-              {/* Clear All Button */}
-              <button className="text-blue-600 hover:text-blue-700 font-medium text-sm self-end sm:self-auto">
-                Clear All
-              </button>
-            </div>
-
-            {/* Stats Cards with new icons */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-              {/* Schools Card - FaSchool icon */}
-              <div className="bg-orange-100 rounded-lg p-3 sm:p-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-200 rounded-lg flex items-center justify-center">
-                    <FaSchool className="text-orange-600 text-lg sm:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">Schools</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">3</span>
-              </div>
-
-              {/* Total Students Card - IoMdSchool icon */}
-              <div className="bg-blue-50 rounded-lg p-3 sm:p-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <IoMdSchool className="text-blue-600 text-lg sm:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">Total Students</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">1200</span>
-              </div>
-
-              {/* Dropout Rate Card - PiWarningBold icon (orange) */}
-              <div className="bg-orange-50 rounded-lg p-3 sm:p-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <PiWarningBold className="text-orange-600 text-lg sm:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">Dropout Rate</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">3%</span>
-              </div>
-
-              {/* At-Risk Students Card - PiWarningCircle icon (red) */}
-              <div className="bg-red-50 rounded-lg p-3 sm:p-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                    <PiWarningCircle className="text-red-600 text-lg sm:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">At-Risk Students</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">30</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Filters Section */}
-          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
-            <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
-              {/* Search Input */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search by school name"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
-                />
-              </div>
-
-              {/* Region Filter */}
-              <div className="relative w-full md:w-48">
-                <button className="w-full px-4 py-2.5 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
-                  <span className="text-gray-700 text-sm sm:text-base">All Regions</span>
-                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                </button>
-              </div>
-
-              {/* Risk Level Filter */}
-              <div className="relative w-full md:w-48">
-                <button className="w-full px-4 py-2.5 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
-                  <span className="text-gray-700 text-sm sm:text-base">All Risk Levels</span>
-                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Original Dashboard Stats Cards - Improved Responsiveness */}
+          {/* FIVE STATS CARDS */}
           <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
             {stats.map((stat, idx) => (
               <div key={idx} className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow">

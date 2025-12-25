@@ -37,7 +37,7 @@ interface FormData {
   internetAccess: string;
 }
 
-export default function AddNewSchool() {
+export default function AddSchoolForm() {
   const [formData, setFormData] = useState<FormData>({
     schoolName: '',
     schoolCode: '',

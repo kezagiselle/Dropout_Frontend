@@ -167,9 +167,12 @@ export default function SchoolsPage() {
             </div>
 
             {/* Add School Button */}
-            <button className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium whitespace-nowrap">
-              + Add School
-            </button>
+           <button
+               onClick={() => navigate('/add-school')}
+               className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium whitespace-nowrap"
+               >
+                 + Add School
+              </button>
           </div>
 
           {/* Header Section */}

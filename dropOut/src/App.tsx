@@ -31,6 +31,7 @@ import ParentMarksDetail from "./components/ParentPages/ParentMarksDetail";
 import OrganDashboard from "./components/OrganisationPages/OrganDashboard";
 import SchoolsPage from "./components/OrganisationPages/SchoolsPages";
 import ViewProfileSchool from "./components/OrganisationPages/ViewProfileSchool";
+import AddSchoolForm from "./components/OrganisationPages/AddSchoolForm";
 
 
 function App() {
@@ -73,6 +74,8 @@ function App() {
           <Route path="/org-dash" element={<OrganDashboard/>} />
           <Route path="/org-schools" element={<SchoolsPage/>} />
           <Route path="/view-profile-school" element={<ViewProfileSchool/>} />
+          <Route path="/add-school" element={<AddSchoolForm />} />
+
 
 
            

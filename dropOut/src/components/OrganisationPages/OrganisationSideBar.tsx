@@ -37,7 +37,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
   
   const menuItems: MenuItem[] = [
     { icon: Building2, label: 'Schools', path: '/org-schools' },
-    { icon: Users, label: 'Students', path: '/students' },
+    { icon: Users, label: 'Students', path: '/student-page' },
     { icon: GraduationCap, label: 'Teachers', path: '/teachers' },
     { icon: BookOpen, label: 'Courses & Timetable', path: '/courses-timetable' },
     { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },

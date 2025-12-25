@@ -32,6 +32,7 @@ import OrganDashboard from "./components/OrganisationPages/OrganDashboard";
 import SchoolsPage from "./components/OrganisationPages/SchoolsPages";
 import ViewProfileSchool from "./components/OrganisationPages/ViewProfileSchool";
 import AddSchoolForm from "./components/OrganisationPages/AddSchoolForm";
+import StudentPage from "./components/OrganisationPages/StudentPage";
 
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
           <Route path="/org-schools" element={<SchoolsPage/>} />
           <Route path="/view-profile-school" element={<ViewProfileSchool/>} />
           <Route path="/add-school" element={<AddSchoolForm />} />
+          <Route path="/student-page" element={<StudentPage />} />
 
 
 

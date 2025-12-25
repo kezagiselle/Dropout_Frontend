@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Menu, X, Bell, Calendar, ChevronDown } from 'lucide-react';
+import OrganizationSidebar from '../OrganisationPages/OrganisationSideBar';
+import userr from "../../../src/img/userr.png";
+import { useUserAuth } from '../../context/useUserAuth';
 
 interface FormData {
   schoolName: string;
@@ -74,6 +78,17 @@ export default function AddSchoolForm() {
     internetAccess: ''
   });
 
+  const [activeTab, setActiveTab] = useState('Schools');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user, logout } = useUserAuth();
+
+  const handleNavigation = (path: string, tabName: string) => {
+    setActiveTab(tabName);
+    navigate(path);
+    setSidebarOpen(false);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -111,528 +126,622 @@ export default function AddSchoolForm() {
 
   const handleSubmit = () => {
     console.log('Form submitted:', formData);
+    // After submitting, navigate back to schools page
+    navigate('/org-schools');
   };
 
   const handleCancel = () => {
     console.log('Form cancelled');
+    navigate('/org-schools');
+  };
+
+  const handleBack = () => {
+    navigate('/org-schools');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <button className="bg-gray-800 text-white px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-700">
-              <ArrowLeft className="w-4 h-4" />
-              Back
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 lg:px-6">
+          {/* Left Section - Mobile Menu Button and Organization Name */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {sidebarOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-800">Add New School</h1>
-          <p className="text-sm text-gray-500">Enter School Informations</p>
-        </div>
-
-        {/* Basic School Information */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-cyan-400 mb-4">Basic School Information</h2>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">School Name</label>
-              <input
-                type="text"
-                name="schoolName"
-                value={formData.schoolName}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            
+            <div className="flex items-center gap-1 sm:gap-2">
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">{user?.name || 'Education Organization'}</span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">School Code / Unique ID</label>
-              <input
-                type="text"
-                name="schoolCode"
-                value={formData.schoolCode}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Type of School</label>
-              <select
-                name="typeOfSchool"
-                value={formData.typeOfSchool}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            {/* Header Navigation Links */}
+            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
+              <button 
+                onClick={() => handleNavigation('/org-dash', 'Dashboard')}
+                className="hover:text-orange-600 transition-colors"
               >
-                <option value="">Select type</option>
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Ownership</label>
-              <select
-                name="ownership"
-                value={formData.ownership}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                Dashboard
+              </button>
+              <button 
+                onClick={() => handleNavigation('/org-schools', 'Schools')}
+                className="hover:text-orange-600 transition-colors"
               >
-                <option value="">Select ownership</option>
-                <option value="government">Government</option>
-                <option value="private">Private</option>
-                <option value="religious">Religious</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Education Level</label>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    checked={formData.educationLevel.includes('Primary')}
-                    onChange={() => handleEducationLevelChange('Primary')}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm text-gray-700">Primary</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    checked={formData.educationLevel.includes('Secondary')}
-                    onChange={() => handleEducationLevelChange('Secondary')}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm text-gray-700">Secondary</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    checked={formData.educationLevel.includes('University')}
-                    onChange={() => handleEducationLevelChange('University')}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm text-gray-700">University</span>
-                </label>
-              </div>
-              <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Year of Establishment</label>
-                <input
-                  type="text"
-                  name="yearOfEstablishment"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">School Category</label>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="schoolCategory"
-                    value="Day"
-                    checked={formData.schoolCategory === 'Day'}
-                    onChange={handleInputChange}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm text-gray-700">Day</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="schoolCategory"
-                    value="Boarding"
-                    checked={formData.schoolCategory === 'Boarding'}
-                    onChange={handleInputChange}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm text-gray-700">Boarding</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="schoolCategory"
-                    value="Mixed"
-                    checked={formData.schoolCategory === 'Mixed'}
-                    onChange={handleInputChange}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm text-gray-700">Mixed</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Location & Contact */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-cyan-400 mb-4">Location & Contact</h2>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Province</label>
-              <select
-                name="province"
-                value={formData.province}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                Schools
+              </button>
+              <button 
+                onClick={() => handleNavigation('/reports', 'Reports')}
+                className="hover:text-orange-600 transition-colors"
               >
-                <option value="">Select province</option>
-                <option value="kigali">Kigali</option>
-                <option value="northern">Northern</option>
-                <option value="southern">Southern</option>
-                <option value="eastern">Eastern</option>
-                <option value="western">Western</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">District</label>
-              <select
-                name="district"
-                value={formData.district}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                Reports
+              </button>
+              <button 
+                onClick={() => handleNavigation('/organization-settings', 'Settings')}
+                className="hover:text-orange-600 transition-colors"
               >
-                <option value="">Select district</option>
-                <option value="gasabo">Gasabo</option>
-                <option value="kicukiro">Kicukiro</option>
-                <option value="nyarugenge">Nyarugenge</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Sector</label>
-              <select
-                name="sector"
-                value={formData.sector}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select sector</option>
-                <option value="sector1">Sector 1</option>
-                <option value="sector2">Sector 2</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">GPS Coordinates</label>
-              <input
-                type="text"
-                name="gpsCoordinates"
-                placeholder="Optional"
-                value={formData.gpsCoordinates}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Exact Address</label>
-            <textarea
-              name="exactAddress"
-              value={formData.exactAddress}
-              onChange={handleInputChange}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            ></textarea>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-              <input
-                type="email"
-                name="emailAddress"
-                value={formData.emailAddress}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number(s)</label>
-              {formData.phoneNumbers.map((phone, index) => (
-                <input
-                  key={index}
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => handlePhoneChange(index, e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-                />
-              ))}
-              <button
-                onClick={addPhoneNumber}
-                className="text-orange-500 text-sm font-medium hover:text-orange-600"
-              >
-                + Add More
+                Settings
               </button>
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Website</label>
-            <input
-              type="url"
-              name="website"
-              placeholder="Optional"
-              value={formData.website}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Right Section - Calendar, Notifications, Profile */}
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4">
+            {/* Calendar - Hidden on mobile, visible on tablet and up */}
+            <div className="hidden sm:flex items-center gap-1 lg:gap-2 text-xs sm:text-sm text-gray-600">
+              <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 hidden lg:block" />
+            </div>
+
+            {/* Notifications */}
+            <div className="relative">
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+              <span className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
+            </div>
+
+            {/* Profile - Compact on mobile */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              <img src={userr} alt="User profile" className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full object-cover" />
+              <span className="text-xs sm:text-sm font-medium hidden sm:block">{user?.name || 'Organization Admin'}</span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
+            </div>
           </div>
         </div>
+      </header>
 
-        {/* Administration */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-cyan-400 mb-4">Administration</h2>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Head of School / Principal</label>
-              <input
-                type="text"
-                name="headOfSchool"
-                value={formData.headOfSchool}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Registration Number</label>
-              <input
-                type="text"
-                name="registrationNumber"
-                value={formData.registrationNumber}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
+      <div className="flex">
+        {/* Organization Sidebar */}
+        <OrganizationSidebar 
+          activeTab={activeTab}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          handleNavigation={handleNavigation}
+        />
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Head of Department(s)</label>
-              <input
-                type="text"
-                name="headOfDepartment"
-                value={formData.headOfDepartment}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+        {/* Main Content */}
+        <main className="flex-1 min-w-0 p-3 sm:p-4 md:p-6">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                <button 
+                  onClick={handleBack}
+                  className="bg-gray-800 text-white px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-700 text-sm sm:text-base"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back
+                </button>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Add New School</h1>
+              <p className="text-xs sm:text-sm text-gray-500">Enter School Informations</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Supervising Authority</label>
-              <select
-                name="supervisingAuthority"
-                value={formData.supervisingAuthority}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+
+            {/* Basic School Information */}
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-semibold text-cyan-400 mb-3 sm:mb-4">Basic School Information</h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">School Name</label>
+                  <input
+                    type="text"
+                    name="schoolName"
+                    value={formData.schoolName}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">School Code / Unique ID</label>
+                  <input
+                    type="text"
+                    name="schoolCode"
+                    value={formData.schoolCode}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Type of School</label>
+                  <select
+                    name="typeOfSchool"
+                    value={formData.typeOfSchool}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  >
+                    <option value="">Select type</option>
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Ownership</label>
+                  <select
+                    name="ownership"
+                    value={formData.ownership}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  >
+                    <option value="">Select ownership</option>
+                    <option value="government">Government</option>
+                    <option value="private">Private</option>
+                    <option value="religious">Religious</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Education Level</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        checked={formData.educationLevel.includes('Primary')}
+                        onChange={() => handleEducationLevelChange('Primary')}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-xs sm:text-sm text-gray-700">Primary</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        checked={formData.educationLevel.includes('Secondary')}
+                        onChange={() => handleEducationLevelChange('Secondary')}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-xs sm:text-sm text-gray-700">Secondary</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        checked={formData.educationLevel.includes('University')}
+                        onChange={() => handleEducationLevelChange('University')}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-xs sm:text-sm text-gray-700">University</span>
+                    </label>
+                  </div>
+                  <div className="mt-3">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Year of Establishment</label>
+                    <input
+                      type="text"
+                      name="yearOfEstablishment"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">School Category</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="schoolCategory"
+                        value="Day"
+                        checked={formData.schoolCategory === 'Day'}
+                        onChange={handleInputChange}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-xs sm:text-sm text-gray-700">Day</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="schoolCategory"
+                        value="Boarding"
+                        checked={formData.schoolCategory === 'Boarding'}
+                        onChange={handleInputChange}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-xs sm:text-sm text-gray-700">Boarding</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="schoolCategory"
+                        value="Mixed"
+                        checked={formData.schoolCategory === 'Mixed'}
+                        onChange={handleInputChange}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-xs sm:text-sm text-gray-700">Mixed</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Location & Contact */}
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-semibold text-cyan-400 mb-3 sm:mb-4">Location & Contact</h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Province</label>
+                  <select
+                    name="province"
+                    value={formData.province}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  >
+                    <option value="">Select province</option>
+                    <option value="kigali">Kigali</option>
+                    <option value="northern">Northern</option>
+                    <option value="southern">Southern</option>
+                    <option value="eastern">Eastern</option>
+                    <option value="western">Western</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">District</label>
+                  <select
+                    name="district"
+                    value={formData.district}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  >
+                    <option value="">Select district</option>
+                    <option value="gasabo">Gasabo</option>
+                    <option value="kicukiro">Kicukiro</option>
+                    <option value="nyarugenge">Nyarugenge</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Sector</label>
+                  <select
+                    name="sector"
+                    value={formData.sector}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  >
+                    <option value="">Select sector</option>
+                    <option value="sector1">Sector 1</option>
+                    <option value="sector2">Sector 2</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">GPS Coordinates</label>
+                  <input
+                    type="text"
+                    name="gpsCoordinates"
+                    placeholder="Optional"
+                    value={formData.gpsCoordinates}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Exact Address</label>
+                <textarea
+                  name="exactAddress"
+                  value={formData.exactAddress}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                ></textarea>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                  <input
+                    type="email"
+                    name="emailAddress"
+                    value={formData.emailAddress}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Phone Number(s)</label>
+                  {formData.phoneNumbers.map((phone, index) => (
+                    <input
+                      key={index}
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => handlePhoneChange(index, e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 text-sm sm:text-base"
+                    />
+                  ))}
+                  <button
+                    onClick={addPhoneNumber}
+                    className="text-orange-500 text-xs sm:text-sm font-medium hover:text-orange-600"
+                  >
+                    + Add More
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Website</label>
+                <input
+                  type="url"
+                  name="website"
+                  placeholder="Optional"
+                  value={formData.website}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                />
+              </div>
+            </div>
+
+            {/* Administration */}
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-semibold text-cyan-400 mb-3 sm:mb-4">Administration</h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Head of School / Principal</label>
+                  <input
+                    type="text"
+                    name="headOfSchool"
+                    value={formData.headOfSchool}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Registration Number</label>
+                  <input
+                    type="text"
+                    name="registrationNumber"
+                    value={formData.registrationNumber}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Head of Department(s)</label>
+                  <input
+                    type="text"
+                    name="headOfDepartment"
+                    value={formData.headOfDepartment}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Supervising Authority</label>
+                  <select
+                    name="supervisingAuthority"
+                    value={formData.supervisingAuthority}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  >
+                    <option value="">Select authority</option>
+                    <option value="reb">REB</option>
+                    <option value="mineduc">MINEDUC</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Staffing & Capacity */}
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-semibold text-cyan-400 mb-3 sm:mb-4">Staffing & Capacity</h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Number of Teachers</label>
+                  <input
+                    type="number"
+                    name="numberOfTeachers"
+                    value={formData.numberOfTeachers}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Number of Admin Staff</label>
+                  <input
+                    type="number"
+                    name="numberOfAdminStaff"
+                    value={formData.numberOfAdminStaff}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Maximum Student Capacity</label>
+                  <input
+                    type="number"
+                    name="maximumStudentCapacity"
+                    value={formData.maximumStudentCapacity}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Current Enrollment</label>
+                  <input
+                    type="number"
+                    name="currentEnrollment"
+                    value={formData.currentEnrollment}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Infrastructure */}
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-semibold text-cyan-400 mb-3 sm:mb-4">Infrastructure</h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Number of Classrooms</label>
+                  <input
+                    type="number"
+                    name="numberOfClassrooms"
+                    value={formData.numberOfClassrooms}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Dormitories</label>
+                  <input
+                    type="text"
+                    name="dormitories"
+                    placeholder="Optional if boarding"
+                    value={formData.dormitories}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-3">Facilities</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="library"
+                      checked={formData.facilities.library}
+                      onChange={handleCheckboxChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">Library</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="labs"
+                      checked={formData.facilities.labs}
+                      onChange={handleCheckboxChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">Labs</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="ictRooms"
+                      checked={formData.facilities.ictRooms}
+                      onChange={handleCheckboxChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">ICT Rooms</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="sports"
+                      checked={formData.facilities.sports}
+                      onChange={handleCheckboxChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">Sports</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="canteen"
+                      checked={formData.facilities.canteen}
+                      onChange={handleCheckboxChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">Canteen</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="others"
+                      checked={formData.facilities.others}
+                      onChange={handleCheckboxChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">Others</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Internet Access</label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="internetAccess"
+                      value="Yes"
+                      checked={formData.internetAccess === 'Yes'}
+                      onChange={handleInputChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">Yes</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="internetAccess"
+                      value="No"
+                      checked={formData.internetAccess === 'No'}
+                      onChange={handleInputChange}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-xs sm:text-sm text-gray-700">No</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-end gap-3">
+              <button
+                onClick={handleCancel}
+                className="px-4 sm:px-6 py-2 border border-cyan-400 text-cyan-400 rounded-lg font-medium hover:bg-cyan-50 text-sm sm:text-base w-full sm:w-auto"
               >
-                <option value="">Select authority</option>
-                <option value="reb">REB</option>
-                <option value="mineduc">MINEDUC</option>
-              </select>
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="px-4 sm:px-6 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 text-sm sm:text-base w-full sm:w-auto"
+              >
+                Save School
+              </button>
             </div>
           </div>
-        </div>
-
-        {/* Staffing & Capacity */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-cyan-400 mb-4">Staffing & Capacity</h2>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Number of Teachers</label>
-              <input
-                type="number"
-                name="numberOfTeachers"
-                value={formData.numberOfTeachers}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Number of Admin Staff</label>
-              <input
-                type="number"
-                name="numberOfAdminStaff"
-                value={formData.numberOfAdminStaff}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Maximum Student Capacity</label>
-              <input
-                type="number"
-                name="maximumStudentCapacity"
-                value={formData.maximumStudentCapacity}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Current Enrollment</label>
-              <input
-                type="number"
-                name="currentEnrollment"
-                value={formData.currentEnrollment}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Infrastructure */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-cyan-400 mb-4">Infrastructure</h2>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Number of Classrooms</label>
-              <input
-                type="number"
-                name="numberOfClassrooms"
-                value={formData.numberOfClassrooms}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Dormitories</label>
-              <input
-                type="text"
-                name="dormitories"
-                placeholder="Optional if boarding"
-                value={formData.dormitories}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-3">Facilities</label>
-            <div className="grid grid-cols-3 gap-3">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="library"
-                  checked={formData.facilities.library}
-                  onChange={handleCheckboxChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">Library</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="labs"
-                  checked={formData.facilities.labs}
-                  onChange={handleCheckboxChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">Labs</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="ictRooms"
-                  checked={formData.facilities.ictRooms}
-                  onChange={handleCheckboxChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">ICT Rooms</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="sports"
-                  checked={formData.facilities.sports}
-                  onChange={handleCheckboxChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">Sports</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="canteen"
-                  checked={formData.facilities.canteen}
-                  onChange={handleCheckboxChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">Canteen</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="others"
-                  checked={formData.facilities.others}
-                  onChange={handleCheckboxChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">Others</span>
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Internet Access</label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="internetAccess"
-                  value="Yes"
-                  checked={formData.internetAccess === 'Yes'}
-                  onChange={handleInputChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">Yes</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="internetAccess"
-                  value="No"
-                  checked={formData.internetAccess === 'No'}
-                  onChange={handleInputChange}
-                  className="w-4 h-4"
-                />
-                <span className="text-sm text-gray-700">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={handleCancel}
-            className="px-6 py-2 border border-cyan-400 text-cyan-400 rounded-lg font-medium hover:bg-cyan-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="px-6 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600"
-          >
-            Save School
-          </button>
-        </div>
+        </main>
       </div>
     </div>
   );

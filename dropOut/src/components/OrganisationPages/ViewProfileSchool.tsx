@@ -125,240 +125,242 @@ export default function SchoolDashboard() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6">
+        <main className="flex-1 min-w-0 p-3 sm:p-4 md:p-6">
           {/* Filters Bar */}
-          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <span className="text-sm font-medium text-gray-700">Filters:</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-700">Filters:</span>
               
               {/* All Schools Dropdown */}
               <div className="relative">
-                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
+                <button className="px-2 sm:px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm">
                   <span className="text-gray-700">All Schools</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-3 h-3 sm:w-4 h-4 text-gray-500" />
                 </button>
               </div>
 
               {/* All Teachers Dropdown */}
               <div className="relative">
-                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
+                <button className="px-2 sm:px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm">
                   <span className="text-gray-700">All Teachers</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-3 h-3 sm:w-4 h-4 text-gray-500" />
                 </button>
               </div>
 
               {/* All Students Dropdown */}
               <div className="relative">
-                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
+                <button className="px-2 sm:px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm">
                   <span className="text-gray-700">All Students</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-3 h-3 sm:w-4 h-4 text-gray-500" />
                 </button>
               </div>
 
               {/* Save Filter Button */}
-              <button className="px-3 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium">
+              <button className="px-2 sm:px-3 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-xs sm:text-sm font-medium">
                 Save Filter
               </button>
             </div>
           </div>
 
           {/* Header Section */}
-          <div className="flex justify-between items-center mb-6">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
+            <div className="relative w-full sm:w-auto">
               <select 
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full sm:w-auto appearance-none bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 pr-8 sm:pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
               >
                 <option value="GASABO">GASABO</option>
                 <option value="KICUKIRO">KICUKIRO</option>
                 <option value="NYARUGENGE">NYARUGENGE</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
             </div>
-            <button className="text-orange-500 font-medium hover:text-orange-600">
+            <button className="text-orange-500 font-medium hover:text-orange-600 text-sm sm:text-base self-end sm:self-auto">
               Clear All
             </button>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-orange-100 p-2 rounded-lg">
-                  <GraduationCap className="w-6 h-6 text-orange-500" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="bg-orange-100 p-1.5 sm:p-2 rounded-lg">
+                  <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-orange-500" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Schools</div>
-                  <div className="text-2xl font-bold text-gray-800">3</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Schools</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-800">3</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <Users className="w-6 h-6 text-blue-500" />
+            <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-500" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Total Students</div>
-                  <div className="text-2xl font-bold text-gray-800">1200</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Total Students</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-800">1200</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-orange-100 p-2 rounded-lg">
-                  <AlertTriangle className="w-6 h-6 text-orange-500" />
+            <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="bg-orange-100 p-1.5 sm:p-2 rounded-lg">
+                  <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-orange-500" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Dropout Rate</div>
-                  <div className="text-2xl font-bold text-gray-800">3%</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Dropout Rate</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-800">3%</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-red-100 p-2 rounded-lg">
-                  <AlertCircle className="w-6 h-6 text-red-500" />
+            <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="bg-red-100 p-1.5 sm:p-2 rounded-lg">
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-red-500" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">At-Risk Students</div>
-                  <div className="text-2xl font-bold text-gray-800">30</div>
+                  <div className="text-xs sm:text-sm text-gray-600">At-Risk Students</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-800">30</div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* School Card */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <div className="flex justify-between items-start mb-6">
-              <div className="flex gap-4">
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-start mb-4 sm:mb-6 gap-4">
+              <div className="flex flex-col md:flex-row gap-4 w-full">
                 {/* School Icon */}
-                <div className="bg-green-100 rounded-lg p-8 flex items-center justify-center w-48 h-48">
+                <div className="bg-green-100 rounded-lg p-4 sm:p-6 md:p-8 flex items-center justify-center w-full md:w-48 h-48 mx-auto md:mx-0">
                   <div className="text-center">
-                    <FaSchool className="w-16 h-16 text-orange-500 mx-auto mb-3" />
-                    <div className="text-base font-medium text-gray-700">Westfield High<br/>School</div>
+                    <FaSchool className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-orange-500 mx-auto mb-2 sm:mb-3" />
+                    <div className="text-sm sm:text-base font-medium text-gray-700">Westfield High<br/>School</div>
                   </div>
                 </div>
 
-                {/* Head of Department */}
-                <div className="bg-orange-50 rounded-lg p-6 flex-1 min-h-[192px] flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Users className="w-5 h-5 text-orange-500" />
-                    <span className="text-sm text-orange-600">Head of Department</span>
+                <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                  {/* Head of Department */}
+                  <div className="bg-orange-50 rounded-lg p-4 sm:p-6 flex-1 min-h-[140px] sm:min-h-[192px] flex flex-col justify-center">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Users className="w-4 h-4 sm:w-5 h-5 text-orange-500" />
+                      <span className="text-xs sm:text-sm text-orange-600">Head of Department</span>
+                    </div>
+                    <div className="text-xl sm:text-2xl font-bold text-orange-500">Sarah Wilson</div>
                   </div>
-                  <div className="text-2xl font-bold text-orange-500">Sarah Wilson</div>
-                </div>
 
-                {/* Location */}
-                <div className="bg-green-50 rounded-lg p-6 flex-1 min-h-[192px] flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MapPin className="w-5 h-5 text-green-600" />
-                    <span className="text-sm text-green-600">Location</span>
+                  {/* Location */}
+                  <div className="bg-green-50 rounded-lg p-4 sm:p-6 flex-1 min-h-[140px] sm:min-h-[192px] flex flex-col justify-center">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MapPin className="w-4 h-4 sm:w-5 h-5 text-green-600" />
+                      <span className="text-xs sm:text-sm text-green-600">Location</span>
+                    </div>
+                    <div className="text-xl sm:text-2xl font-bold text-gray-400">Gasabo</div>
                   </div>
-                  <div className="text-2xl font-bold text-gray-400">Gasabo</div>
                 </div>
               </div>
 
-              <button className="bg-orange-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-orange-600">
+              <button className="bg-orange-500 text-white px-4 sm:px-6 py-2 rounded-lg font-medium hover:bg-orange-600 w-full lg:w-auto mt-4 lg:mt-0 text-sm sm:text-base">
                 View
               </button>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-blue-50 rounded-lg p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-1">
                   <Users className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm text-blue-600">Total Enrollment</span>
+                  <span className="text-xs sm:text-sm text-blue-600">Total Enrollment</span>
                 </div>
-                <div className="text-3xl font-bold text-blue-600">485</div>
+                <div className="text-2xl sm:text-3xl font-bold text-blue-600">485</div>
               </div>
 
-              <div className="bg-green-50 rounded-lg p-4">
+              <div className="bg-green-50 rounded-lg p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-1">
                   <UserCheck className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-green-600">Teaching Staff</span>
+                  <span className="text-xs sm:text-sm text-green-600">Teaching Staff</span>
                 </div>
-                <div className="text-3xl font-bold text-green-600">28</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-600">28</div>
               </div>
             </div>
 
             {/* Description */}
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 text-sm sm:text-base mb-4 sm:mb-6">
               Westfield High School is committed to providing quality education in a nurturing environment. Our dedicated 
               staff works closely with families to ensure every student reaches their full potential.
             </p>
 
             {/* Two Column Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Student Statistics */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Student Statistics</h3>
-                <div className="space-y-3">
+                <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Student Statistics</h3>
+                <div className="space-y-2 sm:space-y-3">
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-blue-500" />
-                      <span className="text-gray-700">Total Students</span>
+                      <span className="text-sm sm:text-base text-gray-700">Total Students</span>
                     </div>
-                    <span className="font-bold text-gray-800">485</span>
+                    <span className="font-bold text-gray-800 text-sm sm:text-base">485</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-orange-500" />
-                      <span className="text-gray-700">Dropout Rate</span>
+                      <span className="text-sm sm:text-base text-gray-700">Dropout Rate</span>
                     </div>
-                    <span className="font-bold text-green-600">3.2%</span>
+                    <span className="font-bold text-green-600 text-sm sm:text-base">3.2%</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <div className="flex items-center gap-2">
                       <UserCheck className="w-4 h-4 text-blue-500" />
-                      <span className="text-gray-700">Avg Attendance</span>
+                      <span className="text-sm sm:text-base text-gray-700">Avg Attendance</span>
                     </div>
-                    <span className="font-bold text-green-600">94.8%</span>
+                    <span className="font-bold text-green-600 text-sm sm:text-base">94.8%</span>
                   </div>
                   <div className="flex justify-between items-center py-2">
                     <div className="flex items-center gap-2">
                       <AlertCircle className="w-4 h-4 text-red-500" />
-                      <span className="text-gray-700">At-Risk Students</span>
+                      <span className="text-sm sm:text-base text-gray-700">At-Risk Students</span>
                     </div>
-                    <span className="font-bold text-red-600">12</span>
+                    <span className="font-bold text-red-600 text-sm sm:text-base">12</span>
                   </div>
                 </div>
               </div>
 
               {/* Academic & Behavior */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Academic & Behavior</h3>
-                <div className="space-y-3">
+                <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">Academic & Behavior</h3>
+                <div className="space-y-2 sm:space-y-3">
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 text-yellow-500">⭐</div>
-                      <span className="text-gray-700">Average Grade</span>
+                      <span className="text-sm sm:text-base text-gray-700">Average Grade</span>
                     </div>
-                    <span className="font-bold text-blue-600">B+ (87%)</span>
+                    <span className="font-bold text-blue-600 text-sm sm:text-base">B+ (87%)</span>
                   </div>
                   <div className="flex justify-between items-center py-2">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 text-orange-500">⚡</div>
-                      <span className="text-gray-700">Behavior Incidents</span>
+                      <span className="text-sm sm:text-base text-gray-700">Behavior Incidents</span>
                     </div>
-                    <span className="font-bold text-orange-600">8</span>
+                    <span className="font-bold text-orange-600 text-sm sm:text-base">8</span>
                   </div>
                 </div>
 
                 {/* Quick Actions */}
-                <div className="mt-6">
-                  <h4 className="text-sm font-bold text-gray-800 mb-3">Quick Actions</h4>
+                <div className="mt-4 sm:mt-6">
+                  <h4 className="text-xs sm:text-sm font-bold text-gray-800 mb-2 sm:mb-3">Quick Actions</h4>
                   <div className="space-y-2">
-                    <button className="w-full bg-blue-400 text-white py-3 rounded-lg font-medium hover:bg-blue-500 transition-colors flex items-center justify-center gap-2">
-                      <TbReportSearch className="w-5 h-5" />
+                    <button className="w-full bg-blue-400 text-white py-2 sm:py-3 rounded-lg font-medium hover:bg-blue-500 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                      <TbReportSearch className="w-4 h-4 sm:w-5 h-5" />
                       View Full Report
                     </button>
-                    <button className="w-full bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors">
+                    <button className="w-full bg-red-500 text-white py-2 sm:py-3 rounded-lg font-medium hover:bg-red-600 transition-colors text-sm sm:text-base">
                       Delete School
                     </button>
                   </div>
@@ -367,13 +369,12 @@ export default function SchoolDashboard() {
             </div>
           </div>
 
-        
-         <div className="flex justify-end">
-           <button className="w-full lg:w-auto bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
-           View All Schools
-          </button>
-         </div>
-
+          {/* View All Schools Button */}
+          <div className="flex justify-center sm:justify-end">
+            <button className="w-full sm:w-auto bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors text-sm sm:text-base">
+              View All Schools
+            </button>
+          </div>
         </main>
       </div>
     </div>

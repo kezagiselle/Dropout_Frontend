@@ -334,7 +334,7 @@ export default function StudentPage() {
                         <button className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm whitespace-nowrap">
                           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                           <span className="hidden xs:inline">View Profile</span>
-                          <span className="xs:hidden">View</span>
+                          <span className="xs:hidden">View Profile</span>
                         </button>
                       </td>
                     </tr>

@@ -283,30 +283,33 @@ export default function SchoolsPage() {
                     <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {schools.map((school, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <a href="#" className="text-blue-600 hover:text-blue-700 font-medium text-sm sm:text-base">
-                          {school.name}
-                        </a>
-                      </td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.region}</td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.dropoutRate}</td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRiskLevelColor(school.riskLevel)}`}>
-                          {school.riskLevel}
-                        </span>
-                      </td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <a href="#" className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 font-medium text-xs sm:text-sm">
-                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                          View Profile
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+               <tbody className="divide-y divide-gray-200">
+  {schools.map((school, idx) => (
+    <tr key={idx} className="hover:bg-gray-50 transition-colors">
+      <td className="px-4 sm:px-6 py-3 sm:py-4">
+        <a href="#" className="text-blue-600 hover:text-blue-700 font-medium text-sm sm:text-base">
+          {school.name}
+        </a>
+      </td>
+      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.region}</td>
+      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.dropoutRate}</td>
+      <td className="px-4 sm:px-6 py-3 sm:py-4">
+        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRiskLevelColor(school.riskLevel)}`}>
+          {school.riskLevel}
+        </span>
+      </td>
+      <td className="px-4 sm:px-6 py-3 sm:py-4">
+        <button 
+          onClick={() => navigate('/view-profile-school')}
+          className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 font-medium text-xs sm:text-sm hover:underline"
+        >
+          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+          View Profile
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
               </table>
             </div>
 

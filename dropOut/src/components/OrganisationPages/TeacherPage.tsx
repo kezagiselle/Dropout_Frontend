@@ -36,6 +36,11 @@ export default function TeacherPage() {
     setSidebarOpen(false);
   };
 
+  const handleViewTeacherProfile = (schoolId: number) => {
+    // Navigate to ViewTeacherPage with the school ID as a parameter
+    navigate(`/view-teachers`);
+  };
+
   const schools = [
     { id: 1, name: 'Westfield High School', region: 'Region A', teachers: 72, teacherColor: 'bg-green-200' },
     { id: 2, name: 'Washington High School', region: 'Region B', teachers: 50, teacherColor: 'bg-yellow-200' },
@@ -343,7 +348,10 @@ export default function TeacherPage() {
                         </span>
                       </td>
                       <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
-                        <button className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm whitespace-nowrap">
+                        <button 
+                          onClick={() => handleViewTeacherProfile(school.id)}
+                          className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm whitespace-nowrap"
+                        >
                           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                           <span className="hidden xs:inline">View Profile</span>
                           <span className="xs:hidden">View Profile</span>

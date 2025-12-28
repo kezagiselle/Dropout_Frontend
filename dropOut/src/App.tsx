@@ -80,7 +80,7 @@ function App() {
           <Route path="/add-school" element={<AddSchoolForm />} />
           <Route path="/student-page" element={<StudentPage />} />
           <Route path="/teacher-page" element={<TeacherPage />} />
-          <Route path="/view-Teachers" element={<ViewTeacherPage/>} />
+          <Route path="/view-teachers" element={<ViewTeacherPage/>} />
 
 
 

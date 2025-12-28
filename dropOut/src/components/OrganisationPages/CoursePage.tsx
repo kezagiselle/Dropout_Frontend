@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
-  GraduationCap, 
-  Users, 
-  TrendingDown, 
-  AlertCircle, 
   ExternalLink, 
   ChevronLeft, 
   ChevronRight, 
@@ -15,9 +11,12 @@ import {
   Bell,
   Calendar
 } from 'lucide-react';
-import OrganizationSidebar from '../OrganisationPages/OrganisationSideBar'; // Adjust path as needed
-import userr from "../../../src/img/userr.png"; // Adjust path as needed
-import { useUserAuth } from '../../context/useUserAuth'; // Adjust path as needed
+import { FaSchool } from "react-icons/fa6";
+import { IoMdSchool } from "react-icons/io";
+import { PiWarningBold, PiWarningCircle } from "react-icons/pi";
+import OrganizationSidebar from '../OrganisationPages/OrganisationSideBar'; 
+import userr from "../../../src/img/userr.png";
+import { useUserAuth } from '../../context/useUserAuth'; 
 
 export default function CoursePage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -200,8 +199,8 @@ export default function CoursePage() {
             </button>
           </div>
 
-          {/* Header with Region Selector and Clear All */}
-          <div className="flex items-center justify-between mb-4 sm:mb-6">
+          {/* REMOVED: Header with Region Selector and Clear All */}
+          {/* <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div className="relative inline-block">
               <select className="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 pr-8 sm:pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm sm:text-base">
                 <option>GASABO</option>
@@ -213,67 +212,69 @@ export default function CoursePage() {
             <button className="text-blue-600 hover:text-blue-700 text-xs sm:text-sm font-medium">
               Clear All
             </button>
-          </div>
+          </div> */}
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
-            {/* Schools Card */}
-            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 border border-gray-200 hover:shadow-sm transition-shadow">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6 text-orange-600" />
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-xs sm:text-sm font-medium">Schools</div>
-                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">3</div>
-                  </div>
-                </div>
+          {/* Stats Cards Section - Updated with TeacherPage cards */}
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 lg:mb-6 gap-3">
+              {/* Dropdown */}
+              <div className="relative w-full sm:w-48 lg:w-64">
+                <button className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
+                  <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">GASABO</span>
+                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
+                </button>
               </div>
+
+              {/* Clear All Button */}
+              <button className="text-blue-600 hover:text-blue-700 font-medium text-xs sm:text-sm self-end sm:self-auto whitespace-nowrap">
+                Clear All
+              </button>
             </div>
 
-            {/* Total Students Card */}
-            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 border border-gray-200 hover:shadow-sm transition-shadow">
-              <div className="flex items-center justify-between">
+            {/* Stats Cards with updated backgrounds - Enhanced grid responsiveness */}
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+              {/* Schools Card */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Users className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FaSchool className="text-orange-600 text-base sm:text-lg lg:text-xl" />
                   </div>
-                  <div>
-                    <div className="text-gray-600 text-xs sm:text-sm font-medium">Total Students</div>
-                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">1200</div>
-                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Schools</span>
                 </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">3</span>
               </div>
-            </div>
 
-            {/* Dropout Rate Card */}
-            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 border border-gray-200 hover:shadow-sm transition-shadow">
-              <div className="flex items-center justify-between">
+              {/* Total Students Card - Updated to white background */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <TrendingDown className="w-4 h-4 sm:w-6 sm:h-6 text-orange-600" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <IoMdSchool className="text-blue-600 text-base sm:text-lg lg:text-xl" />
                   </div>
-                  <div>
-                    <div className="text-gray-600 text-xs sm:text-sm font-medium">Dropout Rate</div>
-                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">3%</div>
-                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Total Students</span>
                 </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">1200</span>
               </div>
-            </div>
 
-            {/* At-Risk Students Card */}
-            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 border border-gray-200 hover:shadow-sm transition-shadow">
-              <div className="flex items-center justify-between">
+              {/* Dropout Rate Card */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <AlertCircle className="w-4 h-4 sm:w-6 sm:h-6 text-red-600" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <PiWarningBold className="text-orange-600 text-base sm:text-lg lg:text-xl" />
                   </div>
-                  <div>
-                    <div className="text-gray-600 text-xs sm:text-sm font-medium">At-Risk Students</div>
-                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">30</div>
-                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Dropout Rate</span>
                 </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">3%</span>
+              </div>
+
+              {/* At-Risk Students Card */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <PiWarningCircle className="text-red-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">At-Risk Students</span>
+                </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">30</span>
               </div>
             </div>
           </div>
@@ -354,7 +355,7 @@ export default function CoursePage() {
                         {school.region}
                       </td>
                       <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
-                        <div className="flex justify-between items-center gap-4">
+                        <div className="flex items-center gap-2">
                           <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-xs sm:text-sm whitespace-nowrap">
                             <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                             <span>View Timetable</span>

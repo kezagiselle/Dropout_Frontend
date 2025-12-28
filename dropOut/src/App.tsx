@@ -36,6 +36,7 @@ import StudentPage from "./components/OrganisationPages/StudentPage";
 import TeacherPage from "./components/OrganisationPages/TeacherPage";
 import ViewTeacherPage from "./components/OrganisationPages/ViewTeacherPage";
 import CoursePage from "./components/OrganisationPages/CoursePage";
+import ExamPages from "./components/OrganisationPages/ExamPages";
 
 
 function App() {
@@ -83,7 +84,7 @@ function App() {
           <Route path="/teacher-page" element={<TeacherPage />} />
           <Route path="/view-teachers" element={<ViewTeacherPage/>} />
           <Route path="/course-timetable" element={<CoursePage/>} />
-          <Route path="/exam-grades" element={<Exam/>} />
+          <Route path="/exams-grades" element={<ExamPages/>} />
 
 
 

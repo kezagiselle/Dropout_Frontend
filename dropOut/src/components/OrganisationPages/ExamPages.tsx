@@ -265,6 +265,50 @@ export default function ExamPages() {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
+          {/* Filters Bar - Enhanced Responsiveness */}
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Filters:</span>
+              
+              {/* All Schools Dropdown */}
+              <div className="relative">
+                <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm min-w-[100px]">
+                  <span className="text-gray-700 truncate">All Schools</span>
+                  <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              {/* All Teachers Dropdown */}
+              <div className="relative">
+                <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm min-w-[100px]">
+                  <span className="text-gray-700 truncate">All Teachers</span>
+                  <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              {/* All Students Dropdown */}
+              <div className="relative">
+                <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm min-w-[100px]">
+                  <span className="text-gray-700 truncate">All Students</span>
+                  <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              {/* Save Filter Button */}
+              <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap">
+                Save Filter
+              </button>
+            </div>
+
+            {/* Add School Button */}
+            <button
+              onClick={() => navigate('/add-school')}
+              className="w-full sm:w-auto px-3 py-2 sm:px-4 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap mt-2 sm:mt-0"
+            >
+              + Add School
+            </button>
+          </div>
+
           <div className="max-w-7xl mx-auto">
             {/* Header with Region Selector and Clear All */}
             <div className="flex items-center justify-between mb-6">

@@ -1,11 +1,40 @@
 import React, { useState } from 'react';
-import { Search, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  ChevronDown, 
+  Search, 
+  ExternalLink, 
+  ChevronLeft, 
+  ChevronRight,
+  Menu,
+  X,
+  Bell,
+  Calendar
+} from 'lucide-react';
+import { FaSchool } from "react-icons/fa6";
+import { IoMdSchool } from "react-icons/io";
+import { PiWarningBold, PiWarningCircle } from "react-icons/pi";
+import OrganizationSidebar from '../OrganisationPages/OrganisationSideBar';
+import userr from "../../../src/img/userr.png"; // Adjust path as needed
+import { useUserAuth } from '../../context/useUserAuth'; // Adjust path as needed
 
 export default function TeacherPage() {
+  const [selectedDistrict, setSelectedDistrict] = useState('GASABO');
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState('All Risk Levels');
-  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  
+  const [activeTab, setActiveTab] = useState('Teachers');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user, logout } = useUserAuth();
+
+  const handleNavigation = (path: string, tabName: string) => {
+    setActiveTab(tabName);
+    navigate(path);
+    setSidebarOpen(false);
+  };
 
   const schools = [
     { id: 1, name: 'Westfield High School', region: 'Region A', teachers: 72, teacherColor: 'bg-green-200' },
@@ -18,175 +47,358 @@ export default function TeacherPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header with Region Selector */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-gray-700 font-medium">GASABO</span>
-              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 lg:px-6">
+          {/* Left Section - Mobile Menu Button and Organization Name */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {sidebarOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
+            </button>
+            
+            <div className="flex items-center gap-1 sm:gap-2">
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base truncate max-w-[120px] sm:max-w-none">
+                {user?.name || 'Education Organization'}
+              </span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
-            <button className="text-blue-500 text-sm hover:text-blue-600">Clear All</button>
-          </div>
-        </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow-sm p-4 flex items-center gap-3">
-            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center">
-              <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-              </svg>
-            </div>
-            <div>
-              <div className="text-gray-600 text-sm">Schools</div>
-              <div className="text-2xl font-bold">3</div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-4 flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-              <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-              </svg>
-            </div>
-            <div>
-              <div className="text-gray-600 text-sm">Total Students</div>
-              <div className="text-2xl font-bold">1200</div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-4 flex items-center gap-3">
-            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center">
-              <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
-              </svg>
-            </div>
-            <div>
-              <div className="text-gray-600 text-sm">Dropout Rate</div>
-              <div className="text-2xl font-bold">3%</div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-4 flex items-center gap-3">
-            <div className="w-8 h-8 bg-red-100 rounded flex items-center justify-center">
-              <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-              </svg>
-            </div>
-            <div>
-              <div className="text-gray-600 text-sm">At-Risk Students</div>
-              <div className="text-2xl font-bold">30</div>
+            {/* Header Navigation Links */}
+            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
+              <button 
+                onClick={() => handleNavigation('/org-dash', 'Dashboard')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button 
+                onClick={() => handleNavigation('/org-schools', 'Schools')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Schools
+              </button>
+              <button 
+                onClick={() => handleNavigation('/student-page', 'Students')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Students
+              </button>
+              <button 
+                onClick={() => handleNavigation('/teachers', 'Teachers')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Teachers
+              </button>
+              <button 
+                onClick={() => handleNavigation('/reports', 'Reports')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Reports
+              </button>
+              <button 
+                onClick={() => handleNavigation('/organization-settings', 'Settings')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Settings
+              </button>
             </div>
           </div>
-        </div>
 
-        {/* Filters and Search */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search by School name"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          {/* Right Section - Calendar, Notifications, Profile */}
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4">
+            {/* Calendar - Hidden on mobile, visible on tablet and up */}
+            <div className="hidden sm:flex items-center gap-1 lg:gap-2 text-xs sm:text-sm text-gray-600">
+              <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 hidden lg:block" />
+            </div>
+
+            {/* Notifications */}
+            <div className="relative">
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+              <span className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-orange-500 rounded-full text-white text-xs flex items-center justify-center">3</span>
+            </div>
+
+            {/* Profile - Compact on mobile */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              <img 
+                src={userr} 
+                alt="User profile" 
+                className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full object-cover" 
               />
+              <span className="text-xs sm:text-sm font-medium hidden sm:block truncate max-w-[100px] lg:max-w-none">
+                {user?.name || 'Admin'}
+              </span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
-            <select
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option>All Regions</option>
-              <option>Region A</option>
-              <option>Region B</option>
-              <option>Region C</option>
-            </select>
-            <select
-              value={selectedRiskLevel}
-              onChange={(e) => setSelectedRiskLevel(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option>All Risk Levels</option>
-              <option>Low Risk</option>
-              <option>Medium Risk</option>
-              <option>High Risk</option>
-            </select>
           </div>
         </div>
+      </header>
 
-        {/* Table */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  School Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Region
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Number of Teachers
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredSchools.map((school) => (
-                <tr key={school.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-blue-600 hover:text-blue-800 cursor-pointer">
-                      {school.name}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                    {school.region}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center justify-center px-4 py-1 rounded-full ${school.teacherColor} text-gray-800 font-medium`}>
-                      {school.teachers}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button className="flex items-center gap-1 text-blue-600 hover:text-blue-800">
-                      <ExternalLink className="w-4 h-4" />
-                      <span className="text-sm">View Profile</span>
-                    </button>
-                  </td>
-                </tr>
+      <div className="flex">
+        {/* Organization Sidebar */}
+        <OrganizationSidebar 
+          activeTab={activeTab}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          handleNavigation={handleNavigation}
+        />
+
+        {/* Main Content */}
+        <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
+          {/* Filters Bar - Enhanced Responsiveness */}
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Filters:</span>
+              
+              {/* All Schools Dropdown */}
+              <div className="relative">
+                <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm min-w-[100px]">
+                  <span className="text-gray-700 truncate">All Schools</span>
+                  <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              {/* All Teachers Dropdown */}
+              <div className="relative">
+                <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm min-w-[100px]">
+                  <span className="text-gray-700 truncate">All Teachers</span>
+                  <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              {/* All Students Dropdown */}
+              <div className="relative">
+                <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1 sm:gap-2 hover:border-gray-400 transition-colors text-xs sm:text-sm min-w-[100px]">
+                  <span className="text-gray-700 truncate">All Students</span>
+                  <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              {/* Save Filter Button */}
+              <button className="px-2 py-1.5 sm:px-3 sm:py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap">
+                Save Filter
+              </button>
+            </div>
+
+            {/* Add School Button */}
+            <button
+              onClick={() => navigate('/add-school')}
+              className="w-full sm:w-auto px-3 py-2 sm:px-4 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap mt-2 sm:mt-0"
+            >
+              + Add School
+            </button>
+          </div>
+
+          {/* Stats Cards Section */}
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 lg:mb-6 gap-3">
+              {/* Dropdown */}
+              <div className="relative w-full sm:w-48 lg:w-64">
+                <button className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
+                  <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{selectedDistrict}</span>
+                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
+                </button>
+              </div>
+
+              {/* Clear All Button */}
+              <button className="text-blue-600 hover:text-blue-700 font-medium text-xs sm:text-sm self-end sm:self-auto whitespace-nowrap">
+                Clear All
+              </button>
+            </div>
+
+            {/* Stats Cards with updated backgrounds - Enhanced grid responsiveness */}
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+              {/* Schools Card */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FaSchool className="text-orange-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Schools</span>
+                </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">3</span>
+              </div>
+
+              {/* Total Students Card - Light blue background */}
+              <div className="bg-blue-50 rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <IoMdSchool className="text-blue-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Total Students</span>
+                </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">1200</span>
+              </div>
+
+              {/* Dropout Rate Card */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <PiWarningBold className="text-orange-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Dropout Rate</span>
+                </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">3%</span>
+              </div>
+
+              {/* At-Risk Students Card */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <PiWarningCircle className="text-red-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">At-Risk Students</span>
+                </div>
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">30</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Search and Filters - Enhanced Responsiveness */}
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              {/* Search Input */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search by School name"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                />
+              </div>
+
+              {/* All Regions Dropdown */}
+              <div className="relative w-full sm:w-auto">
+                <select
+                  value={selectedRegion}
+                  onChange={(e) => setSelectedRegion(e.target.value)}
+                  className="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 pr-8 sm:pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-sm sm:text-base"
+                >
+                  <option value="All Regions">All Regions</option>
+                  <option value="Region A">Region A</option>
+                  <option value="Region B">Region B</option>
+                  <option value="Region C">Region C</option>
+                </select>
+                <ChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
+              </div>
+
+              {/* All Risk Levels Dropdown */}
+              <div className="relative w-full sm:w-auto">
+                <select
+                  value={selectedRiskLevel}
+                  onChange={(e) => setSelectedRiskLevel(e.target.value)}
+                  className="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 pr-8 sm:pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-sm sm:text-base"
+                >
+                  <option value="All Risk Levels">All Risk Levels</option>
+                  <option value="High Risk">High Risk</option>
+                  <option value="Medium Risk">Medium Risk</option>
+                  <option value="Low Risk">Low Risk</option>
+                </select>
+                <ChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+          </div>
+
+          {/* Schools Table - Enhanced Responsiveness */}
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-4 sm:mb-6">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">
+                      School Name
+                    </th>
+                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">
+                      Region
+                    </th>
+                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">
+                      Number of Teachers
+                    </th>
+                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredSchools.map((school) => (
+                    <tr key={school.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
+                        <a href="#" className="text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm lg:text-base truncate block max-w-[150px] sm:max-w-none">
+                          {school.name}
+                        </a>
+                      </td>
+                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-gray-700 text-xs sm:text-sm lg:text-base whitespace-nowrap">
+                        {school.region}
+                      </td>
+                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
+                        <span className={`inline-flex items-center px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${school.teacherColor} text-gray-800 whitespace-nowrap`}>
+                          {school.teachers}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
+                        <button className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm whitespace-nowrap">
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="hidden xs:inline">View Profile</span>
+                          <span className="xs:hidden">View</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Pagination - Enhanced Responsiveness */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+              Showing 1 to {filteredSchools.length} of {schools.length} schools
+            </div>
+            
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm whitespace-nowrap"
+              >
+                <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Previous</span>
+                <span className="sm:hidden">Prev</span>
+              </button>
+
+              {[1, 2, 3, 4].map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
+                    currentPage === page
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                  }`}
+                >
+                  {page}
+                </button>
               ))}
-            </tbody>
-          </table>
 
-          {/* Pagination */}
-          <div className="px-6 py-4 border-t flex items-center justify-between">
-            <div className="text-sm text-gray-600">
-              Showing 1 to 3 of 24 schools
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1 text-gray-600">
-                <ChevronLeft className="w-4 h-4" />
-                Previous
-              </button>
-              <button className="px-3 py-1 bg-orange-500 text-white rounded">1</button>
-              <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">2</button>
-              <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">3</button>
-              <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">4</button>
-              <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1">
-                Next
-                <ChevronRight className="w-4 h-4" />
+              <button
+                onClick={() => setCurrentPage(Math.min(4, currentPage + 1))}
+                disabled={currentPage === 4}
+                className="flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm whitespace-nowrap"
+              >
+                <span className="hidden sm:inline">Next</span>
+                <span className="sm:hidden">Next</span>
+                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

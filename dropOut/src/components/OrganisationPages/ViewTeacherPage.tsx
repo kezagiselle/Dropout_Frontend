@@ -222,28 +222,28 @@ export default function ViewTeacherPage() {
             <p className="text-blue-600 text-sm mt-1">Westfield High School</p>
           </div>
 
-          {/* Search and Filters */}
+          {/* Search and Filters - Enhanced Responsiveness */}
           <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+            <div className="flex flex-col md:flex-row gap-3 sm:gap-4 items-start md:items-center">
               {/* Search Bar */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <div className="flex-1 relative w-full">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="text"
                   placeholder="Search teachers..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                 />
               </div>
 
               {/* Department Filter */}
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-600 whitespace-nowrap">Department:</label>
+              <div className="flex flex-col xs:flex-row items-start xs:items-center gap-1 xs:gap-2 w-full xs:w-auto">
+                <label className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">Department:</label>
                 <select
                   value={selectedDepartment}
                   onChange={(e) => setSelectedDepartment(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full xs:w-auto px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
                 >
                   <option>All Departments</option>
                   <option>Mathematics</option>
@@ -253,12 +253,12 @@ export default function ViewTeacherPage() {
               </div>
 
               {/* Status Filter */}
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-600 whitespace-nowrap">Status:</label>
+              <div className="flex flex-col xs:flex-row items-start xs:items-center gap-1 xs:gap-2 w-full xs:w-auto">
+                <label className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">Status:</label>
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full xs:w-auto px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
                 >
                   <option>All</option>
                   <option>Active</option>
@@ -268,8 +268,8 @@ export default function ViewTeacherPage() {
               </div>
 
               {/* Clear Filters Button */}
-              <button className="text-blue-600 hover:text-blue-700 text-sm whitespace-nowrap flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button className="text-blue-600 hover:text-blue-700 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 self-start xs:self-center mt-2 xs:mt-0">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
                 Clear Filters
@@ -277,25 +277,25 @@ export default function ViewTeacherPage() {
             </div>
           </div>
 
-          {/* Table */}
+          {/* Table - Enhanced Responsiveness */}
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[640px]">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-3 sm:py-2.5 lg:px-4 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Teacher Name
                     </th>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-3 sm:py-2.5 lg:px-4 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Department
                     </th>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-3 sm:py-2.5 lg:px-4 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Assigned Courses
                     </th>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-3 sm:py-2.5 lg:px-4 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 sm:px-3 sm:py-2.5 lg:px-4 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -303,47 +303,48 @@ export default function ViewTeacherPage() {
                 <tbody className="bg-white">
                   {filteredTeachers.map((teacher) => (
                     <tr key={teacher.id} className="hover:bg-gray-50">
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center">
-                            <IoPersonSharp className="w-5 h-5 text-blue-600" />
+                      <td className="px-2 py-2.5 sm:px-3 sm:py-3 lg:px-4 lg:py-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="flex items-center justify-center flex-shrink-0">
+                            <IoPersonSharp className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                           </div>
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{teacher.name}</div>
-                            <div className="text-sm text-gray-500">{teacher.email}</div>
+                          <div className="min-w-0">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">{teacher.name}</div>
+                            <div className="text-xs sm:text-sm text-gray-500 truncate">{teacher.email}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 whitespace-nowrap text-sm text-gray-700">
+                      <td className="px-2 py-2.5 sm:px-3 sm:py-3 lg:px-4 lg:py-4 text-xs sm:text-sm text-gray-700 truncate">
                         {teacher.department}
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
-                        <div className="flex flex-wrap gap-2">
+                      <td className="px-2 py-2.5 sm:px-3 sm:py-3 lg:px-4 lg:py-4">
+                        <div className="flex flex-wrap gap-1 sm:gap-2">
                           {teacher.courses.map((course, idx) => (
                             <span
                               key={idx}
-                              className={`px-3 py-1 rounded-full text-xs font-medium ${teacher.courseColors[idx]}`}
+                              className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-medium ${teacher.courseColors[idx]} truncate max-w-[100px] sm:max-w-none`}
                             >
                               {course}
                             </span>
                           ))}
                         </div>
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 whitespace-nowrap">
+                      <td className="px-2 py-2.5 sm:px-3 sm:py-3 lg:px-4 lg:py-4">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          className={`inline-flex px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-medium ${
                             teacher.status === 'Active'
                               ? 'bg-green-100 text-green-700'
                               : 'bg-yellow-100 text-yellow-700'
-                          }`}
+                          } whitespace-nowrap`}
                         >
                           {teacher.status}
                         </span>
                       </td>
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 whitespace-nowrap">
-                        <button className="flex items-center gap-2 text-blue-600 hover:text-blue-800 text-sm">
-                          <Edit2 className="w-4 h-4" />
-                          <span>View Profile</span>
+                      <td className="px-2 py-2.5 sm:px-3 sm:py-3 lg:px-4 lg:py-4">
+                        <button className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 text-xs sm:text-sm whitespace-nowrap">
+                          <Edit2 className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="hidden xs:inline">View Profile</span>
+                          <span className="xs:hidden">View</span>
                         </button>
                       </td>
                     </tr>
@@ -352,22 +353,24 @@ export default function ViewTeacherPage() {
               </table>
             </div>
 
-            {/* Pagination */}
-            <div className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="text-sm text-gray-600">
+            {/* Pagination - Enhanced Responsiveness */}
+            <div className="px-2 py-2.5 sm:px-3 sm:py-3 lg:px-4 lg:py-4 border-t flex flex-col xs:flex-row items-center justify-between gap-2 sm:gap-3">
+              <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap mb-2 xs:mb-0">
                 Showing 1 to {filteredTeachers.length} of {teachers.length} results
               </div>
-              <div className="flex items-center gap-2">
-                <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1 text-gray-600 text-sm">
-                  <ChevronLeft className="w-4 h-4" />
-                  Previous
+              <div className="flex items-center gap-1 sm:gap-2">
+                <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1 text-gray-600 text-xs sm:text-sm whitespace-nowrap">
+                  <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Previous</span>
+                  <span className="sm:hidden">Prev</span>
                 </button>
-                <button className="px-3 py-2 bg-orange-500 text-white rounded text-sm min-w-[32px]">
+                <button className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-orange-500 text-white rounded text-xs sm:text-sm font-medium flex items-center justify-center">
                   1
                 </button>
-                <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1 text-gray-600 text-sm">
-                  Next
-                  <ChevronRight className="w-4 h-4" />
+                <button className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-1 text-gray-600 text-xs sm:text-sm whitespace-nowrap">
+                  <span className="hidden sm:inline">Next</span>
+                  <span className="sm:hidden">Next</span>
+                  <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>

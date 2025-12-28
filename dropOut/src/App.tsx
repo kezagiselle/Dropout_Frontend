@@ -35,6 +35,7 @@ import AddSchoolForm from "./components/OrganisationPages/AddSchoolForm";
 import StudentPage from "./components/OrganisationPages/StudentPage";
 import TeacherPage from "./components/OrganisationPages/TeacherPage";
 import ViewTeacherPage from "./components/OrganisationPages/ViewTeacherPage";
+import CoursePage from "./components/OrganisationPages/CoursePage";
 
 
 function App() {
@@ -81,6 +82,8 @@ function App() {
           <Route path="/student-page" element={<StudentPage />} />
           <Route path="/teacher-page" element={<TeacherPage />} />
           <Route path="/view-teachers" element={<ViewTeacherPage/>} />
+          <Route path="/course-timetable" element={<CoursePage/>} />
+
 
 
 

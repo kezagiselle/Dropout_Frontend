@@ -199,21 +199,6 @@ export default function CoursePage() {
             </button>
           </div>
 
-          {/* REMOVED: Header with Region Selector and Clear All */}
-          {/* <div className="flex items-center justify-between mb-4 sm:mb-6">
-            <div className="relative inline-block">
-              <select className="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 pr-8 sm:pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm sm:text-base">
-                <option>GASABO</option>
-                <option>KICUKIRO</option>
-                <option>NYARUGENGE</option>
-              </select>
-              <ChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 pointer-events-none" />
-            </div>
-            <button className="text-blue-600 hover:text-blue-700 text-xs sm:text-sm font-medium">
-              Clear All
-            </button>
-          </div> */}
-
           {/* Stats Cards Section - Updated with TeacherPage cards */}
           <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 lg:mb-6 gap-3">
@@ -355,16 +340,10 @@ export default function CoursePage() {
                         {school.region}
                       </td>
                       <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
-                        <div className="flex items-center gap-2">
-                          <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-xs sm:text-sm whitespace-nowrap">
-                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                            <span>View Timetable</span>
-                          </button>
-                          <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-xs sm:text-sm whitespace-nowrap">
-                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                            <span>View Profile</span>
-                          </button>
-                        </div>
+                        <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-xs sm:text-sm whitespace-nowrap">
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span>View Profile</span>
+                        </button>
                       </td>
                     </tr>
                   ))}

@@ -83,6 +83,8 @@ function App() {
           <Route path="/teacher-page" element={<TeacherPage />} />
           <Route path="/view-teachers" element={<ViewTeacherPage/>} />
           <Route path="/course-timetable" element={<CoursePage/>} />
+          <Route path="/exam-grades" element={<Exam/>} />
+
 
 
 

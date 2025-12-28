@@ -4,13 +4,13 @@ import {
   BarChart3, 
   Building2, 
   Users, 
-  GraduationCap, 
   CalendarDays,
   BookOpen,
   FileText,
   Settings,
   LogOut 
 } from 'lucide-react';
+import { FaChalkboardTeacher } from "react-icons/fa";
 import { useUserAuth } from '../../context/useUserAuth';
 
 interface MenuItem {
@@ -38,7 +38,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
   const menuItems: MenuItem[] = [
     { icon: Building2, label: 'Schools', path: '/org-schools' },
     { icon: Users, label: 'Students', path: '/student-page' },
-    { icon: GraduationCap, label: 'Teachers', path: '/teacher-page' },
+    { icon: FaChalkboardTeacher, label: 'Teachers', path: '/teacher-page' },
     { icon: BookOpen, label: 'Courses & Timetable', path: '/courses-timetable' },
     { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },
     { icon: FileText, label: 'Reports', path: '/reports' },

@@ -224,8 +224,8 @@ export default function TeacherPage() {
                 <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">3</span>
               </div>
 
-              {/* Total Students Card - Light blue background */}
-              <div className="bg-blue-50 rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
+              {/* Total Students Card - Updated to white background */}
+              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <IoMdSchool className="text-blue-600 text-base sm:text-lg lg:text-xl" />
@@ -346,7 +346,7 @@ export default function TeacherPage() {
                         <button className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm whitespace-nowrap">
                           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                           <span className="hidden xs:inline">View Profile</span>
-                          <span className="xs:hidden">View</span>
+                          <span className="xs:hidden">View Profile</span>
                         </button>
                       </td>
                     </tr>

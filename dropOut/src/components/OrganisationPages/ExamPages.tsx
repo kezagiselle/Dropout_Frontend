@@ -145,6 +145,17 @@ export default function ExamPages() {
     setSidebarOpen(false);
   };
 
+  const handleViewExams = (schoolId: number, schoolName: string) => {
+    // Navigate to timetable page and pass school info if needed
+    navigate('/organ-timetable', { 
+      state: { 
+        schoolId, 
+        schoolName,
+        from: 'exams-page' 
+      } 
+    });
+  };
+
   const schools = [
     { id: 1, name: 'Westfield High School', region: 'Region A' },
     { id: 2, name: 'Washington High School', region: 'Region B' },
@@ -263,8 +274,8 @@ export default function ExamPages() {
           handleNavigation={handleNavigation}
         />
 
-        {/* Main Content */}
-        <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
+        {/* Main Content - Modified to be closer to sidebar */}
+        <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-4 lg:ml-0"> {/* Reduced padding and removed margin-left */}
           {/* Filters Bar - Enhanced Responsiveness */}
           <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -309,7 +320,8 @@ export default function ExamPages() {
             </button>
           </div>
 
-          <div className="max-w-7xl mx-auto">
+          {/* Main Content Container - Removed max-width and mx-auto to use full available space */}
+          <div className="w-full">
             {/* Header with Region Selector and Clear All */}
             <div className="flex items-center justify-between mb-6">
               <div className="relative inline-block">
@@ -502,13 +514,13 @@ export default function ExamPages() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-4">
-                          <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-sm">
+                          {/* Updated "View Exams" button to navigate to Timetable */}
+                          <button 
+                            onClick={() => handleViewExams(school.id, school.name)}
+                            className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-sm"
+                          >
                             <ExternalLink className="w-4 h-4" />
                             <span>View Exams</span>
-                          </button>
-                          <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-sm">
-                            <ExternalLink className="w-4 h-4" />
-                            <span>View Profile</span>
                           </button>
                         </div>
                       </td>

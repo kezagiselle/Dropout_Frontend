@@ -133,7 +133,7 @@ export default function ExamPages() {
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState('All Risk Levels');
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState('Exams & Grades');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const navigate = useNavigate();

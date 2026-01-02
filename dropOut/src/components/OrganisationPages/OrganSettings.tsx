@@ -31,8 +31,7 @@ const OrganSettings = () => {
   const [language, setLanguage] = useState('English');
   const [showProfile, setShowProfile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('Settings');
-
+  const [activeTab, setActiveTab] = useState<TabName>('Settings'); 
 
 const handleNavigation = (path: RoutePath, tabName: TabName) => {
   setActiveTab(tabName);

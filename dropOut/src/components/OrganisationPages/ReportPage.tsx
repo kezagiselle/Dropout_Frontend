@@ -161,6 +161,12 @@ export default function ReportPage() {
     navigate('/login');
   };
 
+  // Function to handle View Profile click - navigates to ReportsView
+  const handleViewProfile = (schoolName: string) => {
+    // You can pass school data if needed
+    navigate('/report-view', { state: { schoolName } });
+  };
+
   const getRiskLevelColor = (level: string) => {
     switch (level) {
       case 'Low':
@@ -487,10 +493,13 @@ export default function ReportPage() {
                             <IoNotificationsSharp className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                             <span>Generate Report</span>
                           </button>
-                          <a href="#" className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium flex items-center justify-center gap-1 w-full sm:w-auto">
+                          <button 
+                            onClick={() => handleViewProfile(school.name)}
+                            className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium flex items-center justify-center gap-1 w-full sm:w-auto cursor-pointer"
+                          >
                             <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span>View Profile</span>
-                          </a>
+                          </button>
                         </div>
                       </td>
                     </tr>

@@ -39,6 +39,7 @@ import CoursePage from "./components/OrganisationPages/CoursePage";
 import ExamPages from "./components/OrganisationPages/ExamPages";
 import TimetablePage from "./components/OrganisationPages/TimetablePage";
 import ReportPage from "./components/OrganisationPages/ReportPage";
+import ReportsView from "./components/OrganisationPages/ReportView";
 
 
 function App() {
@@ -89,6 +90,8 @@ function App() {
           <Route path="/exams-grades" element={<ExamPages/>} />
           <Route path="/organ-timetable" element={<TimetablePage/>} />
           <Route path="/organ-report" element={<ReportPage/>} />
+          <Route path="/report-view" element={<ReportsView/>} />
+
 
 
 

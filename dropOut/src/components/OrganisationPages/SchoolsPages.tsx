@@ -81,7 +81,7 @@ export default function SchoolsPage() {
                 Schools
               </button>
               <button 
-                onClick={() => handleNavigation('/reports', 'Reports')}
+                onClick={() => handleNavigation('/re', 'Reports')}
                 className="hover:text-orange-600 transition-colors"
               >
                 Reports

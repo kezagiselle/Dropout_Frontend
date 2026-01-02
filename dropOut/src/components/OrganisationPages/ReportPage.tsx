@@ -25,7 +25,10 @@ import {
   X,
   Bell
 } from 'lucide-react';
-import { FaChalkboardTeacher } from "react-icons/fa";
+import { FaChalkboardTeacher, FaSchool } from "react-icons/fa";
+import { IoMdSchool } from "react-icons/io";
+import { PiWarningBold, PiWarningCircle } from "react-icons/pi";
+import { IoNotificationsSharp } from "react-icons/io5";
 import { useUserAuth } from '../../context/useUserAuth';
 import userr from "../../../src/img/userr.png";
 
@@ -126,7 +129,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
 
 // Main ReportPage Component
 export default function ReportPage() {
-  const [selectedRegion, setSelectedRegion] = useState('All Regions');
+  const [selectedRegion, setSelectedRegion] = useState('GASABO');
   const [currentPage, setCurrentPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Reports');
@@ -135,9 +138,9 @@ export default function ReportPage() {
   const { user, logout } = useUserAuth();
 
   const schools = [
-    { name: 'Westfield High School', region: 'Region A' },
-    { name: 'Washington High School', region: 'Region B' },
-    { name: 'Roosevelt Middle School', region: 'Region C' },
+    { name: 'Westfield High School', region: 'Region A', dropoutRate: '3.2%', riskLevel: 'Low' },
+    { name: 'Washington High School', region: 'Region B', dropoutRate: '8.7%', riskLevel: 'Medium' },
+    { name: 'Roosevelt Middle School', region: 'Region C', dropoutRate: '12.4%', riskLevel: 'High' },
   ];
 
   const reports = [
@@ -156,6 +159,19 @@ export default function ReportPage() {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const getRiskLevelColor = (level: string) => {
+    switch (level) {
+      case 'Low':
+        return 'bg-green-100 text-green-700';
+      case 'Medium':
+        return 'bg-yellow-100 text-yellow-700';
+      case 'High':
+        return 'bg-red-100 text-red-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
   };
 
   return (
@@ -241,9 +257,9 @@ export default function ReportPage() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6">
+        <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
           {/* Filters Bar */}
-          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <span className="text-sm font-medium text-gray-700">Filters:</span>
               
@@ -278,94 +294,109 @@ export default function ReportPage() {
             </div>
 
             {/* Generate Report Button */}
-            <button className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium whitespace-nowrap">
-              + Generate Report
+            <button className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium whitespace-nowrap flex items-center justify-center gap-2 mt-3 sm:mt-0">
+              <IoNotificationsSharp className="w-4 h-4" />
+              <span>+ Generate Report</span>
             </button>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center gap-3">
-                <div className="bg-orange-100 p-2 rounded">
-                  <School className="w-5 h-5 text-orange-600" />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">3</div>
-                  <div className="text-sm text-gray-600">Schools</div>
-                </div>
+          {/* Gasabo Section with New Cards */}
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
+              {/* Dropdown */}
+              <div className="relative w-full sm:w-64">
+                <button className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
+                  <span className="font-semibold text-gray-900 text-sm sm:text-base">{selectedRegion}</span>
+                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                </button>
               </div>
+
+              {/* Clear All Button */}
+              <button className="text-blue-600 hover:text-blue-700 font-medium text-sm self-end sm:self-auto">
+                Clear All
+              </button>
             </div>
 
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-100 p-2 rounded">
-                  <Users className="w-5 h-5 text-blue-600" />
+            {/* Stats Cards - All cards now have white background with border */}
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {/* Schools Card - FaSchool icon - White background */}
+              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <FaSchool className="text-orange-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-sm sm:text-base">Schools</span>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">1200</div>
-                  <div className="text-sm text-gray-600">Total Students</div>
-                </div>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">3</span>
               </div>
-            </div>
 
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center gap-3">
-                <div className="bg-orange-100 p-2 rounded">
-                  <AlertTriangle className="w-5 h-5 text-orange-600" />
+              {/* Total Students Card - IoMdSchool icon - White background */}
+              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <IoMdSchool className="text-blue-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-sm sm:text-base">Total Students</span>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">3%</div>
-                  <div className="text-sm text-gray-600">Dropout Rate</div>
-                </div>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">1200</span>
               </div>
-            </div>
 
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center gap-3">
-                <div className="bg-red-100 p-2 rounded">
-                  <UserX className="w-5 h-5 text-red-600" />
+              {/* Dropout Rate Card - PiWarningBold icon - White background */}
+              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <PiWarningBold className="text-orange-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-sm sm:text-base">Dropout Rate</span>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">30</div>
-                  <div className="text-sm text-gray-600">At-Risk Students</div>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">3%</span>
+              </div>
+
+              {/* At-Risk Students Card - PiWarningCircle icon - White background */}
+              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                    <PiWarningCircle className="text-red-600 text-base sm:text-lg lg:text-xl" />
+                  </div>
+                  <span className="text-gray-700 font-medium text-sm sm:text-base">At-Risk Students</span>
                 </div>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">30</span>
               </div>
             </div>
           </div>
 
-          {/* Select Report Type */}
-          <div className="mb-8">
+          {/* Select Report Type - Made responsive */}
+          <div className="mb-6 sm:mb-8">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Report Type</h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <button className="bg-white rounded-lg p-6 shadow-sm border-2 border-orange-500 hover:shadow-md transition-shadow text-left">
-                <FileText className="w-8 h-8 text-orange-500 mb-3" />
-                <div className="font-semibold text-gray-900 mb-1">Student Performance Report</div>
-                <div className="text-sm text-gray-600">Academic performance metrics</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border-2 border-orange-500 hover:shadow-md transition-shadow text-left">
+                <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500 mb-2 sm:mb-3" />
+                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Student Performance Report</div>
+                <div className="text-xs sm:text-sm text-gray-600">Academic performance metrics</div>
               </button>
 
-              <button className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
-                <TrendingDown className="w-8 h-8 text-blue-500 mb-3" />
-                <div className="font-semibold text-gray-900 mb-1">Dropout Statistics</div>
-                <div className="text-sm text-gray-600">Student dropout analysis</div>
+              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
+                <TrendingDown className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 mb-2 sm:mb-3" />
+                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Dropout Statistics</div>
+                <div className="text-xs sm:text-sm text-gray-600">Student dropout analysis</div>
               </button>
 
-              <button className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
-                <Calendar className="w-8 h-8 text-green-500 mb-3" />
-                <div className="font-semibold text-gray-900 mb-1">Attendance Summary</div>
-                <div className="text-sm text-gray-600">Student attendance data</div>
+              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
+                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mb-2 sm:mb-3" />
+                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Attendance Summary</div>
+                <div className="text-xs sm:text-sm text-gray-600">Student attendance data</div>
               </button>
 
-              <button className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
-                <BarChart3 className="w-8 h-8 text-blue-600 mb-3" />
-                <div className="font-semibold text-gray-900 mb-1">Regional Analysis</div>
-                <div className="text-sm text-gray-600">Regional performance comparison</div>
+              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
+                <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 mb-2 sm:mb-3" />
+                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Regional Analysis</div>
+                <div className="text-xs sm:text-sm text-gray-600">Regional performance comparison</div>
               </button>
             </div>
           </div>
 
-          {/* Report Parameters */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 mb-8">
+          {/* Report Parameters - Made responsive */}
+          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 mb-6 sm:mb-8">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Report Parameters</h2>
             
             <div className="mb-4">
@@ -374,18 +405,18 @@ export default function ReportPage() {
                 <input
                   type="text"
                   placeholder="Search by School name"
-                  className="w-full pl-9 sm:pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
                 <input
                   type="text"
                   placeholder="mm/dd/yyyy"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                 />
               </div>
 
@@ -394,7 +425,7 @@ export default function ReportPage() {
                 <input
                   type="text"
                   placeholder="mm/dd/yyyy"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                 />
               </div>
 
@@ -404,53 +435,61 @@ export default function ReportPage() {
                   <select
                     value={selectedRegion}
                     onChange={(e) => setSelectedRegion(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                   >
                     <option>All Regions</option>
                     <option>Region A</option>
                     <option>Region B</option>
                     <option>Region C</option>
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 pointer-events-none" />
                 </div>
               </div>
             </div>
 
-            <button className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+            <button className="bg-blue-400 hover:bg-blue-500 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base">
               <span>▶</span>
               Generate Report
             </button>
           </div>
 
-          {/* Schools Table */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+          {/* Schools Table - Made responsive */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 sm:mb-8">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-max">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">School Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Region</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">School Name</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Region</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Dropout Rate</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Risk Level</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {schools.map((school, index) => (
                     <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <a href="#" className="text-blue-500 hover:text-blue-700 font-medium">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <a href="#" className="text-blue-500 hover:text-blue-700 font-medium text-sm sm:text-base">
                           {school.name}
                         </a>
                       </td>
-                      <td className="px-6 py-4 text-gray-700">{school.region}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors flex items-center gap-2">
-                            <span>🔔</span>
-                            Generate Report
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.region}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.dropoutRate}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRiskLevelColor(school.riskLevel)}`}>
+                          {school.riskLevel}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                          <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto">
+                            <IoNotificationsSharp className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                            <span>Generate Report</span>
                           </button>
-                          <a href="#" className="text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
-                            <span>↗</span>
-                            View Profile
+                          <a href="#" className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium flex items-center justify-center gap-1 w-full sm:w-auto">
+                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span>View Profile</span>
                           </a>
                         </div>
                       </td>
@@ -460,48 +499,48 @@ export default function ReportPage() {
               </table>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-              <div className="text-sm text-gray-600">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+              <div className="text-xs sm:text-sm text-gray-600">
                 Showing 1 to 6 of 24 schools
               </div>
-              <div className="flex items-center gap-2">
-                <button className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
                   Previous
                 </button>
-                <button className="px-3 py-1 bg-orange-500 text-white rounded text-sm">1</button>
-                <button className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">2</button>
-                <button className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">3</button>
-                <button className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">4</button>
-                <button className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-sm">
+                <button className="px-2 sm:px-3 py-1 bg-orange-500 text-white rounded text-xs sm:text-sm">1</button>
+                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">2</button>
+                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">3</button>
+                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">4</button>
+                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
                   Next
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Generated Reports */}
+          {/* Generated Reports - Made responsive */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900">Generated Reports</h2>
             </div>
             
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-max">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Report Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date Generated</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Report Name</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Date Generated</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Status</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {reports.map((report, index) => (
                     <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 text-gray-900">{report.name}</td>
-                      <td className="px-6 py-4 text-gray-700">{report.date}</td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-900 text-sm sm:text-base">{report.name}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{report.date}</td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <span className={`inline-flex px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
                           report.status === 'Ready' 
                             ? 'bg-green-100 text-green-700' 
                             : 'bg-yellow-100 text-yellow-700'
@@ -509,15 +548,15 @@ export default function ReportPage() {
                           {report.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <button className="text-blue-500 hover:text-blue-700 flex items-center gap-1 text-sm">
-                            <Eye className="w-4 h-4" />
-                            View
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <button className="text-blue-500 hover:text-blue-700 flex items-center gap-1 text-xs sm:text-sm">
+                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">View</span>
                           </button>
-                          <button className="text-gray-600 hover:text-gray-800 flex items-center gap-1 text-sm">
-                            <Download className="w-4 h-4" />
-                            Download
+                          <button className="text-gray-600 hover:text-gray-800 flex items-center gap-1 text-xs sm:text-sm">
+                            <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Download</span>
                           </button>
                         </div>
                       </td>

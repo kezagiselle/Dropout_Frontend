@@ -25,8 +25,8 @@ import {
   LogOut
 } from 'lucide-react';
 import { FaChalkboardTeacher } from "react-icons/fa";
-import userr from "../../../src/img/userr.png"; // Update this path if needed
-import { useUserAuth } from '../../context/useUserAuth'; // Update this path if needed
+import userr from "../../../src/img/userr.png";
+import { useUserAuth } from '../../context/useUserAuth'; 
 
 interface MenuItem {
   icon: React.ElementType;

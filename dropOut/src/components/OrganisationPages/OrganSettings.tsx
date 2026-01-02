@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add this import
 import { FaUser, FaCog, FaEdit, FaChevronDown, FaArrowLeft, FaBars } from 'react-icons/fa';
 import { useTheme } from '../Hod';
 import pe3 from "../../img/pe3.png";
@@ -13,9 +14,9 @@ type RoutePath =
   | '/course-timetable'
   | '/exams-grades'
   | '/organ-report'
-  | '/organization-settings';
+  | '/organ-settings'; // Changed to match sidebar
 
-  type TabName = 
+type TabName = 
   | 'Dashboard'
   | 'Schools'
   | 'Students'
@@ -27,31 +28,45 @@ type RoutePath =
 
 const OrganSettings = () => {
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate(); // Add this
   const [timezone, setTimezone] = useState('UTC-5');
   const [language, setLanguage] = useState('English');
   const [showProfile, setShowProfile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabName>('Settings'); 
 
-const handleNavigation = (path: RoutePath, tabName: TabName) => {
-  setActiveTab(tabName);
-  console.log(`Navigating to: ${path}`);
-  setSidebarOpen(false); 
-};
+  const handleNavigation = (path: RoutePath, tabName: TabName) => {
+    setActiveTab(tabName);
+    console.log(`Navigating to: ${path}`);
+    setSidebarOpen(false);
+    navigate(path); // Actually navigate to the route
+  };
+
+  // Add student-specific navigation handler
+  const handleStudentNavigation = (path: string, tabName: string) => {
+    console.log(`Navigating to student page: ${path}`);
+    // You might want to use navigate(path) here too if these are different routes
+    // navigate(path);
+  };
 
   if (showProfile) {
     return <Profile onBack={() => setShowProfile(false)} />;
   }
 
+  const handleNavigationWrapper = (path: string, tabName: string) => {
+  handleNavigation(path as RoutePath, tabName as TabName);
+};
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
     <OrganizationSidebar
-  activeTab={activeTab}
-  sidebarOpen={sidebarOpen}
-  setSidebarOpen={setSidebarOpen}
-  handleNavigation={handleNavigation as (path: string, tabName: string) => void}
-/>
+       activeTab={activeTab}
+       sidebarOpen={sidebarOpen}
+       setSidebarOpen={setSidebarOpen}
+     handleNavigation={handleNavigationWrapper}
+     />
+
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -101,6 +116,34 @@ const handleNavigation = (path: RoutePath, tabName: TabName) => {
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* Added Navigation Buttons - placed on the right side */}
+            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
+              <button 
+                onClick={() => handleStudentNavigation('/student-dash', 'Dashboard')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button 
+                onClick={() => handleStudentNavigation('/student-class', 'My Classes')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Classes
+              </button>
+              <button 
+                onClick={() => handleStudentNavigation('/my-assignments', 'My Assignments')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                Assignments
+              </button>
+              <button 
+                onClick={() => handleStudentNavigation('/student-settings', 'My Profile')}
+                className="hover:text-orange-600 transition-colors"
+              >
+                My Profile
+              </button>
             </div>
           </div>
         </div>

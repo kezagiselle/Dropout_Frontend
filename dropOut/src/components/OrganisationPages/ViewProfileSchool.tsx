@@ -26,7 +26,7 @@ import { useUserAuth } from '../../context/useUserAuth';
 
 export default function SchoolDashboard() {
   const [selectedDistrict, setSelectedDistrict] = useState('GASABO');
-  const [activeTab, setActiveTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState('Schools');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useUserAuth();

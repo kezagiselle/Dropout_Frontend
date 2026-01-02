@@ -56,7 +56,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
     { icon: BookOpen, label: 'Courses & Timetable', path: '/course-timetable' },
     { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },
     { icon: FileText, label: 'Reports', path: '/reports' },
-    { icon: Settings, label: 'Settings', path: '/organization-settings' }
+    { icon: Settings, label: 'Settings', path: '/organ-settings' }
   ];
 
   return (
@@ -220,7 +220,7 @@ export default function ReportPage() {
                 Reports
               </button>
               <button 
-                onClick={() => handleNavigation('/organization-settings', 'Settings')}
+                onClick={() => handleNavigation('/organ-settings', 'Settings')}
                 className="hover:text-orange-600 transition-colors"
               >
                 Settings

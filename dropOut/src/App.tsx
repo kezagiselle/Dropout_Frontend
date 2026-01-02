@@ -40,6 +40,7 @@ import ExamPages from "./components/OrganisationPages/ExamPages";
 import TimetablePage from "./components/OrganisationPages/TimetablePage";
 import ReportPage from "./components/OrganisationPages/ReportPage";
 import ReportsView from "./components/OrganisationPages/ReportView";
+import OrganSettings from "./components/OrganisationPages/OrganSettings";
 
 
 function App() {
@@ -91,6 +92,7 @@ function App() {
           <Route path="/organ-timetable" element={<TimetablePage/>} />
           <Route path="/organ-report" element={<ReportPage/>} />
           <Route path="/report-view" element={<ReportsView/>} />
+          <Route path="/organ-settings" element={<OrganSettings/>} />
 
 
 

@@ -57,7 +57,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
     { icon: BookOpen, label: 'Courses & Timetable', path: '/course-timetable' },
     { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },
     { icon: FileText, label: 'Reports', path: '/organ-report' },
-    { icon: Settings, label: 'Settings', path: '/organization-settings' }
+    { icon: Settings, label: 'Settings', path: '/organ-settings' }
   ];
 
   return (

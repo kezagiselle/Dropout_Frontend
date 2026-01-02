@@ -82,7 +82,7 @@ export default function SchoolDashboard() {
                 Reports
               </button>
               <button 
-                onClick={() => handleNavigation('/organization-settings', 'Settings')}
+                onClick={() => handleNavigation('/organ-settings', 'Settings')}
                 className="hover:text-orange-600 transition-colors"
               >
                 Settings

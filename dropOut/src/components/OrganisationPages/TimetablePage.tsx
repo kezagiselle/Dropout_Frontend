@@ -186,7 +186,7 @@ const TimetablePage = () => {
                 Reports
               </button>
               <button 
-                onClick={() => handleNavigation('/organization-settings', 'Settings')}
+                onClick={() => handleNavigation('/organ-settings', 'Settings')}
                 className="hover:text-orange-600 transition-colors px-2 py-1 rounded hover:bg-gray-50 whitespace-nowrap"
               >
                 Settings

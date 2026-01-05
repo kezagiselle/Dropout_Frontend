@@ -17,6 +17,7 @@ interface Course {
   teacherName: string;
   active: boolean;
   enrollmentCount: number;
+  atRiskStudents: number;
 }
 
 const Courses = () => {
@@ -322,7 +323,7 @@ const Courses = () => {
                       <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <div className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>12</div>
+                        }`}>{course.atRiskStudents}</div>
                       </td>
                     </tr>
                   ))

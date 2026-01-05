@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, Calendar, BarChart3, Bell, Search, Menu, X, FileText, Eye, TrendingUp, ArrowLeft, Users } from 'lucide-react';
+import { ChevronDown, Calendar, BarChart3, Bell, Search, Menu, X, FileText, Eye, ArrowLeft, Users } from 'lucide-react';
 import { SiGoogleclassroom } from "react-icons/si";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';

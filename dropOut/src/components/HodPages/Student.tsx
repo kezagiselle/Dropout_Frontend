@@ -1,23 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTheme } from '../Hod'
 import { IoIosPeople, IoIosWarning, IoIosTime } from 'react-icons/io'
 import { FaSearch, FaDownload, FaFilter, FaExternalLinkAlt, FaFileAlt, FaUser, FaClipboardCheck } from 'react-icons/fa'
 import StudentForm from '../Forms/Student';
 import StudentProfile from '../Forms/StudentProfile';
+import { useUserAuth } from '../../context/useUserAuth';
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 
 interface Student {
   id: string
   name: string
-  studentId: string
-  grade: string
-  riskLevel: 'High Risk' | 'Medium Risk' | 'Low Risk'
+  studentId?: string
+  grade?: string
+  riskLevel: string
   attendance: number
   gpa: number
+  courses?: string[]
+}
+
+interface StudentOverviewData {
+  totalStudents: number
+  totalAtRiskStudents: number
+  todayAttendance: number
+  students: Student[]
 }
 
 const Student = () => {
   const { theme } = useTheme()
+  const { user, token } = useUserAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedGrade, setSelectedGrade] = useState('All Grades')
   const [showStudentForm, setShowStudentForm] = useState(false)
@@ -28,64 +40,79 @@ const Student = () => {
   const [selectedGPA, setSelectedGPA] = useState('All GPA')
   const [selectedDepartment, setSelectedDepartment] = useState('All Department')
 
-  const students: Student[] = [
-    {
-      id: '1',
-      name: 'Sarah Johnson',
-      studentId: '2024001',
-      grade: 'Grade 11',
-      riskLevel: 'High Risk',
-      attendance: 65,
-      gpa: 2.1
-    },
-    {
-      id: '2',
-      name: 'Michael Chen',
-      studentId: '2024002',
-      grade: 'Grade 10',
-      riskLevel: 'Medium Risk',
-      attendance: 78,
-      gpa: 2.8
-    },
-    {
-      id: '3',
-      name: 'Emma Davis',
-      studentId: '2024003',
-      grade: 'Grade 12',
-      riskLevel: 'Low Risk',
-      attendance: 92,
-      gpa: 3.7
-    },
-    {
-      id: '4',
-      name: 'James Wilson',
-      studentId: '2024004',
-      grade: 'Grade 9',
-      riskLevel: 'High Risk',
-      attendance: 58,
-      gpa: 1.9
-    },
-    {
-      id: '5',
-      name: 'William Smith',
-      studentId: '2024005',
-      grade: 'Grade 4',
-      riskLevel: 'High Risk',
-      attendance: 30,
-      gpa: 0.9
+  // Student overview data
+  const [studentData, setStudentData] = useState<StudentOverviewData>({
+    totalStudents: 0,
+    totalAtRiskStudents: 0,
+    todayAttendance: 0,
+    students: []
+  })
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchStudentOverview = async () => {
+      if (!user?.schoolId || !token) return
+      
+      setLoading(true)
+      setError(null)
+      
+      try {
+        const res = await fetch(`${baseUrl}/api/principal/student-overview/${user.schoolId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        if (!res.ok) throw new Error('Failed to fetch student overview')
+        
+        const result = await res.json()
+        
+        if (result.success && result.data) {
+          setStudentData(result.data)
+        } else {
+          setError(result.message || 'Error loading student data')
+        }
+      } catch (err: any) {
+        setError(err.message || 'Error loading student data')
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+    
+    fetchStudentOverview()
+  }, [user?.schoolId, token])
+
+  const students: Student[] = studentData.students
 
   const getRiskLevelColor = (riskLevel: string) => {
-    switch (riskLevel) {
-      case 'High Risk':
+    const level = riskLevel?.toUpperCase()
+    switch (level) {
+      case 'HIGH':
+      case 'CRITICAL':
         return 'bg-red-100 text-red-800 border-red-200'
-      case 'Medium Risk':
+      case 'MEDIUM':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      case 'Low Risk':
+      case 'LOW':
         return 'bg-green-100 text-green-800 border-green-200'
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+  }
+
+  const formatRiskLevel = (riskLevel: string) => {
+    const level = riskLevel?.toUpperCase()
+    switch (level) {
+      case 'HIGH':
+      case 'CRITICAL':
+        return 'High Risk'
+      case 'MEDIUM':
+        return 'Medium Risk'
+      case 'LOW':
+        return 'Low Risk'
+      default:
+        return riskLevel
     }
   }
 
@@ -100,6 +127,26 @@ const Student = () => {
 
   if (showStudentProfile && selectedStudent) {
     return <StudentProfile onBack={() => setShowStudentProfile(false)} />;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className={`text-lg ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+          Loading...
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-lg text-red-600">
+          {error}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -165,7 +212,7 @@ const Student = () => {
               }`}>Total Students</h3>
               <p className={`text-xl lg:text-2xl font-bold mt-1 transition-colors duration-200 ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>1,247</p>
+              }`}>{studentData.totalStudents}</p>
               <p className="text-xs lg:text-sm text-green-500 font-medium mt-1 flex items-center">
                 <span className="mr-1">↑</span>
                 +3.2% vs last term
@@ -190,7 +237,7 @@ const Student = () => {
               }`}>At-Risk Students</h3>
               <p className={`text-xl lg:text-2xl font-bold mt-1 transition-colors duration-200 ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>47</p>
+              }`}>{studentData.totalAtRiskStudents}</p>
               <p className="text-xs lg:text-sm text-orange-500 font-medium mt-1 flex items-center">
                 <span className="mr-1">↓</span>
                 -8.1% vs last term
@@ -213,10 +260,10 @@ const Student = () => {
               <h3 className={`text-xs lg:text-sm font-medium transition-colors duration-200 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}>Today's Attendance</h3>
-              <p className={`text-xl lg:text-2xl font-bold mt-1 text-green-600`}>94.2%</p>
+              <p className={`text-xl lg:text-2xl font-bold mt-1 text-green-600`}>{studentData.todayAttendance}%</p>
               <p className={`text-xs lg:text-sm transition-colors duration-200 mt-1 ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-              }`}>1,152 present / 47 absent</p>
+              }`}>Today's attendance rate</p>
             </div>
             <div className="flex items-center justify-center flex-shrink-0 ml-2">
               <FaClipboardCheck className="w-6 h-6 text-green-500" />
@@ -400,7 +447,7 @@ const Student = () => {
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
                   }`}>
-                    Grade
+                    Course
                   </th>
                 <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
@@ -447,7 +494,7 @@ const Student = () => {
                         <div className={`text-xs transition-colors duration-200 ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                         }`}>
-                          ID: {student.studentId}
+                          ID: {student.id.substring(0, 8)}
                         </div>
                       </div>
                     </div>
@@ -456,12 +503,12 @@ const Student = () => {
                     <div className={`text-xs sm:text-sm transition-colors duration-200 ${
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>
-                      {student.grade}
+                      {student.courses && student.courses.length > 0 ? student.courses.join(', ') : 'N/A'}
                     </div>
                     </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium border ${getRiskLevelColor(student.riskLevel)}`}>
-                      {student.riskLevel}
+                      {formatRiskLevel(student.riskLevel)}
                       </span>
                     </td>
                   <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">

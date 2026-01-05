@@ -2,6 +2,7 @@
 import { useState, useEffect, createContext, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUserAuth } from "../context/useUserAuth";
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 import Student from './HodPages/Student';
 import Teachers from './HodPages/Teachers';
 import Courses from './HodPages/Courses';
@@ -54,51 +55,49 @@ const Hod = () => {
   const [showTeacherForm, setShowTeacherForm] = useState(false);
   const [showStudentForm, setShowStudentForm] = useState(false);
 
-  // Chart data for risk level trends
-  const riskTrendData = [
-    {
-      name: 'Week 1',
-      highRisk: 12,
-      mediumRisk: 25,
-      lowRisk: 45,
-    },
-    {
-      name: 'Week 2',
-      highRisk: 15,
-      mediumRisk: 28,
-      lowRisk: 42,
-    },
-    {
-      name: 'Week 3',
-      highRisk: 18,
-      mediumRisk: 32,
-      lowRisk: 38,
-    },
-    {
-      name: 'Week 4',
-      highRisk: 22,
-      mediumRisk: 35,
-      lowRisk: 35,
-    },
-    {
-      name: 'Week 5',
-      highRisk: 19,
-      mediumRisk: 30,
-      lowRisk: 40,
-    },
-    {
-      name: 'Week 6',
-      highRisk: 16,
-      mediumRisk: 28,
-      lowRisk: 43,
-    },
-    {
-      name: 'Week 7',
-      highRisk: 14,
-      mediumRisk: 26,
-      lowRisk: 45,
-    },
-  ];
+  // Dashboard state
+  const [dashboardData, setDashboardData] = useState({
+    totalStudents: 0,
+    totalTeachers: 0,
+    totalAtRiskStudents: 0,
+    todayAttendance: 0,
+    riskLevelTrends: []
+  });
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState(null);
+
+  const { user, token, logout } = useUserAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      if (!user?.schoolId || !token) return;
+      setDashboardLoading(true);
+      setDashboardError(null);
+      try {
+        const res = await fetch(`${baseUrl}/api/principal/dashboard-overview/${user.schoolId}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        if (!res.ok) throw new Error('Failed to fetch dashboard overview');
+        const result = await res.json();
+        if (result.success && result.data) {
+          setDashboardData(result.data);
+        } else {
+          setDashboardError(result.message || 'Error loading dashboard');
+        }
+      } catch (err) {
+        setDashboardError(err.message || 'Error loading dashboard');
+      } finally {
+        setDashboardLoading(false);
+      }
+    };
+    fetchDashboard();
+  }, [user?.schoolId, token]);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
@@ -119,8 +118,7 @@ const Hod = () => {
   };
 
 
-  const { user, logout } = useUserAuth();
-  const navigate = useNavigate();
+
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
@@ -465,8 +463,10 @@ const Hod = () => {
                         }`}>Total Students</h3>
                         <p className={`text-xl sm:text-2xl font-bold transition-colors duration-200 ${
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>1,247</p>
-                        <p className="text-xs sm:text-sm text-green-500 font-medium">↑+3.2% vs last term</p>
+                        }`}>
+                          {dashboardLoading ? '...' : dashboardData.totalStudents}
+                        </p>
+                        {/* Optionally, add trend info if available */}
                       </div>
                       <div className="flex items-center justify-center flex-shrink-0 ml-2">
                         <IoIosPeople className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
@@ -487,8 +487,9 @@ const Hod = () => {
                         }`}>Total Teachers</h3>
                         <p className={`text-xl sm:text-2xl font-bold transition-colors duration-200 ${
                           theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>72</p>
-                        <p className="text-xs sm:text-sm text-green-500 font-medium">↑+3.2% vs last term</p>
+                        }`}>
+                          {dashboardLoading ? '...' : dashboardData.totalTeachers}
+                        </p>
                       </div>
                       <div className="flex items-center justify-center flex-shrink-0 ml-2">
                         <IoIosPeople className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
@@ -506,14 +507,14 @@ const Hod = () => {
                       <h3 className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                       }`}>At-Risk Students</h3>
-                      {/* Alert Icon - On the same line as title */}
                       <svg className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-xl sm:text-2xl font-bold text-red-600">47</p>
-                      <p className="text-xs sm:text-sm text-red-400 font-medium">↓-8.1% vs last term</p>
+                      <p className="text-xl sm:text-2xl font-bold text-red-600">
+                        {dashboardLoading ? '...' : dashboardData.totalAtRiskStudents}
+                      </p>
                     </div>
                   </div>
 
@@ -527,12 +528,12 @@ const Hod = () => {
                         <h3 className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                           theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                         }`}>Today's Attendance</h3>
-                      {/* Clipboard Checkmark Icon - On the same line as title */}
                       <FaClipboardCheck className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                     </div>
                     <div>
-                        <p className="text-xl sm:text-2xl font-bold text-green-600">92.4%</p>
-                        <p className="text-xs sm:text-sm text-gray-600">1,152 present / 47 absent</p>
+                        <p className="text-xl sm:text-2xl font-bold text-green-600">
+                          {dashboardLoading ? '...' : `${dashboardData.todayAttendance}%`}
+                        </p>
                     </div>
                   </div>
                 </div>
@@ -555,7 +556,13 @@ const Hod = () => {
                           <LineChart
                             width={500}
                             height={300}
-                            data={riskTrendData}
+                            data={dashboardData.riskLevelTrends.map((item, idx) => ({
+                              name: item.date,
+                              highRisk: item.high,
+                              mediumRisk: item.medium,
+                              lowRisk: item.low,
+                              criticalRisk: item.critical
+                            }))}
                             margin={{
                               top: 5,
                               right: 30,
@@ -611,11 +618,18 @@ const Hod = () => {
                               stroke="#10b981" 
                               name="Low Risk"
                             />
+                            <Line 
+                              yAxisId="left" 
+                              type="monotone" 
+                              dataKey="criticalRisk" 
+                              stroke="#000" 
+                              name="Critical Risk"
+                            />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
                     </div>
-
+                    {/* ...existing code... */}
                     {/* Teacher Roster Today */}
                     <div className={`rounded-lg shadow-sm border p-4 sm:p-6 lg:p-8 transition-colors duration-200 mt-6 sm:mt-12 ${
                       theme === 'dark' 

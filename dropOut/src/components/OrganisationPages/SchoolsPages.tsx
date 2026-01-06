@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, ChevronDown, ExternalLink, ChevronLeft, ChevronRight, Menu, X, Bell, Calendar } from 'lucide-react';
 import { FaSchool } from "react-icons/fa6";
@@ -8,6 +8,23 @@ import OrganizationSidebar from '../OrganisationPages/OrganisationSideBar';
 import userr from "../../../src/img/userr.png";
 import { useUserAuth } from '../../context/useUserAuth';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface School {
+  schoolId: string;
+  schoolName: string;
+  region: string;
+  dropoutRate: number;
+}
+
+interface SchoolsData {
+  totalSchools: number;
+  totalStudents: number;
+  overallDropoutRate: number;
+  totalAtRiskStudents: number;
+  schools: School[];
+}
+
 export default function SchoolsPage() {
   const [selectedRegion, setSelectedRegion] = useState('GASABO');
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,7 +32,52 @@ export default function SchoolsPage() {
   const [activeTab, setActiveTab] = useState('Schools');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useUserAuth();
+  const { user, token, logout } = useUserAuth();
+  
+  // API integration state
+  const [schoolsData, setSchoolsData] = useState<SchoolsData>({
+    totalSchools: 0,
+    totalStudents: 0,
+    overallDropoutRate: 0,
+    totalAtRiskStudents: 0,
+    schools: []
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Fetch schools data from API
+  useEffect(() => {
+    const fetchSchoolsData = async () => {
+      if (!token) return;
+      
+      setLoading(true);
+      setError('');
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/government/schools-overview`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          setSchoolsData(result.data);
+        } else {
+          setError(result.message || 'Failed to fetch schools data');
+        }
+      } catch (err) {
+        setError('Failed to load schools data');
+        console.error('Schools API error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSchoolsData();
+  }, [token]);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -26,25 +88,6 @@ export default function SchoolsPage() {
   const handleLogout = () => {
     logout();
     navigate('/login');
-  };
-
-  const schools = [
-    { name: 'Westfield High School', region: 'Region A', dropoutRate: '3.2%', riskLevel: 'Low' },
-    { name: 'Washington High School', region: 'Region B', dropoutRate: '8.7%', riskLevel: 'Medium' },
-    { name: 'Roosevelt Middle School', region: 'Region C', dropoutRate: '12.4%', riskLevel: 'High' },
-  ];
-
-  const getRiskLevelColor = (level: string) => {
-    switch (level) {
-      case 'Low':
-        return 'bg-green-100 text-green-700';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'High':
-        return 'bg-red-100 text-red-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
   };
 
   return (
@@ -202,7 +245,7 @@ export default function SchoolsPage() {
                   </div>
                   <span className="text-gray-700 font-medium text-sm sm:text-base">Schools</span>
                 </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">3</span>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">{schoolsData.totalSchools}</span>
               </div>
 
               {/* Total Students Card - IoMdSchool icon - Plain white background */}
@@ -213,7 +256,7 @@ export default function SchoolsPage() {
                   </div>
                   <span className="text-gray-700 font-medium text-sm sm:text-base">Total Students</span>
                 </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">1200</span>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">{schoolsData.totalStudents}</span>
               </div>
 
               {/* Dropout Rate Card - PiWarningBold icon - Plain white background */}
@@ -224,7 +267,7 @@ export default function SchoolsPage() {
                   </div>
                   <span className="text-gray-700 font-medium text-sm sm:text-base">Dropout Rate</span>
                 </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">3%</span>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">{schoolsData.overallDropoutRate.toFixed(1)}%</span>
               </div>
 
               {/* At-Risk Students Card - PiWarningCircle icon - Plain white background */}
@@ -235,7 +278,7 @@ export default function SchoolsPage() {
                   </div>
                   <span className="text-gray-700 font-medium text-sm sm:text-base">At-Risk Students</span>
                 </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">30</span>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">{schoolsData.totalAtRiskStudents}</span>
               </div>
             </div>
           </div>
@@ -262,65 +305,86 @@ export default function SchoolsPage() {
                   <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                 </button>
               </div>
-
-              {/* Risk Level Filter */}
-              <div className="relative w-full md:w-48">
-                <button className="w-full px-4 py-2.5 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
-                  <span className="text-gray-700 text-sm sm:text-base">All Risk Levels</span>
-                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                </button>
-              </div>
             </div>
           </div>
 
           {/* Table Section */}
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">School Name</th>
-                    <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Region</th>
-                    <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Dropout Rate</th>
-                    <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Risk Level</th>
-                    <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Action</th>
-                  </tr>
-                </thead>
-               <tbody className="divide-y divide-gray-200">
-  {schools.map((school, idx) => (
-    <tr key={idx} className="hover:bg-gray-50 transition-colors">
-      <td className="px-4 sm:px-6 py-3 sm:py-4">
-        <a href="#" className="text-blue-600 hover:text-blue-700 font-medium text-sm sm:text-base">
-          {school.name}
-        </a>
-      </td>
-      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.region}</td>
-      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.dropoutRate}</td>
-      <td className="px-4 sm:px-6 py-3 sm:py-4">
-        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRiskLevelColor(school.riskLevel)}`}>
-          {school.riskLevel}
-        </span>
-      </td>
-      <td className="px-4 sm:px-6 py-3 sm:py-4">
-        <button 
-          onClick={() => navigate('/view-profile-school')}
-          className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 font-medium text-xs sm:text-sm hover:underline"
-        >
-          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-          View Profile
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-              </table>
-            </div>
-
-            {/* Pagination */}
-            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
-              <div className="text-xs sm:text-sm text-gray-600">
-                Showing 1 to 6 of 24 schools
+            {loading ? (
+              /* Skeleton Loading */
+              <div className="animate-pulse">
+                <div className="bg-gray-50 border-b border-gray-200">
+                  <div className="flex px-4 sm:px-6 py-3 sm:py-4 gap-4">
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                  </div>
+                </div>
+                <div className="divide-y divide-gray-200">
+                  {[...Array(5)].map((_, idx) => (
+                    <div key={idx} className="flex px-4 sm:px-6 py-3 sm:py-4 gap-4">
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    </div>
+                  ))}
+                </div>
               </div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-500">{error}</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">School Name</th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Region</th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Dropout Rate</th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {schoolsData.schools.length > 0 ? (
+                      schoolsData.schools.map((school, idx) => (
+                        <tr key={school.schoolId} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-4 sm:px-6 py-3 sm:py-4">
+                            <a href="#" className="text-blue-600 hover:text-blue-700 font-medium text-sm sm:text-base">
+                              {school.schoolName}
+                            </a>
+                          </td>
+                          <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.region}</td>
+                          <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.dropoutRate.toFixed(1)}%</td>
+                          <td className="px-4 sm:px-6 py-3 sm:py-4">
+                            <button 
+                              onClick={() => navigate('/view-profile-school', { state: { schoolId: school.schoolId } })}
+                              className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 font-medium text-xs sm:text-sm hover:underline"
+                            >
+                              <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                              View Profile
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={4} className="text-center py-8 text-gray-400">
+                          No schools found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {!loading && (
+              /* Pagination */
+              <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+                <div className="text-xs sm:text-sm text-gray-600">
+                  Showing {schoolsData.schools.length} of {schoolsData.totalSchools} schools
+                </div>
               <div className="flex items-center gap-1 sm:gap-2">
                 <button className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
                   <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -343,7 +407,8 @@ export default function SchoolsPage() {
                   <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               </div>
-            </div>
+              </div>
+            )}
           </div>
         </main>
       </div>

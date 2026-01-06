@@ -31,6 +31,7 @@ interface UserAuthContextType {
   isPrincipal: boolean;
   isStudent: boolean;
   isParent: boolean;
+  isGovernment: boolean;
   teacherCourses: Course[];
   parentId?: string;
   studentIds?: string[];
@@ -67,6 +68,7 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const isPrincipal = user?.role === 'PRINCIPAL'; 
   const isStudent = user?.role === 'STUDENT';
   const isParent = user?.role === 'PARENT';
+  const isGovernment = user?.role === 'GOVERNMENT';
   const teacherCourses = user?.courses || [];
   const parentId = user?.parentId;
   const studentIds = user?.studentIds || [];
@@ -81,6 +83,7 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       isPrincipal,
       isStudent,
       isParent,
+      isGovernment,
       teacherCourses,
       parentId,
       studentIds

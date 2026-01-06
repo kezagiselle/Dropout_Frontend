@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap, Users, School, AlertTriangle, CheckCircle, Download, BookOpen, FileText, HelpCircle, Wrench, MessageCircle, Menu, X, Bell, ChevronDown, Calendar, Search, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -9,6 +9,36 @@ import { FaSchool } from "react-icons/fa6";
 import { IoMdSchool } from "react-icons/io";
 import { PiWarningBold, PiWarningCircle } from "react-icons/pi";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface DashboardSummary {
+  totalStudents: number;
+  totalTeachers: number;
+  averageAttendance: number;
+  dropoutRate: number;
+}
+
+interface DropoutRiskTrend {
+  month: string;
+  lowRisk: number;
+  mediumRisk: number;
+  highRisk: number;
+  criticalRisk: number;
+}
+
+interface PolicyImpactSchool {
+  schoolId: string;
+  schoolName: string;
+  attendance: number;
+  performance: number;
+}
+
+interface DashboardData {
+  summary: DashboardSummary;
+  dropoutRiskTrends: DropoutRiskTrend[];
+  policyImpactBySchool: PolicyImpactSchool[];
+}
+
 export default function OrganDashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,7 +46,55 @@ export default function OrganDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  const { user, logout } = useUserAuth();
+  const { user, token, logout } = useUserAuth();
+  
+  // API integration state
+  const [dashboardData, setDashboardData] = useState<DashboardData>({
+    summary: {
+      totalStudents: 0,
+      totalTeachers: 0,
+      averageAttendance: 0,
+      dropoutRate: 0
+    },
+    dropoutRiskTrends: [],
+    policyImpactBySchool: []
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Fetch dashboard data from API
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!token) return;
+      
+      setLoading(true);
+      setError('');
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/government/dashboard-overview`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          setDashboardData(result.data);
+        } else {
+          setError(result.message || 'Failed to fetch dashboard data');
+        }
+      } catch (err) {
+        setError('Failed to load dashboard data');
+        console.error('Dashboard API error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [token]);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -30,11 +108,11 @@ export default function OrganDashboard() {
   };
 
   const stats = [
-    { label: 'Total Students', value: '2,932', change: '+2.4%', icon: GraduationCap, positive: true, color: 'blue' },
-    { label: 'Total Teachers', value: '200', change: '+1.8%', icon: Users, positive: true, color: 'green' },
-    { label: 'Total Schools', value: '2', change: '0.0%', icon: School, positive: null, color: 'orange' },
-    { label: 'Dropout Rate', value: '4.2%', change: '-0.8%', icon: AlertTriangle, positive: true, color: 'yellow' },
-    { label: 'Average Attendance', value: '87.3%', change: '+0.5%', icon: CheckCircle, positive: true, color: 'teal' }
+    { label: 'Total Students', value: dashboardData.summary.totalStudents.toLocaleString(), change: '+2.4%', icon: GraduationCap, positive: true, color: 'blue' },
+    { label: 'Total Teachers', value: dashboardData.summary.totalTeachers.toString(), change: '+1.8%', icon: Users, positive: true, color: 'green' },
+    { label: 'Total Schools', value: dashboardData.policyImpactBySchool.length.toString(), change: '0.0%', icon: School, positive: null, color: 'orange' },
+    { label: 'Dropout Rate', value: `${dashboardData.summary.dropoutRate.toFixed(1)}%`, change: '-0.8%', icon: AlertTriangle, positive: true, color: 'yellow' },
+    { label: 'Average Attendance', value: `${dashboardData.summary.averageAttendance.toFixed(1)}%`, change: '+0.5%', icon: CheckCircle, positive: true, color: 'teal' }
   ];
 
   const alerts = [
@@ -57,21 +135,37 @@ export default function OrganDashboard() {
     { label: 'Communication Hub', icon: MessageCircle, color: 'blue', path: '/communication' }
   ];
 
-  // Dropout Risk Trends Data for Recharts
-  const dropoutData = [
-    { month: 'Jan', highRisk: 45, mediumRisk: 30, lowRisk: 25 },
-    { month: 'Feb', highRisk: 42, mediumRisk: 32, lowRisk: 26 },
-    { month: 'Mar', highRisk: 38, mediumRisk: 35, lowRisk: 27 },
-    { month: 'Apr', highRisk: 35, mediumRisk: 38, lowRisk: 27 },
-    { month: 'May', highRisk: 32, mediumRisk: 40, lowRisk: 28 },
-    { month: 'Jun', highRisk: 30, mediumRisk: 42, lowRisk: 28 },
-    { month: 'Jul', highRisk: 28, mediumRisk: 43, lowRisk: 29 },
-    { month: 'Aug', highRisk: 26, mediumRisk: 44, lowRisk: 30 },
-    { month: 'Sep', highRisk: 24, mediumRisk: 45, lowRisk: 31 },
-    { month: 'Oct', highRisk: 22, mediumRisk: 46, lowRisk: 32 },
-    { month: 'Nov', highRisk: 20, mediumRisk: 47, lowRisk: 33 },
-    { month: 'Dec', highRisk: 18, mediumRisk: 48, lowRisk: 34 },
-  ];
+  // Dropout Risk Trends Data from API
+  const dropoutData = dashboardData.dropoutRiskTrends.length > 0
+    ? dashboardData.dropoutRiskTrends.map(trend => ({
+        month: trend.month,
+        highRisk: trend.highRisk + trend.criticalRisk,
+        mediumRisk: trend.mediumRisk,
+        lowRisk: trend.lowRisk
+      }))
+    : [
+        { month: 'Jan', highRisk: 0, mediumRisk: 0, lowRisk: 0 }
+      ];
+
+  // Policy Impact data organized by metric for the chart
+  const policyImpactData = dashboardData.policyImpactBySchool;
+  
+  // Group schools by metric type for better comparison
+  const performanceData = policyImpactData.map(school => ({
+    schoolName: school.schoolName.length > 10 ? school.schoolName.substring(0, 10) + '...' : school.schoolName,
+    value: school.performance,
+    fullName: school.schoolName,
+    displayValue: school.performance.toFixed(1),
+    heightPercent: (school.performance / 20) * 100 // Performance is out of 20
+  }));
+  
+  const attendanceData = policyImpactData.map(school => ({
+    schoolName: school.schoolName.length > 10 ? school.schoolName.substring(0, 10) + '...' : school.schoolName,
+    value: school.attendance,
+    fullName: school.schoolName,
+    displayValue: school.attendance.toFixed(0) + '%',
+    heightPercent: school.attendance
+  }));
 
   const getRiskLevelColor = (level: string) => {
     switch (level) {
@@ -170,8 +264,90 @@ export default function OrganDashboard() {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-4 sm:p-6">
-          {/* Filters Bar - Added after header */}
-          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          {/* Error State */}
+          {error && (
+            <div className="w-full text-center py-4 text-red-500 font-medium mb-4">
+              {error}
+            </div>
+          )}
+          
+          {loading ? (
+            /* Skeleton Loading */
+            <>
+              {/* Skeleton Filters Bar */}
+              <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-6 animate-pulse">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                  <div className="h-8 w-24 bg-gray-200 rounded-lg"></div>
+                  <div className="h-8 w-24 bg-gray-200 rounded-lg"></div>
+                  <div className="h-8 w-24 bg-gray-200 rounded-lg"></div>
+                  <div className="h-8 w-20 bg-gray-200 rounded-lg"></div>
+                </div>
+              </div>
+
+              {/* Skeleton Stats Cards */}
+              <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                {[...Array(5)].map((_, idx) => (
+                  <div key={idx} className="bg-white rounded-lg shadow p-4 sm:p-6 animate-pulse">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="h-3 w-20 bg-gray-200 rounded"></div>
+                      <div className="w-5 h-5 bg-gray-200 rounded"></div>
+                    </div>
+                    <div className="h-8 w-16 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-3 w-12 bg-gray-200 rounded"></div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Skeleton Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                {[...Array(2)].map((_, idx) => (
+                  <div key={idx} className="bg-white rounded-lg shadow p-4 sm:p-6 animate-pulse">
+                    <div className="flex justify-between items-center mb-4">
+                      <div className="h-5 w-32 bg-gray-200 rounded"></div>
+                      <div className="h-4 w-20 bg-gray-200 rounded"></div>
+                    </div>
+                    <div className="h-48 sm:h-64 bg-gray-200 rounded"></div>
+                    <div className="flex justify-center gap-6 mt-4">
+                      <div className="h-3 w-16 bg-gray-200 rounded"></div>
+                      <div className="h-3 w-20 bg-gray-200 rounded"></div>
+                      <div className="h-3 w-16 bg-gray-200 rounded"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Skeleton Alerts and Reports */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                {[...Array(2)].map((_, idx) => (
+                  <div key={idx} className="bg-white rounded-lg shadow p-4 sm:p-6 animate-pulse">
+                    <div className="flex justify-between items-center mb-4">
+                      <div className="h-5 w-32 bg-gray-200 rounded"></div>
+                      <div className="h-4 w-16 bg-gray-200 rounded"></div>
+                    </div>
+                    <div className="space-y-3">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="h-16 bg-gray-200 rounded-lg"></div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Skeleton Quick Access */}
+              <div className="bg-white rounded-lg shadow p-4 sm:p-6 animate-pulse">
+                <div className="h-5 w-24 bg-gray-200 rounded mb-4"></div>
+                <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4">
+                  {[...Array(5)].map((_, idx) => (
+                    <div key={idx} className="h-24 sm:h-28 md:h-32 bg-gray-200 rounded-lg"></div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Filters Bar - Added after header */}
+              <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <span className="text-sm font-medium text-gray-700">Filters:</span>
               
@@ -260,7 +436,7 @@ export default function OrganDashboard() {
                         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                         fontSize: '12px'
                       }}
-                      formatter={(value) => [`${value}%`, 'Risk Level']}
+                      formatter={(value) => [value, 'Students']}
                     />
                     <Area 
                       type="monotone" 
@@ -314,30 +490,66 @@ export default function OrganDashboard() {
                 <h2 className="text-lg font-semibold text-gray-900">Policy Impact Analysis</h2>
                 <button className="text-sm text-blue-600 hover:text-blue-800 self-start sm:self-auto">View Details →</button>
               </div>
-              <div className="h-48 sm:h-64 flex items-end justify-around gap-1 sm:gap-2 px-2 sm:px-4">
-                {[
-                  { label: 'Dropout Rate', before: 8, after: 4 },
-                  { label: 'Attendance', before: 70, after: 87 },
-                  { label: 'Performance', before: 65, after: 72 },
-                  { label: 'Teacher Retention', before: 75, after: 85 }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex-1 flex flex-col items-center gap-1">
-                    <div className="w-full flex gap-0.5 sm:gap-1 items-end h-32 sm:h-48">
-                      <div className="flex-1 bg-gray-300 rounded-t" style={{ height: `${item.before}%` }}></div>
-                      <div className="flex-1 bg-blue-400 rounded-t" style={{ height: `${item.after}%` }}></div>
-                    </div>
-                    <span className="text-xs text-gray-600 text-center mt-1 sm:mt-2 whitespace-nowrap">{item.label}</span>
+              <div className="h-48 sm:h-64 flex items-end justify-center gap-3 sm:gap-4 px-2 sm:px-4">
+                {policyImpactData.length > 0 ? (
+                  <>
+                    {/* Performance bars for each school */}
+                    {performanceData.map((school, idx) => (
+                      <div key={`perf-${idx}`} className="flex flex-col items-center gap-1 w-16 sm:w-20">
+                        <div className="w-full flex gap-0.5 sm:gap-1 items-end h-32 sm:h-48">
+                          <div 
+                            className="flex-1 bg-blue-400 rounded-t relative flex items-start justify-center pt-1" 
+                            style={{ height: `${Math.max(school.heightPercent, 5)}%` }}
+                            title={`${school.fullName}: ${school.value.toFixed(1)}/20`}
+                          >
+                            <span className="text-xs font-bold text-white">
+                              {school.displayValue}
+                            </span>
+                          </div>
+                        </div>
+                        <span className="text-xs text-gray-600 text-center mt-1 sm:mt-2 truncate w-full" title={school.fullName}>
+                          {school.schoolName}
+                        </span>
+                      </div>
+                    ))}
+                    
+                    {/* Spacer between groups */}
+                    <div className="w-8 sm:w-12"></div>
+                    
+                    {/* Attendance bars for each school */}
+                    {attendanceData.map((school, idx) => (
+                      <div key={`att-${idx}`} className="flex flex-col items-center gap-1 w-16 sm:w-20">
+                        <div className="w-full flex gap-0.5 sm:gap-1 items-end h-32 sm:h-48">
+                          <div 
+                            className="flex-1 bg-orange-400 rounded-t relative flex items-start justify-center pt-1" 
+                            style={{ height: `${Math.max(school.heightPercent, 5)}%` }}
+                            title={`${school.fullName}: ${school.value.toFixed(1)}%`}
+                          >
+                            <span className="text-xs font-bold text-white">
+                              {school.displayValue}
+                            </span>
+                          </div>
+                        </div>
+                        <span className="text-xs text-gray-600 text-center mt-1 sm:mt-2 truncate w-full" title={school.fullName}>
+                          {school.schoolName}
+                        </span>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center h-full w-full text-gray-400">
+                    No school data available
                   </div>
-                ))}
+                )}
               </div>
               <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-3 sm:mt-4 text-xs sm:text-sm">
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-gray-300"></div>
-                  <span className="text-gray-600">Before Policy</span>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-blue-400"></div>
+                  <span className="text-gray-600">Performance (out of 20)</span>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-blue-400"></div>
-                  <span className="text-gray-600">After Policy</span>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-orange-400"></div>
+                  <span className="text-gray-600">Attendance (%)</span>
                 </div>
               </div>
             </div>
@@ -411,6 +623,8 @@ export default function OrganDashboard() {
               ))}
             </div>
           </div>
+            </>
+          )}
         </main>
       </div>
     </div>

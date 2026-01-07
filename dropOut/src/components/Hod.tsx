@@ -7,6 +7,7 @@ import Student from './HodPages/Student';
 import Teachers from './HodPages/Teachers';
 import Courses from './HodPages/Courses';
 import Reports from './HodPages/Reports';
+import Predictions from './HodPages/Prediction'; // Fixed: Changed from 'Prediction' to 'Predictions' if needed
 import Attendance from './HodPages/Attendance';
 import Exams from './HodPages/Exams';
 import Settings from './HodPages/Settings';
@@ -23,15 +24,26 @@ import { IoIosPeople } from "react-icons/io";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaClipboardCheck } from "react-icons/fa";
-
 import { IoMdSettings } from "react-icons/io";
 import { TbReport } from "react-icons/tb";
+import { FaChartLine } from "react-icons/fa"; 
 
+// Define types for dashboard data
+interface RiskLevelTrend {
+  date: string;
+  high: number;
+  medium: number;
+  low: number;
+  critical: number;
+}
 
-
-
-
-
+interface DashboardData {
+  totalStudents: number;
+  totalTeachers: number;
+  totalAtRiskStudents: number;
+  todayAttendance: number;
+  riskLevelTrends: RiskLevelTrend[];
+}
 
 // Create theme context
 const ThemeContext = createContext({
@@ -43,20 +55,23 @@ export const useTheme = () => useContext(ThemeContext);
 
 const Hod = () => {
   const location = useLocation();
-  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'settings'>('dashboard');
+  // Update activeView to include 'predictions'
+  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'predictions' | 'settings'>('dashboard');
+  
   // Set activeView from navigation state (e.g., after teacher registration)
   useEffect(() => {
     if (location.state && location.state.view) {
       setActiveView(location.state.view);
     }
   }, [location.state]);
+  
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showTeacherForm, setShowTeacherForm] = useState(false);
   const [showStudentForm, setShowStudentForm] = useState(false);
 
-  // Dashboard state
-  const [dashboardData, setDashboardData] = useState({
+  // Dashboard state with proper typing
+  const [dashboardData, setDashboardData] = useState<DashboardData>({
     totalStudents: 0,
     totalTeachers: 0,
     totalAtRiskStudents: 0,
@@ -64,7 +79,7 @@ const Hod = () => {
     riskLevelTrends: []
   });
   const [dashboardLoading, setDashboardLoading] = useState(true);
-  const [dashboardError, setDashboardError] = useState(null);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
 
   const { user, token, logout } = useUserAuth();
   const navigate = useNavigate();
@@ -91,7 +106,12 @@ const Hod = () => {
           setDashboardError(result.message || 'Error loading dashboard');
         }
       } catch (err) {
-        setDashboardError(err.message || 'Error loading dashboard');
+        // Properly handle the error with type checking
+        if (err instanceof Error) {
+          setDashboardError(err.message || 'Error loading dashboard');
+        } else {
+          setDashboardError('An unknown error occurred');
+        }
       } finally {
         setDashboardLoading(false);
       }
@@ -111,14 +131,10 @@ const Hod = () => {
     setIsMobileMenuOpen(false);
   };
 
-
   const themeContextValue = {
     theme,
     toggleTheme,
   };
-
-
-
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
@@ -315,7 +331,7 @@ const Hod = () => {
               </div>
 
               <div className="space-y-1 sm:space-y-2">
-                {/* ...existing sidebar nav items... */}
+                {/* Dashboard */}
                 <div 
                   className={`flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'dashboard' 
@@ -331,7 +347,8 @@ const Hod = () => {
                   </svg>
                   <span className="text-sm sm:text-base font-medium">Dashboard</span>
                 </div>
-                {/* ...other nav items... */}
+
+                {/* Students */}
                 <div 
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'students' 
@@ -345,6 +362,8 @@ const Hod = () => {
                   <IoIosPeople className="w-5 h-5" />
                   <span className="font-medium">Students</span>
                 </div>
+
+                {/* Teachers */}
                 <div 
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'teachers' 
@@ -358,6 +377,8 @@ const Hod = () => {
                   <LiaChalkboardTeacherSolid className="w-6 h-6 font-bold" />
                   <span className="font-medium">Teachers</span>
                 </div>
+
+                {/* Courses */}
                 <div 
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'courses' 
@@ -371,6 +392,8 @@ const Hod = () => {
                   <FaCalendarAlt className="w-5 h-5" />
                   <span className="font-medium">Courses & Timetable</span>
                 </div>
+
+                {/* Attendance */}
                 <div 
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'attendance' 
@@ -384,6 +407,8 @@ const Hod = () => {
                   <FaClipboardCheck className="w-5 h-5" />
                   <span className="font-medium">Attendance</span>
                 </div>
+
+                {/* Exams */}
                 <div 
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'exams' 
@@ -400,6 +425,8 @@ const Hod = () => {
                   </svg>
                   <span className="font-medium">Exams/Grades</span>
                 </div>
+
+                {/* Reports */}
                 <div 
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'reports' 
@@ -413,6 +440,23 @@ const Hod = () => {
                   <TbReport className="w-5 h-5" />
                   <span className="font-medium">Reports</span>
                 </div>
+
+                {/* PREDICTIONS - Added after Reports */}
+                <div 
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                    activeView === 'predictions' 
+                      ? 'bg-orange-100 text-orange-700' 
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
+                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
+                  }`}
+                  onClick={() => { setActiveView('predictions'); closeMobileMenu(); }}
+                >
+                  <FaChartLine className="w-5 h-5" />
+                  <span className="font-medium">Predictions</span>
+                </div>
+
+                {/* Settings */}
                 <div 
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
                     activeView === 'settings' 
@@ -629,7 +673,7 @@ const Hod = () => {
                         </ResponsiveContainer>
                       </div>
                     </div>
-                    {/* ...existing code... */}
+                    
                     {/* Teacher Roster Today */}
                     <div className={`rounded-lg shadow-sm border p-4 sm:p-6 lg:p-8 transition-colors duration-200 mt-6 sm:mt-12 ${
                       theme === 'dark' 
@@ -679,41 +723,41 @@ const Hod = () => {
                           }`}>Dr. Kim</p>
                         </div>
                       </div>
-                      </div>
+                    </div>
 
-                      {/* Quick Actions */}
-                      <div className={`rounded-lg shadow-sm border p-4 sm:p-6 transition-colors duration-200 ${
-                        theme === 'dark' 
-                          ? 'bg-gray-800 border-gray-700' 
-                          : 'bg-white border-gray-200'
-                      }`}>
-                        <h3 className={`text-base sm:text-lg font-bold mb-3 sm:mb-4 transition-colors duration-200 ${
-                          theme === 'dark' ? 'text-white' : 'text-gray-900'
-                        }`}>Quick Actions</h3>
-                        
-                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                          <button 
-                            onClick={() => {
-                              console.log('Add Teacher button clicked');
-                              setShowTeacherForm(true);
-                            }}
-                            className="px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm"
-                          >
-                            <span className="text-xs sm:text-sm">+</span>
-                            <span>Add Teacher</span>
-                          </button>
-                          <button 
-                            onClick={() => {
-                              console.log('Add Student button clicked');
-                              setShowStudentForm(true);
-                            }}
-                            className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm"
-                          >
-                            <span className="text-xs sm:text-sm">+</span>
-                            <span>Add Student</span>
-                          </button>
-                        </div>
+                    {/* Quick Actions */}
+                    <div className={`rounded-lg shadow-sm border p-4 sm:p-6 transition-colors duration-200 ${
+                      theme === 'dark' 
+                        ? 'bg-gray-800 border-gray-700' 
+                        : 'bg-white border-gray-200'
+                    }`}>
+                      <h3 className={`text-base sm:text-lg font-bold mb-3 sm:mb-4 transition-colors duration-200 ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>Quick Actions</h3>
+                      
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button 
+                          onClick={() => {
+                            console.log('Add Teacher button clicked');
+                            setShowTeacherForm(true);
+                          }}
+                          className="px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm"
+                        >
+                          <span className="text-xs sm:text-sm">+</span>
+                          <span>Add Teacher</span>
+                        </button>
+                        <button 
+                          onClick={() => {
+                            console.log('Add Student button clicked');
+                            setShowStudentForm(true);
+                          }}
+                          className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold flex items-center justify-center space-x-1 text-xs sm:text-sm"
+                        >
+                          <span className="text-xs sm:text-sm">+</span>
+                          <span>Add Student</span>
+                        </button>
                       </div>
+                    </div>
                   </div>
 
                   {/* Right Column - Flagged Students and Alerts */}
@@ -844,6 +888,7 @@ const Hod = () => {
             {activeView === 'teachers' && <Teachers />}
             {activeView === 'courses' && <Courses />}
             {activeView === 'reports' && <Reports />}
+            {activeView === 'predictions' && <Predictions />}
             {activeView === 'attendance' && <Attendance />}
             {activeView === 'exams' && <Exams />}
             {activeView === 'settings' && <Settings />}
@@ -863,9 +908,6 @@ const Hod = () => {
                 </div>
               </div>
             )}
-            
-            
-              
           </main>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, Filter, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
 export default function StudentRiskTable() {
   const [students] = useState([
@@ -42,26 +42,55 @@ export default function StudentRiskTable() {
   return (
     <div className="w-full mx-auto p-2 sm:p-3 md:p-4 lg:p-6"> {/* Responsive padding */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {/* Header with responsive layout */}
+        {/* Header section */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 border-b border-gray-200">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-0">Students List</h2>
-          <div className="flex gap-2 w-full sm:w-auto">
-            <button 
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 text-sm"
-              aria-label="Export data"
-            >
-              <Download size={18} className="text-gray-600" />
-              <span className="hidden sm:inline">Export</span>
-            </button>
-            <button 
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 text-sm"
-              aria-label="Filter results"
-            >
-              <Filter size={18} className="text-gray-600" />
-              <span className="hidden sm:inline">Filter</span>
-            </button>
+          {/* Title on left */}
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-0">
+            Students List
+          </h2>
+          
+          {/* Right side with all action buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+            {/* Black prediction buttons - top row */}
+            <div className="flex gap-2">
+              <button 
+                className="px-3 py-1.5 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm font-medium flex-1 sm:flex-none"
+                aria-label="Add prediction"
+              >
+                <Plus size={16} />
+                <span>Add Prediction</span>
+              </button>
+              <button 
+                className="px-3 py-1.5 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm font-medium flex-1 sm:flex-none"
+                aria-label="Add second prediction"
+              >
+                <Plus size={16} />
+                <span>Add Second Prediction</span>
+              </button>
+            </div>
+            
+            {/* Export and filter buttons - bottom row on mobile, inline on desktop */}
+            <div className="flex gap-2">
+              <button 
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 text-sm border border-gray-200"
+                aria-label="Export data"
+              >
+                <Download size={18} className="text-gray-600" />
+                <span className="hidden sm:inline">Export</span>
+              </button>
+              <button 
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-2 text-sm border border-gray-200"
+                aria-label="Filter results"
+              >
+                <Filter size={18} className="text-gray-600" />
+                <span className="hidden sm:inline">Filter</span>
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Add space between header and table */}
+        <div className="h-4 sm:h-6"></div> {/* This lowers the table */}
 
         {/* Mobile card view for small screens */}
         <div className="sm:hidden p-3">
@@ -86,7 +115,7 @@ export default function StudentRiskTable() {
         </div>
 
         {/* Desktop table view (hidden on mobile) */}
-        <div className="hidden sm:block overflow-x-auto">
+        <div className="hidden sm:block overflow-x-auto px-3 sm:px-4"> {/* Added horizontal padding */}
           <table className="w-full min-w-[640px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
@@ -126,6 +155,9 @@ export default function StudentRiskTable() {
             </tbody>
           </table>
         </div>
+
+        {/* Add space before footer */}
+        <div className="h-4 sm:h-6"></div> {/* Added space before footer */}
 
         {/* Responsive footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between p-3 sm:p-4 border-t border-gray-200">

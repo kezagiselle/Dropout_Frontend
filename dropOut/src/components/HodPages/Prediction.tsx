@@ -95,7 +95,7 @@ export default function StudentRiskTable() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200"> {/* Reduced px from 6 to 4 */}
+        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200"> 
           <div className="text-sm text-gray-500">
             Showing 1 to 3 of 3 results
           </div>

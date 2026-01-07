@@ -40,9 +40,9 @@ export default function StudentRiskTable() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6">
+    <div className="w-full mx-auto p-4"> {/* Reduced padding from p-6 to p-4 */}
       <div className="bg-white rounded-lg shadow">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200"> {/* Reduced padding from p-6 to p-4 */}
           <h2 className="text-xl font-semibold text-gray-800">Students List</h2>
           <div className="flex gap-2">
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
@@ -58,16 +58,16 @@ export default function StudentRiskTable() {
           <table className="w-full">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> {/* Reduced px from 6 to 4 */}
                   Student
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> {/* Reduced px from 6 to 4 */}
                   Risk Level
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> {/* Reduced px from 6 to 4 */}
                   Prediction
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> {/* Reduced px from 6 to 4 */}
                   Information
                 </th>
               </tr>
@@ -75,18 +75,18 @@ export default function StudentRiskTable() {
             <tbody className="bg-white divide-y divide-gray-200">
               {students.map((student) => (
                 <tr key={student.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900"> {/* Reduced px from 6 to 4 */}
                     {student.name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap"> {/* Reduced px from 6 to 4 */}
                     <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${getRiskLevelColor(student.riskLevel)}`}>
                       {student.riskLevel}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
+                  <td className="px-4 py-3 text-sm text-gray-700"> {/* Reduced px from 6 to 4 */}
                     {student.prediction}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-4 py-3 text-sm text-gray-600"> {/* Reduced px from 6 to 4 */}
                     {student.information}
                   </td>
                 </tr>
@@ -95,7 +95,7 @@ export default function StudentRiskTable() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200"> {/* Reduced px from 6 to 4 */}
           <div className="text-sm text-gray-500">
             Showing 1 to 3 of 3 results
           </div>

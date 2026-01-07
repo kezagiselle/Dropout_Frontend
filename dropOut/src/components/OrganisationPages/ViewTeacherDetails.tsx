@@ -13,7 +13,7 @@ import {
   BookOpen,
   Users
 } from 'lucide-react';
-import OrganizationSidebar from '../OrganisationPages/OrganisationSideBar';
+import OrganizationSidebar from './OrganisationSideBar';
 import userr from "../../../src/img/userr.png";
 import { useUserAuth } from '../../context/useUserAuth';
 

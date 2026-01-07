@@ -33,8 +33,9 @@ import SchoolsPage from "./components/OrganisationPages/SchoolsPages";
 import ViewProfileSchool from "./components/OrganisationPages/ViewProfileSchool";
 import AddSchoolForm from "./components/OrganisationPages/AddSchoolForm";
 import StudentPage from "./components/OrganisationPages/StudentPage";
+import ViewStudents from "./components/OrganisationPages/ViewStudents";
 import TeacherPage from "./components/OrganisationPages/TeacherPage";
-import ViewTeacherPage from "./components/OrganisationPages/ViewTeacherPage";
+import ViewTeacherDetails from "./components/OrganisationPages/ViewTeacherDetails";
 import CoursePage from "./components/OrganisationPages/CoursePage";
 import ExamPages from "./components/OrganisationPages/ExamPages";
 import TimetablePage from "./components/OrganisationPages/TimetablePage";
@@ -85,8 +86,9 @@ function App() {
           <Route path="/view-profile-school" element={<ViewProfileSchool/>} />
           <Route path="/add-school" element={<AddSchoolForm />} />
           <Route path="/student-page" element={<StudentPage />} />
+          <Route path="/view-students" element={<ViewStudents />} />
           <Route path="/teacher-page" element={<TeacherPage />} />
-          <Route path="/view-teachers" element={<ViewTeacherPage/>} />
+          <Route path="/view-teachers" element={<ViewTeacherDetails/>} />
           <Route path="/course-timetable" element={<CoursePage/>} />
           <Route path="/exams-grades" element={<ExamPages/>} />
           <Route path="/organ-timetable" element={<TimetablePage/>} />

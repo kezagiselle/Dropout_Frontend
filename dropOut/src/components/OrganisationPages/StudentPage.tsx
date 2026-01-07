@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ChevronDown, 
@@ -18,6 +18,19 @@ import OrganizationSidebar from '../OrganisationPages/OrganisationSideBar';
 import userr from "../../../src/img/userr.png";
 import { useUserAuth } from '../../context/useUserAuth';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface School {
+  schoolId: string;
+  schoolName: string;
+  region: string;
+  numberOfStudents: number;
+}
+
+interface StudentsData {
+  schools: School[];
+}
+
 export default function StudentPage() {
   const [selectedDistrict, setSelectedDistrict] = useState('GASABO');
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,24 +41,51 @@ export default function StudentPage() {
   const [activeTab, setActiveTab] = useState('Students');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useUserAuth();
+  const { user, token, logout } = useUserAuth();
+  
+  // API integration state
+  const [studentsData, setStudentsData] = useState<StudentsData>({ schools: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Fetch students data from API
+  useEffect(() => {
+    const fetchStudentsData = async () => {
+      if (!token) return;
+      
+      setLoading(true);
+      setError('');
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/government/students-overview`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          setStudentsData(result.data);
+        } else {
+          setError(result.message || 'Failed to fetch students data');
+        }
+      } catch (err) {
+        setError('Failed to load students data');
+        console.error('Students API error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudentsData();
+  }, [token]);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
     navigate(path);
     setSidebarOpen(false);
-  };
-
-  const schools = [
-    { id: 1, name: 'Westfield High School', region: 'Region A', students: 570, color: 'green' },
-    { id: 2, name: 'Washington High School', region: 'Region B', students: 360, color: 'yellow' },
-    { id: 3, name: 'Roosevelt Middle School', region: 'Region C', students: 200, color: 'red' },
-  ];
-
-  const getStudentBadgeColor = (students: number) => {
-    if (students >= 500) return 'bg-green-100 text-green-700';
-    if (students >= 300) return 'bg-yellow-100 text-yellow-700';
-    return 'bg-red-100 text-red-700';
   };
 
   return (
@@ -190,71 +230,6 @@ export default function StudentPage() {
             </button>
           </div>
 
-          {/* Stats Cards Section */}
-          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 lg:mb-6 gap-3">
-              {/* Dropdown */}
-              <div className="relative w-full sm:w-48 lg:w-64">
-                <button className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
-                  <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{selectedDistrict}</span>
-                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
-                </button>
-              </div>
-
-              {/* Clear All Button */}
-              <button className="text-blue-600 hover:text-blue-700 font-medium text-xs sm:text-sm self-end sm:self-auto whitespace-nowrap">
-                Clear All
-              </button>
-            </div>
-
-            {/* Stats Cards with updated backgrounds - Enhanced grid responsiveness */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
-              {/* Schools Card */}
-              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <FaSchool className="text-orange-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Schools</span>
-                </div>
-                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">3</span>
-              </div>
-
-              {/* Total Students Card - Light blue background */}
-              <div className="bg-blue-50 rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <IoMdSchool className="text-blue-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Total Students</span>
-                </div>
-                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">1200</span>
-              </div>
-
-              {/* Dropout Rate Card */}
-              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <PiWarningBold className="text-orange-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">Dropout Rate</span>
-                </div>
-                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">3%</span>
-              </div>
-
-              {/* At-Risk Students Card */}
-              <div className="bg-white rounded-lg p-2 sm:p-3 lg:p-4 flex items-center justify-between border border-gray-200 hover:shadow-sm transition-shadow">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <PiWarningCircle className="text-red-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-xs sm:text-sm lg:text-base truncate">At-Risk Students</span>
-                </div>
-                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 ml-2">30</span>
-              </div>
-            </div>
-          </div>
-
           {/* Search and Filters - Enhanced Responsiveness */}
           <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -304,51 +279,88 @@ export default function StudentPage() {
 
           {/* Schools Table - Enhanced Responsiveness */}
           <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-4 sm:mb-6">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">School Name</th>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Region</th>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Number of Students</th>
-                    <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {schools.map((school) => (
-                    <tr key={school.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
-                        <a href="#" className="text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm lg:text-base truncate block max-w-[150px] sm:max-w-none">
-                          {school.name}
-                        </a>
-                      </td>
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-gray-700 text-xs sm:text-sm lg:text-base whitespace-nowrap">
-                        {school.region}
-                      </td>
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
-                        <span className={`inline-flex items-center px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${getStudentBadgeColor(school.students)} whitespace-nowrap`}>
-                          {school.students}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
-                        <button className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm whitespace-nowrap">
-                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="hidden xs:inline">View Profile</span>
-                          <span className="xs:hidden">View Profile</span>
-                        </button>
-                      </td>
-                    </tr>
+            {loading ? (
+              /* Skeleton Loading */
+              <div className="animate-pulse">
+                <div className="bg-gray-50 border-b border-gray-200">
+                  <div className="flex px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 gap-4">
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                  </div>
+                </div>
+                <div className="divide-y divide-gray-200">
+                  {[...Array(5)].map((_, idx) => (
+                    <div key={idx} className="flex px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 gap-4">
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                      <div className="flex-1 h-4 bg-gray-200 rounded"></div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </div>
+              </div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-500">{error}</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">School Name</th>
+                      <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Region</th>
+                      <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Number of Students</th>
+                      <th className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {studentsData.schools.length > 0 ? (
+                      studentsData.schools.map((school) => (
+                        <tr key={school.schoolId} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
+                            <a href="#" className="text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm lg:text-base truncate block max-w-[150px] sm:max-w-none">
+                              {school.schoolName}
+                            </a>
+                          </td>
+                          <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4 text-gray-700 text-xs sm:text-sm lg:text-base whitespace-nowrap">
+                            {school.region}
+                          </td>
+                          <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
+                            <span className="text-gray-700 text-xs sm:text-sm lg:text-base font-medium">
+                              {school.numberOfStudents}
+                            </span>
+                          </td>
+                          <td className="px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6 lg:py-4">
+                            <button 
+                              onClick={() => navigate('/view-students', { state: { schoolId: school.schoolId } })}
+                              className="flex items-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm whitespace-nowrap"
+                            >
+                              <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                              <span>View Students</span>
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={4} className="text-center py-8 text-gray-400">
+                          No schools found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Pagination - Enhanced Responsiveness */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-            <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-              Showing 1 to {schools.length} of 24 schools
-            </div>
+          {!loading && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+              <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                Showing {studentsData.schools.length} schools
+              </div>
             
             <div className="flex items-center gap-1 sm:gap-2">
               <button
@@ -385,7 +397,8 @@ export default function StudentPage() {
                 <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
             </div>
-          </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

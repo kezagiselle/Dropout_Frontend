@@ -9,6 +9,7 @@ import Teacher from '../Forms/Teacher';
 
 
 type TeacherType = {
+  id: string;
   name: string;
   specialization: string;
   courses: string[];
@@ -24,6 +25,15 @@ const Teachers = () => {
   const { user, token } = useUserAuth();
   const [teachers, setTeachers] = useState<TeacherType[]>([]);
   const [totalTeachers, setTotalTeachers] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [editingTeacher, setEditingTeacher] = useState<TeacherType | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -96,12 +106,103 @@ const Teachers = () => {
     fetchTeachers();
   };
 
+  const handleEditTeacher = (teacher: TeacherType) => {
+    setEditingTeacher(teacher);
+    setShowTeacherForm(true);
+  };
+
   if (showTeacherForm) {
-    return <Teacher onBack={() => setShowTeacherForm(false)} onTeacherCreated={handleTeacherCreated} />;
+    return <Teacher 
+      onBack={() => {
+        setShowTeacherForm(false);
+        setEditingTeacher(null);
+      }} 
+      onTeacherCreated={handleTeacherCreated}
+      teacherData={editingTeacher ? {
+        id: editingTeacher.id,
+        name: editingTeacher.name,
+        email: '',
+        phone: '',
+        specialization: editingTeacher.specialization,
+        courses: editingTeacher.courses
+      } : undefined}
+    />;
   }
 
   return (
     <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
+      {isLoading ? (
+        <div className="animate-pulse space-y-4 sm:space-y-6">
+          {/* Header Skeleton */}
+          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
+            <div className="flex-1 min-w-0">
+              <div className="h-8 bg-gray-200 rounded w-64 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-48"></div>
+            </div>
+            <div className="flex space-x-3">
+              <div className="h-10 bg-gray-200 rounded w-64"></div>
+              <div className="h-10 bg-gray-200 rounded w-32"></div>
+            </div>
+          </div>
+
+          {/* KPI Cards Skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className={`rounded-lg shadow-sm border p-6 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                    <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-32"></div>
+                  </div>
+                  <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Filters Skeleton */}
+          <div className={`rounded-lg shadow-sm border p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <div className="flex justify-between items-center">
+              <div className="h-4 bg-gray-200 rounded w-16"></div>
+              <div className="flex space-x-4">
+                <div className="h-10 bg-gray-200 rounded w-40"></div>
+                <div className="h-10 bg-gray-200 rounded w-32"></div>
+                <div className="h-10 bg-gray-200 rounded w-24"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Table Skeleton */}
+          <div className={`rounded-lg shadow-sm border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <div className="px-6 py-4 border-b">
+              <div className="flex justify-between items-center">
+                <div className="h-5 bg-gray-200 rounded w-32"></div>
+                <div className="flex space-x-2">
+                  <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                  <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            </div>
+            <div className="p-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-16 bg-gray-100 rounded mb-3"></div>
+              ))}
+            </div>
+            <div className="px-6 py-4 border-t">
+              <div className="flex justify-between items-center">
+                <div className="h-4 bg-gray-200 rounded w-48"></div>
+                <div className="flex space-x-2">
+                  <div className="h-8 bg-gray-200 rounded w-20"></div>
+                  <div className="h-8 bg-gray-200 rounded w-8"></div>
+                  <div className="h-8 bg-gray-200 rounded w-20"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Header Section */}
       <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
         <div className="flex-1 min-w-0">
@@ -382,6 +483,11 @@ const Teachers = () => {
                 }`}>
                   Status
                 </th>
+                <th className={`px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors duration-200 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                }`}>
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className={`divide-y transition-colors duration-200 ${
@@ -427,6 +533,19 @@ const Teachers = () => {
                       {teacher.status ? 'Active' : 'Inactive'}
                     </span>
                   </td>
+                  <td className="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => handleEditTeacher(teacher)}
+                        className="p-2 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors duration-200"
+                        title="Edit Teacher"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -468,6 +587,8 @@ const Teachers = () => {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   )
 }

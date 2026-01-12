@@ -31,14 +31,13 @@ const Student = () => {
   const { theme } = useTheme()
   const { user, token } = useUserAuth()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedGrade, setSelectedGrade] = useState('All Grades')
   const [showStudentForm, setShowStudentForm] = useState(false)
   const [showStudentProfile, setShowStudentProfile] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [selectedRisk, setSelectedRisk] = useState('All Risk Levels')
-  const [selectedAttendance, setSelectedAttendance] = useState('All Attendance')
-  const [selectedGPA, setSelectedGPA] = useState('All GPA')
-  const [selectedDepartment, setSelectedDepartment] = useState('All Department')
+  const [selectedCourse, setSelectedCourse] = useState('All Courses')
+  const [courses, setCourses] = useState<{ id: string; name: string }[]>([])
+  const [loadingCourses, setLoadingCourses] = useState(false)
 
   // Student overview data
   const [studentData, setStudentData] = useState<StudentOverviewData>({
@@ -49,6 +48,44 @@ const Student = () => {
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoadingCourses(true)
+      try {
+        const response = await fetch(`${baseUrl}/api/courses`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        const data = await response.json()
+        if (data && Array.isArray(data.data)) {
+          setCourses(data.data.map((course: { id: string; name: string }) => ({
+            id: course.id,
+            name: course.name
+          })))
+        } else {
+          setCourses([])
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error)
+      } finally {
+        setLoadingCourses(false)
+      }
+    }
+    if (token) {
+      fetchCourses()
+    }
+  }, [token])
 
   useEffect(() => {
     const fetchStudentOverview = async () => {
@@ -121,19 +158,100 @@ const Student = () => {
     setShowStudentProfile(true)
   }
 
+  // Filter students based on selected filters
+  const filteredStudents = students.filter((student) => {
+    // Filter by course
+    const courseMatch = selectedCourse === 'All Courses' || 
+      (student.courses && student.courses.some(course => {
+        const selectedCourseName = courses.find(c => c.id === selectedCourse)?.name
+        return selectedCourseName ? course === selectedCourseName : false
+      }))
+    
+    // Filter by risk level
+    const riskMatch = selectedRisk === 'All Risk Levels' || 
+      formatRiskLevel(student.riskLevel) === selectedRisk
+    
+    // Filter by search term
+    const searchMatch = searchTerm === '' || 
+      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.id.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    return courseMatch && riskMatch && searchMatch
+  })
+
   if (showStudentForm) {
     return <StudentForm onBack={() => setShowStudentForm(false)} />;
   }
 
   if (showStudentProfile && selectedStudent) {
-    return <StudentProfile onBack={() => setShowStudentProfile(false)} />;
+    return <StudentProfile onBack={() => setShowStudentProfile(false)} studentId={selectedStudent.id} />;
   }
 
-  if (loading) {
+  if (isLoading || loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className={`text-lg ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-          Loading...
+      <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
+          <div className="flex-1 min-w-0">
+            <div className="h-8 bg-gray-200 rounded w-64 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-48"></div>
+          </div>
+          <div className="flex space-x-3">
+            <div className="h-10 bg-gray-200 rounded w-64"></div>
+            <div className="h-10 bg-gray-200 rounded w-32"></div>
+          </div>
+        </div>
+
+        {/* KPI Cards Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className={`rounded-lg shadow-sm border p-4 lg:p-6 ${
+              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                  <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-32"></div>
+                </div>
+                <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Filters Skeleton */}
+        <div className={`rounded-lg shadow-sm border p-3 sm:p-4 lg:p-6 ${
+          theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex justify-between items-center">
+            <div className="h-4 bg-gray-200 rounded w-16"></div>
+            <div className="flex space-x-3">
+              <div className="h-10 bg-gray-200 rounded w-40"></div>
+              <div className="h-10 bg-gray-200 rounded w-32"></div>
+              <div className="h-10 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Table Skeleton */}
+        <div className={`rounded-lg shadow-sm border ${
+          theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
+          <div className="px-6 py-4 border-b">
+            <div className="flex justify-between items-center">
+              <div className="h-5 bg-gray-200 rounded w-32"></div>
+              <div className="flex space-x-2">
+                <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                <div className="w-8 h-8 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          </div>
+          <div className="p-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="h-16 bg-gray-100 rounded mb-3"></div>
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -307,21 +425,21 @@ const Student = () => {
           
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-4">
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {/* Grade Filter */}
+              {/* Course Filter */}
               <select
-                value={selectedGrade}
-                onChange={(e) => setSelectedGrade(e.target.value)}
+                value={selectedCourse}
+                onChange={(e) => setSelectedCourse(e.target.value)}
+                disabled={loadingCourses}
                 className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
                   theme === 'dark'
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
                 }`}
               >
-                <option>All Grades</option>
-                <option>Grade 9</option>
-                <option>Grade 10</option>
-                <option>Grade 11</option>
-                <option>Grade 12</option>
+                <option>All Courses</option>
+                {courses.map((course) => (
+                  <option key={course.id} value={course.id}>{course.name}</option>
+                ))}
               </select>
 
               {/* Risk Level Filter */}
@@ -339,58 +457,15 @@ const Student = () => {
                 <option>Medium Risk</option>
                 <option>Low Risk</option>
               </select>
-
-              {/* Attendance Filter */}
-              <select
-                value={selectedAttendance}
-                onChange={(e) => setSelectedAttendance(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              >
-                <option>All Attendance</option>
-                <option>90%+</option>
-                <option>70-89%</option>
-                <option>Below 70%</option>
-              </select>
-
-              {/* GPA Filter */}
-              <select
-                value={selectedGPA}
-                onChange={(e) => setSelectedGPA(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              >
-                <option>All GPA</option>
-                <option>3.5+</option>
-                <option>2.5-3.4</option>
-                <option>Below 2.5</option>
-              </select>
-
-              {/* Department Filter */}
-              <select
-                value={selectedDepartment}
-                onChange={(e) => setSelectedDepartment(e.target.value)}
-                className={`px-3 py-2 border rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
-                  theme === 'dark'
-                    ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              >
-                <option>All Department</option>
-                <option>Mathematics</option>
-                <option>Science</option>
-                <option>English</option>
-                <option>History</option>
-              </select>
             </div>
             
-            <button className="text-blue-600 hover:text-blue-700 text-sm font-bold transition-colors duration-200">
+            <button 
+              onClick={() => {
+                setSelectedCourse('All Courses')
+                setSelectedRisk('All Risk Levels')
+              }}
+              className="text-blue-600 hover:text-blue-700 text-sm font-bold transition-colors duration-200"
+            >
               Clear All
             </button>
           </div>
@@ -476,7 +551,16 @@ const Student = () => {
                   ? 'bg-gray-800 divide-gray-700' 
                   : 'bg-white divide-gray-200'
               }`}>
-                {students.map((student) => (
+                {filteredStudents.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-8 text-center">
+                      <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                        No students found
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredStudents.map((student) => (
                   <tr key={student.id} className={`hover:transition-colors duration-200 ${
                     theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                   }`}>
@@ -542,7 +626,8 @@ const Student = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                ))
+                )}
               </tbody>
             </table>
           </div>

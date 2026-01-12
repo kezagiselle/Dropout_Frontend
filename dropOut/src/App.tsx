@@ -42,6 +42,7 @@ import TimetablePage from "./components/OrganisationPages/TimetablePage";
 import ReportPage from "./components/OrganisationPages/ReportPage";
 import ReportsView from "./components/OrganisationPages/ReportView";
 import OrganSettings from "./components/OrganisationPages/OrganSettings";
+import PredictionProfile from "./components/HodPages/PredictionProfile";
 
 
 function App() {
@@ -95,6 +96,7 @@ function App() {
           <Route path="/organ-report" element={<ReportPage/>} />
           <Route path="/report-view" element={<ReportsView/>} />
           <Route path="/organ-settings" element={<OrganSettings/>} />
+          <Route path="/prediction-profile" element={<PredictionProfile/>} />
 
 
 

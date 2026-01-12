@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../Hod';
 import { FaDownload, FaPlus, FaEye, FaBell, FaEdit, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
 import ExamsForm from '../Forms/Exams';
@@ -6,6 +6,14 @@ import ExamsForm from '../Forms/Exams';
 const Exams = () => {
   const { theme } = useTheme();
   const [showExamsForm, setShowExamsForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (showExamsForm) {
     return <ExamsForm onBack={() => setShowExamsForm(false)} />;
@@ -45,6 +53,21 @@ const Exams = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {isLoading ? (
+          // Skeleton loading cards
+          [1, 2, 3].map((i) => (
+            <div key={i} className={`rounded-lg shadow-sm p-4 animate-pulse ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            }`}>
+              <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+              <div className="space-y-3">
+                <div className="h-16 bg-gray-200 rounded"></div>
+                <div className="h-16 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <>
         {/* Upcoming Exams Card */}
         <div className={`rounded-lg shadow-sm transition-colors duration-200 ${
           theme === 'dark' 
@@ -352,9 +375,24 @@ const Exams = () => {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
 
       {/* Exam Timetable Section */}
+      {isLoading ? (
+        <div className={`rounded-lg shadow-sm p-4 animate-pulse ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className="flex justify-between items-center mb-4">
+            <div className="h-6 bg-gray-200 rounded w-40"></div>
+            <div className="h-10 bg-gray-200 rounded w-32"></div>
+          </div>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-16 bg-gray-100 rounded"></div>
+            ))}
+          </div>
+        </div>
+      ) : (
       <div className={`rounded-lg shadow-sm transition-colors duration-200 ${
         theme === 'dark' 
           ? 'bg-gray-800' 
@@ -577,6 +615,7 @@ const Exams = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };

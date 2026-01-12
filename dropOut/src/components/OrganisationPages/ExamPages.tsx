@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
@@ -129,6 +129,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
 };
 
 export default function ExamPages() {
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState('All Risk Levels');
@@ -138,6 +139,13 @@ export default function ExamPages() {
   
   const navigate = useNavigate();
   const { user, logout } = useUserAuth();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleNavigation = (path: string, tabName: string) => {
     setActiveTab(tabName);
@@ -276,6 +284,85 @@ export default function ExamPages() {
 
         {/* Main Content - Modified to be closer to sidebar */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-4 lg:ml-0"> {/* Reduced padding and removed margin-left */}
+          {isLoading ? (
+            <div className="animate-pulse">
+              {/* Filters Bar Skeleton */}
+              <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6">
+                <div className="flex flex-wrap gap-2">
+                  <div className="h-8 bg-gray-200 rounded w-20"></div>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-8 bg-gray-200 rounded w-24"></div>
+                  ))}
+                  <div className="h-8 bg-gray-200 rounded w-28"></div>
+                </div>
+              </div>
+
+              {/* Region Selector Skeleton */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="h-10 bg-gray-200 rounded w-32"></div>
+                <div className="h-6 bg-gray-200 rounded w-20"></div>
+              </div>
+
+              {/* Stats Cards Skeleton */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                    <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-32"></div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Academic Grades Skeleton */}
+              <div className="mb-6">
+                <div className="h-6 bg-gray-200 rounded w-40 mb-4"></div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+                      <div className="h-5 bg-gray-200 rounded w-32 mb-3"></div>
+                      {[1, 2, 3].map((j) => (
+                        <div key={j} className="flex justify-between items-center mb-2">
+                          <div className="h-4 bg-gray-200 rounded w-24"></div>
+                          <div className="h-4 bg-gray-200 rounded w-12"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Search and Filters Skeleton */}
+              <div className="bg-white rounded-lg shadow-sm p-4 mb-6 border border-gray-200">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="h-10 bg-gray-200 rounded flex-1"></div>
+                  <div className="h-10 bg-gray-200 rounded w-32"></div>
+                  <div className="h-10 bg-gray-200 rounded w-32"></div>
+                </div>
+              </div>
+
+              {/* Table Skeleton */}
+              <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div className="p-4">
+                  <div className="space-y-3">
+                    <div className="h-10 bg-gray-200 rounded"></div>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="h-16 bg-gray-100 rounded"></div>
+                    ))}
+                  </div>
+                </div>
+                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                  <div className="h-4 bg-gray-200 rounded w-32"></div>
+                  <div className="flex gap-2">
+                    <div className="h-8 bg-gray-200 rounded w-20"></div>
+                    <div className="h-8 bg-gray-200 rounded w-8"></div>
+                    <div className="h-8 bg-gray-200 rounded w-20"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
           {/* Filters Bar - Enhanced Responsiveness */}
           <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -559,6 +646,8 @@ export default function ExamPages() {
               </div>
             </div>
           </div>
+            </>
+          )}
         </main>
       </div>
     </div>

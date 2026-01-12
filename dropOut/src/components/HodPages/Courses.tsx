@@ -32,8 +32,16 @@ const Courses = () => {
     totalInactiveCourses: 0,
     totalTeachers: 0
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);
@@ -90,12 +98,68 @@ const Courses = () => {
 
   return (
     <div className="w-full space-y-4 sm:space-y-6 px-2 sm:px-0">
-      {loading && (
-        <div className="w-full text-center py-2 text-blue-500">Loading courses...</div>
-      )}
       {error && (
         <div className="w-full text-center py-2 text-red-500">{error}</div>
       )}
+      
+      {isLoading || loading ? (
+        <div className="animate-pulse space-y-4 sm:space-y-6">
+          {/* Header Skeleton */}
+          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
+            <div className="flex-1 min-w-0">
+              <div className="h-8 bg-gray-200 rounded w-96 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-64"></div>
+            </div>
+            <div className="h-10 bg-gray-200 rounded w-32"></div>
+          </div>
+
+          {/* KPI Cards Skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className={`rounded-lg shadow-sm border p-4 lg:p-6 ${
+                theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              }`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-3"></div>
+                    <div className="h-8 bg-gray-200 rounded w-16 mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-32"></div>
+                  </div>
+                  <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Table Skeleton */}
+          <div className={`rounded-lg shadow-sm border ${
+            theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          }`}>
+            <div className="px-6 py-4 border-b">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                <div className="h-6 bg-gray-200 rounded w-40"></div>
+                <div className="flex gap-3">
+                  <div className="h-10 bg-gray-200 rounded w-48"></div>
+                  <div className="h-10 bg-gray-200 rounded w-24"></div>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-16 bg-gray-100 rounded mb-3"></div>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons Skeleton */}
+          <div className="flex justify-end gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-10 bg-gray-200 rounded w-32"></div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Header Section */}
       <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
         <div className="flex-1 min-w-0">
@@ -366,6 +430,8 @@ const Courses = () => {
           </button>
         </div>
       </div>
+        </>
+      )}
     </div>
   )
 }

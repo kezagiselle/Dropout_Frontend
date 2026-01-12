@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaDownload, FaPlus, FaUsers, FaExclamationTriangle, FaChartLine, FaChevronDown, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { FaHandHoldingHeart } from "react-icons/fa6";
 import { useTheme } from '../Hod';
@@ -12,6 +12,14 @@ const Reports = () => {
   const [riskLevel, setRiskLevel] = useState("All Risk Levels");
   const [department, setDepartment] = useState("All Departments");
   const [showReport, setShowReport] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (showReport) {
     return <Report onBack={() => setShowReport(false)} />;
@@ -111,6 +119,70 @@ const Reports = () => {
         </div>
       </div>
 
+      {isLoading ? (
+        <div className="animate-pulse space-y-4 sm:space-y-6">
+          {/* Filters Skeleton */}
+          <div className={`rounded-lg shadow-sm p-4 sm:p-6 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className="h-6 bg-gray-200 rounded w-32 mb-4"></div>
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i}>
+                  <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                  <div className="h-10 bg-gray-200 rounded w-full"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Summary Cards Skeleton */}
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className={`rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                    <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-32"></div>
+                  </div>
+                  <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Tables Skeleton */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+            {/* High Risk Students Table Skeleton */}
+            <div className={`rounded-lg shadow-sm ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+              <div className="px-4 sm:px-6 py-4">
+                <div className="h-6 bg-gray-200 rounded w-40 mb-4"></div>
+              </div>
+              <div className="p-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-16 bg-gray-100 rounded mb-3"></div>
+                ))}
+              </div>
+            </div>
+
+            {/* Risk Factors Skeleton */}
+            <div className={`rounded-lg shadow-sm p-3 sm:p-4 lg:p-6 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+              <div className="h-6 bg-gray-200 rounded w-32 mb-4"></div>
+              <div className="space-y-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i}>
+                    <div className="flex justify-between mb-2">
+                      <div className="h-4 bg-gray-200 rounded w-32"></div>
+                      <div className="h-4 bg-gray-200 rounded w-12"></div>
+                    </div>
+                    <div className="h-2 bg-gray-200 rounded w-full"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Report Filters */}
       <div className={`rounded-lg shadow-sm p-4 sm:p-6 transition-colors duration-200 ${
         theme === 'dark' ? 'bg-gray-800' : 'bg-white'
@@ -451,6 +523,8 @@ const Reports = () => {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };

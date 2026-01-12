@@ -1,30 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, Filter, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function StudentRiskTable() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    // Simulate loading data
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+  
   const [students] = useState([
     {
       id: 1,
       name: 'Alice Johnson',
       riskLevel: 'High',
-      prediction: 'At Risk of Dropping Out',
+      prediction: 0.87,
       information: 'Low attendance, declining grades'
     },
     {
       id: 2,
       name: 'Bob Smith',
       riskLevel: 'Medium',
-      prediction: 'Needs Support',
+      prediction: 0.54,
       information: 'Struggling with mathematics'
     },
     {
       id: 3,
       name: 'Carol Williams',
       riskLevel: 'Low',
-      prediction: 'On Track',
+      prediction: 0.12,
       information: 'Good performance across subjects'
     }
   ]);
+
+  const handleStudentClick = (student: any) => {
+    navigate('/prediction-profile', { state: { student } });
+  };
+
+  const handleMakePrediction = () => {
+    console.log('Making prediction...');
+    // Add your prediction logic here
+  };
 
   const getRiskLevelColor = (level: string) => {
     switch (level.toLowerCase()) {
@@ -51,23 +72,18 @@ export default function StudentRiskTable() {
           
           {/* Right side with all action buttons */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-            {/* Black prediction buttons - top row */}
-            <div className="flex gap-2">
-              <button 
-                className="px-3 py-1.5 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm font-medium flex-1 sm:flex-none"
-                aria-label="Add prediction"
-              >
-                <Plus size={16} />
-                <span>Add Prediction</span>
-              </button>
-              <button 
-                className="px-3 py-1.5 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm font-medium flex-1 sm:flex-none"
-                aria-label="Add second prediction"
-              >
-                <Plus size={16} />
-                <span>Add Second Prediction</span>
-              </button>
-            </div>
+            {/* Make Prediction button - primary action */}
+            <button 
+              onClick={handleMakePrediction}
+              className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200 flex items-center justify-center gap-2 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 flex-1 sm:flex-none"
+              aria-label="Make prediction"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span>Make Prediction</span>
+            </button>
             
             {/* Export and filter buttons - bottom row on mobile, inline on desktop */}
             <div className="flex gap-2">
@@ -92,10 +108,57 @@ export default function StudentRiskTable() {
         {/* Add space between header and table */}
         <div className="h-4 sm:h-6"></div> {/* This lowers the table */}
 
-        {/* Mobile card view for small screens */}
-        <div className="sm:hidden p-3">
+        {isLoading ? (
+          <>
+            {/* Mobile skeleton */}
+            <div className="sm:hidden p-3 space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-3 border border-gray-200 rounded-lg animate-pulse">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                    <div className="h-6 bg-gray-200 rounded-full w-16"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                    <div className="h-3 bg-gray-200 rounded w-full"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Desktop skeleton */}
+            <div className="hidden sm:block overflow-x-auto px-3 sm:px-4">
+              <table className="w-full min-w-[640px]">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Student</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Risk Level</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Prediction</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Information</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="px-3 sm:px-4 py-3"><div className="h-4 bg-gray-200 rounded w-32"></div></td>
+                      <td className="px-3 sm:px-4 py-3"><div className="h-6 bg-gray-200 rounded-full w-16"></div></td>
+                      <td className="px-3 sm:px-4 py-3"><div className="h-4 bg-gray-200 rounded w-12"></div></td>
+                      <td className="px-3 sm:px-4 py-3"><div className="h-4 bg-gray-200 rounded w-48"></div></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Mobile card view for small screens */}
+            <div className="sm:hidden p-3">
           {students.map((student) => (
-            <div key={student.id} className="mb-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors last:mb-0">
+            <div 
+              key={student.id} 
+              onClick={() => handleStudentClick(student)}
+              className="mb-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors last:mb-0 cursor-pointer hover:shadow-md"
+            >
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-medium text-gray-900 truncate">{student.name}</h3>
                 <span className={`px-2 py-1 text-xs font-semibold rounded-full border shrink-0 ${getRiskLevelColor(student.riskLevel)}`}>
@@ -104,7 +167,7 @@ export default function StudentRiskTable() {
               </div>
               <div className="space-y-1">
                 <p className="text-sm text-gray-700">
-                  <span className="font-medium">Prediction:</span> {student.prediction}
+                  <span className="font-medium">Prediction:</span> {(student.prediction * 100).toFixed(1)}%
                 </p>
                 <p className="text-sm text-gray-600">
                   <span className="font-medium">Info:</span> {student.information}
@@ -135,7 +198,11 @@ export default function StudentRiskTable() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {students.map((student) => (
-                <tr key={student.id} className="hover:bg-gray-50 transition-colors">
+                <tr 
+                  key={student.id} 
+                  onClick={() => handleStudentClick(student)}
+                  className="hover:bg-gray-50 transition-colors cursor-pointer hover:shadow-sm"
+                >
                   <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                     {student.name}
                   </td>
@@ -144,8 +211,8 @@ export default function StudentRiskTable() {
                       {student.riskLevel}
                     </span>
                   </td>
-                  <td className="px-3 sm:px-4 py-3 text-sm text-gray-700">
-                    {student.prediction}
+                  <td className="px-3 sm:px-4 py-3 text-sm font-semibold text-gray-900">
+                    {(student.prediction * 100).toFixed(1)}%
                   </td>
                   <td className="px-3 sm:px-4 py-3 text-sm text-gray-600">
                     {student.information}
@@ -155,6 +222,8 @@ export default function StudentRiskTable() {
             </tbody>
           </table>
         </div>
+        </>
+        )}
 
         {/* Add space before footer */}
         <div className="h-4 sm:h-6"></div> {/* Added space before footer */}

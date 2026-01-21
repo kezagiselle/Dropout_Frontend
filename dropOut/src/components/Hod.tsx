@@ -197,7 +197,9 @@ const Hod = () => {
                 </svg>
                 <span className={`text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>Jan 15 - Feb 15, 2024</span>
+                }`}>
+                  {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
                 <svg className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
                   theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                 }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,52 +250,6 @@ const Hod = () => {
                 </svg>
               </button>
             </div>
-          </div>
-
-          {/* Filters Bar */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-3 sm:mt-4">
-            <span className={`text-xs sm:text-sm font-bold transition-colors duration-200 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-            }`}>Filters:</span>
-            
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
-              theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-            } focus:outline-none focus:ring-2 focus:ring-orange-500`}>
-              <option>All Grades</option>
-              <option>Grade 9</option>
-              <option>Grade 10</option>
-              <option>Grade 11</option>
-              <option>Grade 12</option>
-            </select>
-
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
-              theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-            } focus:outline-none focus:ring-2 focus:ring-orange-500`}>
-              <option>All Classes</option>
-              <option>Class A</option>
-              <option>Class B</option>
-              <option>Class C</option>
-            </select>
-
-            <select className={`px-3 py-2 border rounded-lg transition-colors duration-200 font-semibold ${
-              theme === 'dark' 
-                ? 'bg-gray-700 border-gray-600 text-white' 
-                : 'bg-white border-gray-300 text-gray-900'
-            } focus:outline-none focus:ring-2 focus:ring-orange-500`}>
-              <option>Current Term</option>
-              <option>Term 1</option>
-              <option>Term 2</option>
-              <option>Term 3</option>
-            </select>
-
-            <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold flex items-center space-x-2">
-              <FaSave className="w-4 h-4" />
-              <span>Save Filter</span>
-            </button>
           </div>
         </header>
 
@@ -600,7 +556,7 @@ const Hod = () => {
                           <LineChart
                             width={500}
                             height={300}
-                            data={dashboardData.riskLevelTrends.map((item, idx) => ({
+                            data={dashboardData.riskLevelTrends.slice().sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((item, idx) => ({
                               name: item.date,
                               highRisk: item.high,
                               mediumRisk: item.medium,

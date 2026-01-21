@@ -24,6 +24,7 @@ export default function Behavior() {
       notes: string;
     }>;
   }>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   const { token, user } = useUserAuth();
@@ -36,8 +37,12 @@ export default function Behavior() {
   // Fetch behavior incident stats for the logged-in user and replace hardcoded data
   useEffect(() => {
     const fetchStats = async () => {
-      if (!token || !user?.userId) return;
+      if (!token || !user?.userId) {
+        setIsLoading(false);
+        return;
+      }
       
+      setIsLoading(true);
       const baseUrl = import.meta.env.VITE_API_BASE_URL;
       try {
         const res = await fetch(`${baseUrl}/api/behavior-incidents/stats/${user.userId}`, {
@@ -53,6 +58,8 @@ export default function Behavior() {
       } catch (err) {
         console.error('Error fetching behavior stats:', err);
         setStats(null);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchStats();
@@ -150,6 +157,49 @@ export default function Behavior() {
               </div>
             </div>
 
+            {isLoading ? (
+              <>
+                {/* Skeleton Stats Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                  {[...Array(3)].map((_, idx) => (
+                    <div key={idx} className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 animate-pulse">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="h-3 bg-gray-200 rounded w-24 mb-2"></div>
+                          <div className="h-8 bg-gray-300 rounded w-16"></div>
+                        </div>
+                        <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                      </div>
+                      <div className="h-3 bg-gray-200 rounded w-20"></div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Skeleton Table */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="p-4 border-b">
+                    <div className="h-6 bg-gray-200 rounded w-48 mb-4 animate-pulse"></div>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                      {[...Array(4)].map((_, idx) => (
+                        <div key={idx} className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    {[...Array(5)].map((_, idx) => (
+                      <div key={idx} className="flex items-center gap-4 p-4 mb-2 border-b animate-pulse">
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-48"></div>
+                        </div>
+                        <div className="h-6 bg-gray-200 rounded w-16"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
             {/* Filters */}
             <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-wrap">
@@ -311,7 +361,9 @@ export default function Behavior() {
                 </button>
               </div>
             </div>
-          </div>
+          </>
+          )}
         </div>
-  );
-}
+      </div>
+    );
+  }

@@ -399,8 +399,23 @@ export default function DailyAttendance() {
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="text-gray-500">Loading students...</div>
+            <div className="space-y-3">
+              {[...Array(8)].map((_, idx) => (
+                <div key={idx} className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 animate-pulse">
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-24"></div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    {[...Array(4)].map((_, btnIdx) => (
+                      <div key={btnIdx} className="w-20 h-8 bg-gray-200 rounded"></div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : students.length === 0 ? (
             <div className="flex items-center justify-center py-8">

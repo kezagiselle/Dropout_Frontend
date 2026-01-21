@@ -322,53 +322,6 @@ export default function ReportPage() {
                 Clear All
               </button>
             </div>
-
-            {/* Stats Cards - All cards now have white background with border */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              {/* Schools Card - FaSchool icon - White background */}
-              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <FaSchool className="text-orange-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">Schools</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">3</span>
-              </div>
-
-              {/* Total Students Card - IoMdSchool icon - White background */}
-              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <IoMdSchool className="text-blue-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">Total Students</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">1200</span>
-              </div>
-
-              {/* Dropout Rate Card - PiWarningBold icon - White background */}
-              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <PiWarningBold className="text-orange-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">Dropout Rate</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">3%</span>
-              </div>
-
-              {/* At-Risk Students Card - PiWarningCircle icon - White background */}
-              <div className="bg-white rounded-lg p-3 sm:p-4 flex items-center justify-between border border-gray-200">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                    <PiWarningCircle className="text-red-600 text-base sm:text-lg lg:text-xl" />
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm sm:text-base">At-Risk Students</span>
-                </div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">30</span>
-              </div>
-            </div>
           </div>
 
           {/* Select Report Type - Made responsive */}

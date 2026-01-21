@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { FaUser, FaCog, FaEdit, FaChevronDown } from 'react-icons/fa';
 import { useTheme } from '../Hod';
+import { useUserAuth } from '../../context/useUserAuth';
 import pe3 from "../../img/pe3.png";
 import Profile from '../Forms/Profile';
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
+  const { user } = useUserAuth();
   const [timezone, setTimezone] = useState('UTC-5');
   const [language, setLanguage] = useState('English');
   const [showProfile, setShowProfile] = useState(false);
@@ -73,12 +75,12 @@ const Settings = () => {
                   <h3 className={`text-xl font-semibold transition-colors duration-200 ${
                     theme === 'dark' ? 'text-white' : 'text-gray-900'
                   }`}>
-                    Sarah Willson
+                    {user?.name || 'User'}
                   </h3>
                   <p className={`text-base transition-colors duration-200 ${
                     theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                   }`}>
-                    HoD of Wesfield High School
+                    {user?.role === 'PRINCIPAL' ? 'PRINCIPAL' : user?.role} of {user?.schoolName || 'School'}
                   </p>
                 <button
                     onClick={() => setShowProfile(true)}
@@ -99,7 +101,7 @@ const Settings = () => {
                   </label>
                   <input
                     type="text"
-                    defaultValue="Sarah"
+                    defaultValue={user?.name?.split(' ')[0] || ''}
                     className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                   theme === 'dark' 
                     ? 'bg-gray-700 border-gray-600 text-white' 
@@ -116,7 +118,7 @@ const Settings = () => {
                   </label>
                   <input
                     type="text"
-                    defaultValue="Willson"
+                    defaultValue={user?.name?.split(' ').slice(1).join(' ') || ''}
                     className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                   theme === 'dark' 
                     ? 'bg-gray-700 border-gray-600 text-white' 
@@ -133,7 +135,7 @@ const Settings = () => {
                   </label>
                 <input
                     type="email"
-                    defaultValue="sarah.willson@gmail.com"
+                    defaultValue={user?.email || ''}
                     className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                     theme === 'dark' 
                       ? 'bg-gray-700 border-gray-600 text-white' 
@@ -150,7 +152,7 @@ const Settings = () => {
                   </label>
                 <input
                     type="tel"
-                    defaultValue="+1 (555) 123-4567"
+                    defaultValue={user?.phone || ''}
                     className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-200 ${
                     theme === 'dark' 
                       ? 'bg-gray-700 border-gray-600 text-white' 

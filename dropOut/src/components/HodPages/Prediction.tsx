@@ -1,63 +1,147 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Filter, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../../context/useUserAuth';
+import { toast } from 'react-toastify';
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface Student {
+  studentId: string;
+  studentName: string;
+  probability: number;
+  riskLevel: string;
+  topFactor: string;
+  predictedAt: string;
+}
 
 export default function StudentRiskTable() {
   const navigate = useNavigate();
+  const { user, token } = useUserAuth();
   const [isLoading, setIsLoading] = useState(true);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isPredicting, setIsPredicting] = useState(false);
   
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
-  
-  const [students] = useState([
-    {
-      id: 1,
-      name: 'Alice Johnson',
-      riskLevel: 'High',
-      prediction: 0.87,
-      information: 'Low attendance, declining grades'
-    },
-    {
-      id: 2,
-      name: 'Bob Smith',
-      riskLevel: 'Medium',
-      prediction: 0.54,
-      information: 'Struggling with mathematics'
-    },
-    {
-      id: 3,
-      name: 'Carol Williams',
-      riskLevel: 'Low',
-      prediction: 0.12,
-      information: 'Good performance across subjects'
-    }
-  ]);
+    const fetchPredictions = async () => {
+      if (!user?.schoolId || !token) {
+        setIsLoading(false);
+        return;
+      }
+      
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/predictions/school/${user.schoolId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch predictions');
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          setStudents(result.data);
+        } else {
+          setError(result.message || 'Failed to load predictions');
+          toast.error(result.message || 'Failed to load predictions');
+        }
+      } catch (err: any) {
+        console.error('Error fetching predictions:', err);
+        setError(err.message || 'Error loading predictions');
+        toast.error(err.message || 'Error loading predictions');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchPredictions();
+  }, [user?.schoolId, token]);
 
-  const handleStudentClick = (student: any) => {
-    navigate('/prediction-profile', { state: { student } });
+  const handleStudentClick = (student: Student) => {
+    navigate('/prediction-profile', { state: { student, studentId: student.studentId } });
   };
 
-  const handleMakePrediction = () => {
-    console.log('Making prediction...');
-    // Add your prediction logic here
+  const handleMakePrediction = async () => {
+    if (!user?.schoolId || !token) {
+      toast.error('Authentication required');
+      return;
+    }
+
+    setIsPredicting(true);
+    
+    try {
+      const response = await fetch(`${baseUrl}/api/predictions/run-batch/school/${user.schoolId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to run predictions');
+      }
+      
+      if (result.success) {
+        toast.success(result.message || 'Predictions completed successfully');
+        
+        // Refresh the predictions list
+        const refreshResponse = await fetch(`${baseUrl}/api/predictions/school/${user.schoolId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const refreshResult = await refreshResponse.json();
+        
+        if (refreshResult.success && refreshResult.data) {
+          setStudents(refreshResult.data);
+        }
+      } else {
+        toast.error(result.message || 'Failed to run predictions');
+      }
+    } catch (err: any) {
+      console.error('Error running predictions:', err);
+      toast.error(err.message || 'Error running predictions');
+    } finally {
+      setIsPredicting(false);
+    }
   };
 
   const getRiskLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'high':
+    switch (level.toUpperCase()) {
+      case 'CRITICAL':
+      case 'HIGH':
         return 'bg-red-100 text-red-800 border-red-200';
-      case 'medium':
+      case 'MEDIUM':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low':
+      case 'LOW':
         return 'bg-green-100 text-green-800 border-green-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   return (
@@ -75,14 +159,24 @@ export default function StudentRiskTable() {
             {/* Make Prediction button - primary action */}
             <button 
               onClick={handleMakePrediction}
-              className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200 flex items-center justify-center gap-2 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 flex-1 sm:flex-none"
+              disabled={isPredicting}
+              className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 disabled:from-orange-400 disabled:to-orange-400 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 disabled:transform-none flex-1 sm:flex-none"
               aria-label="Make prediction"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>Make Prediction</span>
+              {isPredicting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Running Predictions...</span>
+                </>
+              ) : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Make Prediction</span>
+                </>
+              )}
             </button>
             
             {/* Export and filter buttons - bottom row on mobile, inline on desktop */}
@@ -134,6 +228,7 @@ export default function StudentRiskTable() {
                     <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Risk Level</th>
                     <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Prediction</th>
                     <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Information</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Predicted At</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -143,6 +238,7 @@ export default function StudentRiskTable() {
                       <td className="px-3 sm:px-4 py-3"><div className="h-6 bg-gray-200 rounded-full w-16"></div></td>
                       <td className="px-3 sm:px-4 py-3"><div className="h-4 bg-gray-200 rounded w-12"></div></td>
                       <td className="px-3 sm:px-4 py-3"><div className="h-4 bg-gray-200 rounded w-48"></div></td>
+                      <td className="px-3 sm:px-4 py-3"><div className="h-4 bg-gray-200 rounded w-28"></div></td>
                     </tr>
                   ))}
                 </tbody>
@@ -153,28 +249,37 @@ export default function StudentRiskTable() {
           <>
             {/* Mobile card view for small screens */}
             <div className="sm:hidden p-3">
-          {students.map((student) => (
-            <div 
-              key={student.id} 
-              onClick={() => handleStudentClick(student)}
-              className="mb-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors last:mb-0 cursor-pointer hover:shadow-md"
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-medium text-gray-900 truncate">{student.name}</h3>
-                <span className={`px-2 py-1 text-xs font-semibold rounded-full border shrink-0 ${getRiskLevelColor(student.riskLevel)}`}>
-                  {student.riskLevel}
-                </span>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-700">
-                  <span className="font-medium">Prediction:</span> {(student.prediction * 100).toFixed(1)}%
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Info:</span> {student.information}
-                </p>
-              </div>
+          {students.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              {error ? error : 'No predictions available'}
             </div>
-          ))}
+          ) : (
+            students.map((student) => (
+              <div 
+                key={student.studentId} 
+                onClick={() => handleStudentClick(student)}
+                className="mb-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors last:mb-0 cursor-pointer hover:shadow-md"
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium text-gray-900 truncate">{student.studentName}</h3>
+                  <span className={`px-2 py-1 text-xs font-semibold rounded-full border shrink-0 ${getRiskLevelColor(student.riskLevel)}`}>
+                    {student.riskLevel}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-gray-700">
+                    <span className="font-medium">Prediction:</span> {(student.probability * 100).toFixed(1)}%
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Top Factor:</span> {student.topFactor}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    <span className="font-medium">Predicted:</span> {formatDate(student.predictedAt)}
+                  </p>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Desktop table view (hidden on mobile) */}
@@ -194,31 +299,45 @@ export default function StudentRiskTable() {
                 <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                   Information
                 </th>
+                <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                  Predicted At
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {students.map((student) => (
-                <tr 
-                  key={student.id} 
-                  onClick={() => handleStudentClick(student)}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer hover:shadow-sm"
-                >
-                  <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {student.name}
-                  </td>
-                  <td className="px-3 sm:px-4 py-3 whitespace-nowrap">
-                    <span className={`px-2 sm:px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${getRiskLevelColor(student.riskLevel)}`}>
-                      {student.riskLevel}
-                    </span>
-                  </td>
-                  <td className="px-3 sm:px-4 py-3 text-sm font-semibold text-gray-900">
-                    {(student.prediction * 100).toFixed(1)}%
-                  </td>
-                  <td className="px-3 sm:px-4 py-3 text-sm text-gray-600">
-                    {student.information}
+              {students.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-3 sm:px-4 py-8 text-center text-gray-500">
+                    {error ? error : 'No predictions available'}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                students.map((student) => (
+                  <tr 
+                    key={student.studentId} 
+                    onClick={() => handleStudentClick(student)}
+                    className="hover:bg-gray-50 transition-colors cursor-pointer hover:shadow-sm"
+                  >
+                    <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {student.studentName}
+                    </td>
+                    <td className="px-3 sm:px-4 py-3 whitespace-nowrap">
+                      <span className={`px-2 sm:px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${getRiskLevelColor(student.riskLevel)}`}>
+                        {student.riskLevel}
+                      </span>
+                    </td>
+                    <td className="px-3 sm:px-4 py-3 text-sm font-semibold text-gray-900">
+                      {(student.probability * 100).toFixed(1)}%
+                    </td>
+                    <td className="px-3 sm:px-4 py-3 text-sm text-gray-600">
+                      {student.topFactor}
+                    </td>
+                    <td className="px-3 sm:px-4 py-3 text-xs text-gray-500">
+                      {formatDate(student.predictedAt)}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

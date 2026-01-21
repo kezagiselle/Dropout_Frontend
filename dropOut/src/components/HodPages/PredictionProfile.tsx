@@ -1,71 +1,134 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, User, Calendar, BookOpen, AlertCircle, Activity } from 'lucide-react';
+import { useUserAuth } from '../../context/useUserAuth';
+import { toast } from 'react-toastify';
 
-interface StudentFeatures {
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+interface PredictionProfileData {
+  studentId: string;
+  studentName: string;
+  probability: number;
+  riskLevel: string;
+  topFactor: string;
+  predictedAt: string;
+  averageMarks: number;
+  lowestGrade: number;
+  failingCoursesCount: number;
+  weeksEnrolled: number;
   attendanceRate: number;
   daysAbsent: number;
   consecutiveAbsences: number;
-  averageMarks: number;
-  failingCoursesCount: number;
-  lowestGrade: number;
   incidentCount: number;
   severityScore: number;
   daysSinceLastIncident: number;
-  weeksEnrolled: number;
   age: number;
-  genderEncoded: number;
-}
-
-interface StudentData {
-  id: number;
-  name: string;
-  riskLevel: string;
-  prediction: number;
-  information: string;
-  studentId?: string;
-  features?: StudentFeatures;
+  gender: string;
 }
 
 export default function PredictionProfile() {
   const location = useLocation();
   const navigate = useNavigate();
-  const student = location.state?.student as StudentData;
+  const { token } = useUserAuth();
+  const studentId = location.state?.studentId;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const [profileData, setProfileData] = useState<PredictionProfileData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setIsPageLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+    const fetchPredictionProfile = async () => {
+      if (!studentId || !token) {
+        setIsPageLoading(false);
+        setError('Student ID or authentication token is missing');
+        return;
+      }
 
-  // Default features if not provided
-  const features: StudentFeatures = student?.features || {
-    attendanceRate: 57.14,
-    daysAbsent: 3,
-    consecutiveAbsences: 2,
-    averageMarks: 13.67,
-    failingCoursesCount: 0,
-    lowestGrade: 10.0,
-    incidentCount: 1,
-    severityScore: 1,
-    daysSinceLastIncident: 8,
-    weeksEnrolled: 18,
-    age: 23,
-    genderEncoded: 1
-  };
+      setIsPageLoading(true);
+      setError(null);
 
-  const handleMakePrediction = () => {
+      try {
+        const response = await fetch(`${baseUrl}/api/predictions/profile/${studentId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch prediction profile');
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          setProfileData(result.data);
+        } else {
+          setError(result.message || 'Failed to load prediction profile');
+          toast.error(result.message || 'Failed to load prediction profile');
+        }
+      } catch (err: any) {
+        console.error('Error fetching prediction profile:', err);
+        setError(err.message || 'Error loading prediction profile');
+        toast.error(err.message || 'Error loading prediction profile');
+      } finally {
+        setIsPageLoading(false);
+      }
+    };
+
+    fetchPredictionProfile();
+  }, [studentId, token]);
+
+  const handleMakePrediction = async () => {
+    if (!studentId || !token) {
+      toast.error('Authentication required');
+      return;
+    }
+
     setIsLoading(true);
-    // Simulate prediction API call
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch(`${baseUrl}/api/predictions/student/${studentId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to run prediction');
+      }
+      
+      if (result.success) {
+        toast.success(result.message || 'Prediction completed successfully');
+        
+        // Refresh the prediction profile data
+        const refreshResponse = await fetch(`${baseUrl}/api/predictions/profile/${studentId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const refreshResult = await refreshResponse.json();
+        
+        if (refreshResult.success && refreshResult.data) {
+          setProfileData(refreshResult.data);
+        }
+      } else {
+        toast.error(result.message || 'Failed to run prediction');
+      }
+    } catch (err: any) {
+      console.error('Error running prediction:', err);
+      toast.error(err.message || 'Error running prediction');
+    } finally {
       setIsLoading(false);
-      console.log('Prediction made for student:', student?.name);
-    }, 1500);
+    }
   };
 
   const getPredictionColor = (prediction: number) => {
@@ -75,26 +138,26 @@ export default function PredictionProfile() {
   };
 
   const getRiskLevelStyles = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'high':
-      case 'critical':
+    switch (level.toUpperCase()) {
+      case 'HIGH':
+      case 'CRITICAL':
         return 'bg-red-100 text-red-800 border-red-300';
-      case 'medium':
+      case 'MEDIUM':
         return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'low':
+      case 'LOW':
         return 'bg-green-100 text-green-800 border-green-300';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
 
-  if (!student) {
+  if (!studentId) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">No student data available</p>
+          <p className="text-gray-600 mb-4">No student ID provided</p>
           <button
-            onClick={() => navigate('/hod-prediction')}
+            onClick={() => navigate('/hod-dashboard', { state: { view: 'predictions' } })}
             className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
           >
             Go Back
@@ -104,8 +167,24 @@ export default function PredictionProfile() {
     );
   }
 
-  const predictionPercentage = (student.prediction * 100).toFixed(1);
-  const colorStyles = getPredictionColor(student.prediction);
+  if (error && !isPageLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={() => navigate('/hod-dashboard', { state: { view: 'predictions' } })}
+            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const predictionPercentage = profileData ? (profileData.probability * 100).toFixed(1) : '0.0';
+  const colorStyles = profileData ? getPredictionColor(profileData.probability) : getPredictionColor(0);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
@@ -140,13 +219,13 @@ export default function PredictionProfile() {
                   <User className="text-white" size={32} />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">{student.name}</h1>
-                  <p className="text-gray-600">Student ID: {student.studentId || `STU-${student.id}`}</p>
+                  <h1 className="text-2xl font-bold text-gray-900">{profileData?.studentName || 'Loading...'}</h1>
+                  <p className="text-gray-600">Student ID: {profileData?.studentId || studentId}</p>
                 </div>
               </div>
               <div>
-                <span className={`px-4 py-2 rounded-full border-2 font-semibold text-sm ${getRiskLevelStyles(student.riskLevel)}`}>
-                  Risk Level: {student.riskLevel}
+                <span className={`px-4 py-2 rounded-full border-2 font-semibold text-sm ${getRiskLevelStyles(profileData?.riskLevel || 'LOW')}`}>
+                  Risk Level: {profileData?.riskLevel || 'N/A'}
                 </span>
               </div>
             </div>
@@ -194,7 +273,7 @@ export default function PredictionProfile() {
                     strokeWidth="12"
                     fill="none"
                     strokeDasharray={`${2 * Math.PI * 88}`}
-                    strokeDashoffset={`${2 * Math.PI * 88 * (1 - student.prediction)}`}
+                    strokeDashoffset={`${2 * Math.PI * 88 * (1 - (profileData?.probability || 0))}`}
                     className={`${colorStyles.color} transition-all duration-1000 ease-out`}
                     strokeLinecap="round"
                   />
@@ -208,7 +287,7 @@ export default function PredictionProfile() {
               </div>
 
               <p className="text-center text-gray-600 mt-4 text-sm">
-                {student.information}
+                {profileData?.topFactor || 'No factor information available'}
               </p>
             </div>
 
@@ -263,19 +342,19 @@ export default function PredictionProfile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-gray-600 mb-1">Average Marks</p>
-                <p className="text-2xl font-bold text-blue-900">{features.averageMarks.toFixed(2)}%</p>
+                <p className="text-2xl font-bold text-blue-900">{profileData?.averageMarks?.toFixed(2) || '0.00'}%</p>
               </div>
               <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
                 <p className="text-sm text-gray-600 mb-1">Lowest Grade</p>
-                <p className="text-2xl font-bold text-purple-900">{features.lowestGrade.toFixed(1)}%</p>
+                <p className="text-2xl font-bold text-purple-900">{profileData?.lowestGrade?.toFixed(1) || '0.0'}%</p>
               </div>
               <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                 <p className="text-sm text-gray-600 mb-1">Failing Courses</p>
-                <p className="text-2xl font-bold text-orange-900">{features.failingCoursesCount}</p>
+                <p className="text-2xl font-bold text-orange-900">{profileData?.failingCoursesCount || 0}</p>
               </div>
               <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
                 <p className="text-sm text-gray-600 mb-1">Weeks Enrolled</p>
-                <p className="text-2xl font-bold text-teal-900">{features.weeksEnrolled}</p>
+                <p className="text-2xl font-bold text-teal-900">{profileData?.weeksEnrolled || 0}</p>
               </div>
             </div>
           </div>
@@ -289,15 +368,15 @@ export default function PredictionProfile() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-sm text-gray-600 mb-1">Attendance Rate</p>
-                <p className="text-2xl font-bold text-green-900">{features.attendanceRate.toFixed(2)}%</p>
+                <p className="text-2xl font-bold text-green-900">{profileData?.attendanceRate?.toFixed(2) || '0.00'}%</p>
               </div>
               <div className="p-4 bg-red-50 rounded-lg border border-red-200">
                 <p className="text-sm text-gray-600 mb-1">Days Absent</p>
-                <p className="text-2xl font-bold text-red-900">{features.daysAbsent}</p>
+                <p className="text-2xl font-bold text-red-900">{profileData?.daysAbsent || 0}</p>
               </div>
               <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
                 <p className="text-sm text-gray-600 mb-1">Consecutive Absences</p>
-                <p className="text-2xl font-bold text-yellow-900">{features.consecutiveAbsences}</p>
+                <p className="text-2xl font-bold text-yellow-900">{profileData?.consecutiveAbsences || 0}</p>
               </div>
             </div>
           </div>
@@ -311,15 +390,15 @@ export default function PredictionProfile() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 bg-red-50 rounded-lg border border-red-200">
                 <p className="text-sm text-gray-600 mb-1">Incident Count</p>
-                <p className="text-2xl font-bold text-red-900">{features.incidentCount}</p>
+                <p className="text-2xl font-bold text-red-900">{profileData?.incidentCount || 0}</p>
               </div>
               <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                 <p className="text-sm text-gray-600 mb-1">Severity Score</p>
-                <p className="text-2xl font-bold text-orange-900">{features.severityScore}</p>
+                <p className="text-2xl font-bold text-orange-900">{profileData?.severityScore || 0}</p>
               </div>
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-gray-600 mb-1">Days Since Last Incident</p>
-                <p className="text-2xl font-bold text-blue-900">{features.daysSinceLastIncident}</p>
+                <p className="text-2xl font-bold text-blue-900">{profileData?.daysSinceLastIncident || 0}</p>
               </div>
             </div>
           </div>
@@ -333,12 +412,12 @@ export default function PredictionProfile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <p className="text-sm text-gray-600 mb-1">Age</p>
-                <p className="text-2xl font-bold text-gray-900">{features.age} years</p>
+                <p className="text-2xl font-bold text-gray-900">{profileData?.age || 0} years</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <p className="text-sm text-gray-600 mb-1">Gender</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {features.genderEncoded === 1 ? 'Male' : 'Female'}
+                  {profileData?.gender || 'N/A'}
                 </p>
               </div>
             </div>

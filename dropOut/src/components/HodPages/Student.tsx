@@ -121,6 +121,30 @@ const Student = () => {
     fetchStudentOverview()
   }, [user?.schoolId, token])
 
+  // Function to refresh student data
+  const refreshStudentData = async () => {
+    if (!user?.schoolId || !token) return
+    
+    try {
+      const res = await fetch(`${baseUrl}/api/principal/student-overview/${user.schoolId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (!res.ok) throw new Error('Failed to fetch student overview')
+      
+      const result = await res.json()
+      
+      if (result.success && result.data) {
+        setStudentData(result.data)
+      }
+    } catch (err: any) {
+      console.error('Error refreshing student data:', err)
+    }
+  }
+
   const students: Student[] = studentData.students
 
   const getRiskLevelColor = (riskLevel: string) => {
@@ -180,7 +204,7 @@ const Student = () => {
   })
 
   if (showStudentForm) {
-    return <StudentForm onBack={() => setShowStudentForm(false)} />;
+    return <StudentForm onBack={() => setShowStudentForm(false)} onStudentCreated={refreshStudentData} />;
   }
 
   if (showStudentProfile && selectedStudent) {

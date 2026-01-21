@@ -128,27 +128,32 @@ export default function Dashboard() {
     }
   ];
 
-  // Updated attendance data for the BarChart with increased absent AND late values
-  const attendanceData = [
-    { name: 'Mon', present: 115, absent: 8, late: 5 },
-    { name: 'Tue', present: 110, absent: 13, late: 5 },
-    { name: 'Wed', present: 105, absent: 18, late: 5 },
-    { name: 'Thu', present: 113, absent: 10, late: 5 },
-    { name: 'Fri', present: 107, absent: 16, late: 5 },
-    { name: 'Sat', present: 95, absent: 28, late: 5 },
-    { name: 'Sun', present: 90, absent: 33, late: 5 }
+  // Use API data for weekly attendance chart
+  const attendanceData = dashboardData?.weeklyAttendance?.map((day: any) => ({
+    name: day.dayName.substring(0, 3), // Get first 3 letters (MON, TUE, etc.)
+    present: day.presentCount,
+    absent: day.absentCount,
+    late: 0 // API doesn't provide late count, defaulting to 0
+  })) || [
+    { name: 'Mon', present: 0, absent: 0, late: 0 },
+    { name: 'Tue', present: 0, absent: 0, late: 0 },
+    { name: 'Wed', present: 0, absent: 0, late: 0 },
+    { name: 'Thu', present: 0, absent: 0, late: 0 },
+    { name: 'Fri', present: 0, absent: 0, late: 0 },
+    { name: 'Sat', present: 0, absent: 0, late: 0 },
+    { name: 'Sun', present: 0, absent: 0, late: 0 }
   ];
 
-  const flaggedStudents = [
-    { name: 'Sarah Johnson', grade: 'Grade 10A', risk: 'High Risk', color: 'bg-red-100 text-red-700' },
-    { name: 'Michael Chen', grade: 'Grade 10B', risk: 'Medium', color: 'bg-yellow-100 text-yellow-700' },
-    { name: 'Emma Davis', grade: 'Grade 10A', risk: 'Low Risk', color: 'bg-green-100 text-green-700' }
+  const flaggedStudents = dashboardData?.top3AtRiskStudents?.map((name: string, idx: number) => ({
+    name: name,
+    grade: 'At Risk', // API doesn't provide grade info
+    risk: 'High Risk',
+    color: 'bg-red-100 text-red-700'
+  })) || [
+    { name: 'No data', grade: 'N/A', risk: 'N/A', color: 'bg-gray-100 text-gray-700' }
   ];
 
-  const recentBehavior = [
-    { name: 'Alex Thompson', behavior: 'Excellent participation', time: 'Today, 10:30 AM', type: 'positive' },
-    { name: 'James Wilson', behavior: 'Disruptive behavior', time: 'Yesterday, 2:15 PM', type: 'negative' }
-  ];
+  
 
   const schedule = [
     { period: 'Period 1', class: 'Mathematics - Grade 10A', time: '8:00 - 8:45 AM', color: 'bg-blue-500', bgColor: 'bg-blue-50' },
@@ -330,29 +335,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Recent Behavior */}
-          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Recent Behavior</h2>
-              <button 
-                onClick={() => handleNavigation('/behavior-reports', 'Behavior Reports')}
-                className="px-3 py-1 bg-red-500 text-white rounded text-sm w-full sm:w-auto text-center"
-              >
-                + Log Report
-              </button>
-            </div>
-            <div className="space-y-3">
-              {recentBehavior.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${item.type === 'positive' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 text-sm truncate">{item.name} - {item.behavior}</p>
-                    <p className="text-xs text-gray-500 mt-1">{item.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        
 
           {/* Alerts & Tasks */}
           <div className="bg-white rounded-lg shadow p-4 sm:p-6">
@@ -391,19 +374,9 @@ export default function Dashboard() {
             </button>
             
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800 text-sm sm:text-base">Westfield High School</span>
+              <span className="font-semibold text-gray-800 text-sm sm:text-base">{user?.schoolName || 'School'}</span>
               <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
-          </div>
-
-          {/* Search Bar - Hidden on mobile, visible on tablet and up */}
-          <div className="hidden md:block relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
           </div>
 
           {/* Right Section - Calendar, Notifications, Profile */}
@@ -411,7 +384,7 @@ export default function Dashboard() {
             {/* Calendar - Hidden on mobile, visible on tablet and up */}
             <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="w-4 h-4" />
-              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
+              <span className="hidden lg:inline">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
               <ChevronDown className="w-4 h-4 hidden lg:block" />
             </div>
 
@@ -424,44 +397,12 @@ export default function Dashboard() {
             {/* Profile - Compact on mobile */}
             <div className="flex items-center gap-2">
               <img src={userr} alt="User profile" className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover" />
-              <span className="text-sm font-medium hidden sm:block">Sarah Wilson</span>
+              <span className="text-sm font-medium hidden sm:block">{user?.name || 'User'}</span>
               <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
             </div>
           </div>
         </div>
-
-        {/* Mobile Search Bar - Visible only on mobile */}
-        <div className="md:hidden px-4 pb-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, courses..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-        </div>
       </header>
-
-      {/* Filters */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-gray-600 mr-2">Filters</span>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Grades <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            All Classes <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            Current Term <ChevronDown className="w-3 h-3" />
-          </button>
-          <button className="px-4 py-1 bg-orange-500 text-white rounded text-sm flex items-center gap-2 whitespace-nowrap">
-            <Calendar className="w-4 h-4" />
-            Date Filter
-          </button>
-        </div>
-      </div>
 
       <div className="flex">
         {/* Sidebar */}

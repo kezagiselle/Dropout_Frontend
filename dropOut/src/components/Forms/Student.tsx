@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaArrowLeft, FaChevronDown, FaUser, FaCalendarAlt } from 'react-icons/fa'
 import { FaHouseChimney } from "react-icons/fa6";
 import { toast } from 'react-toastify';
 import StudentProfile from './StudentProfile';
 import { useUserAuth } from '../../context/useUserAuth';
+import axios from 'axios';
 
 interface StudentProps {
   onBack: () => void;
+  onStudentCreated?: () => void;
 }
 
-function Student({ onBack }: StudentProps) {
+function Student({ onBack, onStudentCreated }: StudentProps) {
   const [showStudentProfile, setShowStudentProfile] = useState(false);
   const { user, token } = useUserAuth();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -29,9 +31,14 @@ function Student({ onBack }: StudentProps) {
     studentPhone: '',
     dateOfBirth: '',
     gender: '',
-    enrollmentYear: ''
+    enrollmentYear: '',
+    courseIds: [] as string[],
+    academicYear: '',
+    semester: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [courses, setCourses] = useState<{ id: string; name: string }[]>([]);
+  const [loadingCourses, setLoadingCourses] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -40,6 +47,48 @@ function Student({ onBack }: StudentProps) {
       [name]: value
     }));
   };
+
+  const handleCourseToggle = (courseId: string) => {
+    setFormData(prev => {
+      const currentCourses = prev.courseIds;
+      const isSelected = currentCourses.includes(courseId);
+      return {
+        ...prev,
+        courseIds: isSelected
+          ? currentCourses.filter(id => id !== courseId)
+          : [...currentCourses, courseId]
+      };
+    });
+  };
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoadingCourses(true);
+      try {
+        const response = await axios.get(`${baseUrl}/api/courses`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.data && Array.isArray(response.data.data)) {
+          setCourses(response.data.data.map((course: { id: string; name: string }) => ({
+            id: course.id,
+            name: course.name
+          })));
+        } else {
+          toast.error(response.data.message);
+          setCourses([]);
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        toast.error('Failed to load courses. Please try again.');
+      } finally {
+        setLoadingCourses(false);
+      }
+    };
+    fetchCourses(); 
+  }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +103,15 @@ function Student({ onBack }: StudentProps) {
     if (!formData.parentName || !formData.parentEmail || !formData.parentPassword || 
         !formData.parentPhone || !formData.parentOccupation ||
         !formData.studentName || !formData.studentEmail || !formData.studentPassword ||
-        !formData.studentPhone || !formData.dateOfBirth || !formData.gender || !formData.enrollmentYear) {
+        !formData.studentPhone || !formData.dateOfBirth || !formData.gender || !formData.enrollmentYear ||
+        !formData.academicYear || !formData.semester) {
       toast.error('Please fill in all required fields');
+      return;
+    }
+
+    // Validate at least one course is selected
+    if (formData.courseIds.length === 0) {
+      toast.error('Please select at least one course');
       return;
     }
 
@@ -96,7 +152,10 @@ function Student({ onBack }: StudentProps) {
         dateOfBirth: formData.dateOfBirth,
         gender: formData.gender.toUpperCase(),
         enrollmentYear: parseInt(formData.enrollmentYear),
-        schoolId: user?.schoolId 
+        schoolId: user?.schoolId,
+        courseIds: formData.courseIds,
+        academicYear: formData.academicYear,
+        semester: formData.semester.toUpperCase()
       };
 
       console.log('Sending student payload:', payload); // Debug log
@@ -132,8 +191,16 @@ function Student({ onBack }: StudentProps) {
         studentPhone: '',
         dateOfBirth: '',
         gender: '',
-        enrollmentYear: ''
+        enrollmentYear: '',
+        courseIds: [],
+        academicYear: '',
+        semester: ''
       });
+      
+      // Call the callback to refresh the student list
+      if (onStudentCreated) {
+        onStudentCreated();
+      }
       
       // Optionally navigate back or show success message
       setTimeout(() => {
@@ -299,15 +366,85 @@ function Student({ onBack }: StudentProps) {
                     required
                   >
                     <option value="">Select Year</option>
+                    <option value="2026">2026</option>
                     <option value="2025">2025</option>
                     <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
+                    
                   </select>
                   <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
                 </div>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Academic Year
+                </label>
+                <input
+                  type="text"
+                  name="academicYear"
+                  value={formData.academicYear}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 2025-2026"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-gray-900"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Semester
+                </label>
+                <div className="relative">
+                  <select
+                    name="semester"
+                    value={formData.semester}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-gray-900 pr-10"
+                    required
+                  >
+                    <option value="">Select Semester</option>
+                    <option value="SPRING">Spring</option>
+                    <option value="SUMMER">Summer</option>
+                    <option value="FALL">Fall</option>
+                    <option value="WINTER">Winter</option>
+                  </select>
+                  <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+              
+              <div className="space-y-2 md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Courses <span className="text-red-500">*</span>
+                </label>
+                {loadingCourses ? (
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                    Loading courses...
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-4 border border-gray-300 rounded-lg bg-gray-50 max-h-48 overflow-y-auto">
+                    {courses.length === 0 ? (
+                      <p className="text-gray-500 text-sm col-span-full">No courses available</p>
+                    ) : (
+                      courses.map((course) => (
+                        <label key={course.id} className="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={formData.courseIds.includes(course.id)}
+                            onChange={() => handleCourseToggle(course.id)}
+                            className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                          />
+                          <span className="text-sm text-gray-700">{course.name}</span>
+                        </label>
+                      ))
+                    )}
+                  </div>
+                )}
+                {formData.courseIds.length > 0 && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    {formData.courseIds.length} course(s) selected
+                  </p>
+                )}
               </div>
             </div>
           </div>

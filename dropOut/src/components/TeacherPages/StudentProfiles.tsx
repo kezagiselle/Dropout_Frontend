@@ -1,51 +1,66 @@
  
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, Plus, Search, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useUserAuth } from '../../context/useUserAuth';
 import pe1 from "../../../src/img/pe1.png";
 import pe2 from "../../../src/img/pe2.png";
 import pe3 from "../../../src/img/pe3.png";
 
 type RiskColor = 'red' | 'green' | 'yellow';
 
+interface Student {
+  studentId: string;
+  name: string;
+  riskLevel: string;
+  averageAttendance: number;
+  dropoutProbability: number;
+}
+
 export default function StudentProfiles() {
+  const { user, token } = useUserAuth();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedRegion, setSelectedRegion] = useState<string>('All Regions');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>('All Risk Levels');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock student data (in real app, this would come from API)
-  const students = [
-    {
-      id: 'STU001',
-      name: 'John Doe',
-      avatar: pe1,
-      grade: 'Grade 11',
-      riskStatus: 'At-risk',
-      riskColor: 'red' as RiskColor,
-      enrollmentStatus: 'Enrolled',
-      enrollmentColor: 'green' as RiskColor
-    },
-    {
-      id: 'STU002',
-      name: 'Maria Gonzalez',
-      avatar: pe2,
-      grade: 'Grade 12',
-      riskStatus: 'Normal',
-      riskColor: 'green' as RiskColor,
-      enrollmentStatus: 'Enrolled',
-      enrollmentColor: 'green' as RiskColor
-    },
-    {
-      id: 'STU003',
-      name: 'Ahmed Ali',
-      avatar: pe3,
-      grade: 'Grade 10',
-      riskStatus: 'At-risk',
-      riskColor: 'red' as RiskColor,
-      enrollmentStatus: 'Pending',
-      enrollmentColor: 'yellow' as RiskColor
-    }
-  ];
+  useEffect(() => {
+    const fetchStudents = async () => {
+      if (!user?.userId || !token) return;
+      
+      setIsLoading(true);
+      try {
+        const response = await fetch(`http://localhost:8080/api/teachers/students/${user.userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch students');
+        }
+        
+        const result = await response.json();
+        if (result.success && result.data) {
+          setStudents(result.data);
+        }
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, [user?.userId, token]);
+
+  const getRiskColor = (riskLevel: string): RiskColor => {
+    if (riskLevel === 'CRITICAL') return 'red';
+    if (riskLevel === 'HIGH') return 'yellow';
+    return 'green'; // MEDIUM or LOW
+  };
 
   const getRiskBadgeClass = (color: RiskColor): string => {
     const classes = {
@@ -161,109 +176,122 @@ export default function StudentProfiles() {
               {/* Table Header - Hidden on mobile, visible on tablet and up */}
               <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-700">
                 <div className="col-span-3">Student Name</div>
-                <div className="col-span-2">Grade</div>
+                <div className="col-span-2">Attendance</div>
                 <div className="col-span-2">Risk Status</div>
-                <div className="col-span-3">Enrollment Status</div>
+                <div className="col-span-3">Dropout Probability</div>
                 <div className="col-span-2">Actions</div>
               </div>
 
               {/* Table Body */}
               <div className="divide-y divide-gray-200">
-                {students.map((student) => (
-                  <div key={student.id} className="p-4 sm:px-6 sm:py-4 hover:bg-gray-50 transition-colors">
-                    {/* Mobile Layout */}
-                    <div className="sm:hidden space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                {isLoading ? (
+                  // Loading skeleton
+                  Array(3).fill(0).map((_, index) => (
+                    <div key={index} className="p-4 sm:px-6 sm:py-4 animate-pulse">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                          <div className="h-3 bg-gray-200 rounded w-1/6"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : students.length === 0 ? (
+                  <div className="p-8 text-center text-gray-500">
+                    No students found
+                  </div>
+                ) : (
+                  students.map((student, index) => (
+                    <div key={student.studentId} className="p-4 sm:px-6 sm:py-4 hover:bg-gray-50 transition-colors">
+                      {/* Mobile Layout */}
+                      <div className="sm:hidden space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={[pe1, pe2, pe3][index % 3]}
+                              alt={student.name}
+                              className="w-12 h-12 rounded-full bg-gray-200 object-cover"
+                            />
+                            <div>
+                              <div className="font-medium text-gray-900">{student.name}</div>
+                              <div className="text-sm text-gray-500">ID: {student.studentId.slice(0, 8)}</div>
+                            </div>
+                          </div>
+                          <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                            View
+                          </button>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <div className="text-gray-500 mb-1">Attendance</div>
+                            <div className="font-medium">{student.averageAttendance}%</div>
+                          </div>
+                          <div>
+                            <div className="text-gray-500 mb-1">Risk Status</div>
+                            <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${getRiskBadgeClass(getRiskColor(student.riskLevel))}`}>
+                              {getRiskIcon(getRiskColor(student.riskLevel))}
+                              {student.riskLevel}
+                            </span>
+                          </div>
+                          <div className="col-span-2">
+                            <div className="text-gray-500 mb-1">Dropout Probability</div>
+                            <div className="font-medium">{(student.dropoutProbability * 100).toFixed(1)}%</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout */}
+                      <div className="hidden sm:grid grid-cols-12 gap-4 items-center">
+                        {/* Student Name */}
+                        <div className="col-span-3 flex items-center gap-3">
                           <img
-                            src={student.avatar}
+                            src={[pe1, pe2, pe3][index % 3]}
                             alt={student.name}
-                            className="w-12 h-12 rounded-full bg-gray-200 object-cover"
+                            className="w-10 h-10 rounded-full bg-gray-200 object-cover"
                           />
                           <div>
                             <div className="font-medium text-gray-900">{student.name}</div>
-                            <div className="text-sm text-gray-500">ID: {student.id}</div>
+                            <div className="text-sm text-gray-500">ID: {student.studentId.slice(0, 8)}</div>
                           </div>
                         </div>
-                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
-                          View
-                        </button>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <div className="text-gray-500 mb-1">Grade</div>
-                          <div className="font-medium">{student.grade}</div>
+
+                        {/* Attendance */}
+                        <div className="col-span-2 text-gray-700">
+                          {student.averageAttendance}%
                         </div>
-                        <div>
-                          <div className="text-gray-500 mb-1">Risk Status</div>
-                          <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${getRiskBadgeClass(student.riskColor)}`}>
-                            {getRiskIcon(student.riskColor)}
-                            {student.riskStatus}
-                          </span>
-                        </div>
+
+                        {/* Risk Status */}
                         <div className="col-span-2">
-                          <div className="text-gray-500 mb-1">Enrollment Status</div>
-                          <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${getRiskBadgeClass(student.enrollmentColor)}`}>
-                            {getEnrollmentIcon(student.enrollmentColor)}
-                            {student.enrollmentStatus}
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(getRiskColor(student.riskLevel))}`}>
+                            {getRiskIcon(getRiskColor(student.riskLevel))}
+                            {student.riskLevel}
                           </span>
                         </div>
-                      </div>
-                    </div>
 
-                    {/* Desktop Layout */}
-                    <div className="hidden sm:grid grid-cols-12 gap-4 items-center">
-                      {/* Student Name */}
-                      <div className="col-span-3 flex items-center gap-3">
-                        <img
-                          src={student.avatar}
-                          alt={student.name}
-                          className="w-10 h-10 rounded-full bg-gray-200 object-cover"
-                        />
-                        <div>
-                          <div className="font-medium text-gray-900">{student.name}</div>
-                          <div className="text-sm text-gray-500">ID: {student.id}</div>
+                        {/* Dropout Probability */}
+                        <div className="col-span-3 text-gray-700 font-medium">
+                          {(student.dropoutProbability * 100).toFixed(1)}%
+                        </div>
+
+                        {/* Actions */}
+                        <div className="col-span-2">
+                          <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            View Profile
+                          </button>
                         </div>
                       </div>
-
-                      {/* Grade */}
-                      <div className="col-span-2 text-gray-700">
-                        {student.grade}
-                      </div>
-
-                      {/* Risk Status */}
-                      <div className="col-span-2">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.riskColor)}`}>
-                          {getRiskIcon(student.riskColor)}
-                          {student.riskStatus}
-                        </span>
-                      </div>
-
-                      {/* Enrollment Status */}
-                      <div className="col-span-3">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${getRiskBadgeClass(student.enrollmentColor)}`}>
-                          {getEnrollmentIcon(student.enrollmentColor)}
-                          {student.enrollmentStatus}
-                        </span>
-                      </div>
-
-                      {/* Actions */}
-                      <div className="col-span-2">
-                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                          View Profile
-                        </button>
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
 
             {/* Pagination */}
             <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
               <div className="text-sm text-gray-600">
-                Showing 1 to 3 of 3 Students
+                Showing 1 to {students.length} of {students.length} Students
               </div>
               
               <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">

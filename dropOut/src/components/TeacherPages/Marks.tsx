@@ -309,8 +309,17 @@ export default function Marks() {
                     <p className="text-gray-500">Please select a course to view students</p>
                   </div>
                 ) : loading ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">Loading students...</p>
+                  <div className="space-y-3 py-4">
+                    {[...Array(5)].map((_, idx) => (
+                      <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg animate-pulse">
+                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-24"></div>
+                        </div>
+                        <div className="w-20 h-10 bg-gray-200 rounded"></div>
+                      </div>
+                    ))}
                   </div>
                 ) : students.length === 0 ? (
                   <div className="text-center py-8">

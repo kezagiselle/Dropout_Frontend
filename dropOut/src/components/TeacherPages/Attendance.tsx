@@ -46,13 +46,18 @@ const Attendance = () => {
   const [selectedWeek, setSelectedWeek] = useState<string>('This Week');
   const [selectedGrade] = useState<string>('Grade 5A');
   const [attendanceData, setAttendanceData] = useState<AttendanceResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { token, user } = useUserAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAttendanceStats = async () => {
-      if (!token || !user?.userId) return;
+      if (!token || !user?.userId) {
+        setIsLoading(false);
+        return;
+      }
       
+      setIsLoading(true);
       const baseUrl = import.meta.env.VITE_API_BASE_URL;
       try {
         const res = await fetch(`${baseUrl}/api/teachers/attendance-stats/${user.userId}`, {
@@ -67,6 +72,8 @@ const Attendance = () => {
         }
       } catch (err) {
         // Handle error silently, use fallback data
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchAttendanceStats(); 
@@ -153,6 +160,49 @@ const Attendance = () => {
           <p className="text-gray-600 text-xs sm:text-sm mt-1">Manage daily attendance and track student participation</p>
         </div>
 
+        {isLoading ? (
+          <>
+            {/* Skeleton Stats Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 w-full">
+              {[...Array(4)].map((_, idx) => (
+                <div key={idx} className="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-gray-200 w-full animate-pulse">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="h-3 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div className="h-8 bg-gray-300 rounded w-16"></div>
+                    </div>
+                    <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                  </div>
+                  <div className="h-3 bg-gray-200 rounded w-20"></div>
+                </div>
+              ))}
+            </div>
+
+            {/* Skeleton Table */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="p-4 border-b border-gray-200 animate-pulse">
+                <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
+                <div className="flex gap-2">
+                  <div className="h-10 bg-gray-200 rounded w-32"></div>
+                  <div className="h-10 bg-gray-200 rounded w-32"></div>
+                </div>
+              </div>
+              <div className="p-4">
+                {[...Array(5)].map((_, idx) => (
+                  <div key={idx} className="flex items-center gap-4 p-3 mb-2 animate-pulse">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-24"></div>
+                    </div>
+                    <div className="h-6 bg-gray-200 rounded w-16"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
           {/* Stats Cards - Single row above */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 w-full">
             <div className="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-gray-200 w-full">
@@ -478,8 +528,10 @@ const Attendance = () => {
               </div>
             </div>
           </div>
-        </div>
+        </>
+        )}
       </div>
+    </div>
   );
 };
 

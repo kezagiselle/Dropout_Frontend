@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { useNavigate } from 'react-router-dom';
 import { 
   ChevronDown, 
-  School, 
   Users, 
-  AlertTriangle, 
-  UserX, 
   BarChart3, 
-  TrendingDown, 
   Calendar, 
   FileText, 
-  Eye, 
   Download,
   Building2,
   BookOpen,
@@ -18,17 +15,12 @@ import {
   Settings,
   LogOut,
   Search,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight,
   Menu,
   X,
   Bell
 } from 'lucide-react';
-import { FaChalkboardTeacher, FaSchool } from "react-icons/fa";
-import { IoMdSchool } from "react-icons/io";
-import { PiWarningBold, PiWarningCircle } from "react-icons/pi";
-import { IoNotificationsSharp } from "react-icons/io5";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { FaFilePdf } from 'react-icons/fa';
 import { useUserAuth } from '../../context/useUserAuth';
 import userr from "../../../src/img/userr.png";
 
@@ -129,25 +121,127 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
 
 // Main ReportPage Component
 export default function ReportPage() {
-  const [selectedRegion, setSelectedRegion] = useState('GASABO');
-  const [currentPage, setCurrentPage] = useState(1);
+      // Report types for tab selector
+      const reportTypes = [
+        { value: 'OVERALL', label: 'Overall' },
+        { value: 'GRADES', label: 'Grades' },
+        { value: 'ATTENDANCE', label: 'Attendance' },
+      ];
+    // School filter state
+    const [selectedSchoolId, setSelectedSchoolId] = useState<string>('ALL');
+  const [reportType, setReportType] = useState<'OVERALL' | 'GRADES' | 'ATTENDANCE'>('OVERALL');
+  // Removed unused state: startDate, endDate, selectedSchool
+  // Removed unused selectedRegion state
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Reports');
-  const [searchQuery, setSearchQuery] = useState('');
+  // Removed unused searchQuery state
+  const [reportData, setReportData] = useState<ReportData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { user, logout } = useUserAuth();
+  const userAuth = useUserAuth();
+  const user = userAuth.user;
 
-  const schools = [
-    { name: 'Westfield High School', region: 'Region A', dropoutRate: '3.2%', riskLevel: 'Low' },
-    { name: 'Washington High School', region: 'Region B', dropoutRate: '8.7%', riskLevel: 'Medium' },
-    { name: 'Roosevelt Middle School', region: 'Region C', dropoutRate: '12.4%', riskLevel: 'High' },
-  ];
+  // Types for API data
+  interface CourseSummary {
+    courseId: string;
+    courseName: string;
+    teacherName: string | null;
+    studentCount: number;
+    averageGrade: number;
+    attendanceRate: number;
+    atRiskCount: number;
+  }
+  interface RiskDistribution {
+    lowRiskCount: number;
+    lowRiskPercentage: number;
+    mediumRiskCount: number;
+    mediumRiskPercentage: number;
+    highRiskCount: number;
+    highRiskPercentage: number;
+    criticalRiskCount: number;
+    criticalRiskPercentage: number;
+    trend: string;
+  }
+  interface Performer {
+    studentId: string;
+    studentName: string;
+    averageGrade: number;
+    percentileRank: number;
+  }
+  interface AtRiskStudent {
+    studentId: string;
+    studentName: string;
+    riskLevel: string;
+    dropoutProbability: number;
+    averageGrade: number;
+    attendanceRate: number;
+    behaviorIncidents: number;
+    primaryConcern: string;
+  }
+  interface SchoolReport {
+    schoolId: string;
+    schoolName: string;
+    totalStudents: number;
+    totalCourses: number;
+    totalTeachers: number;
+    totalBehaviorIncidents: number;
+    averageGrade: number;
+    highestGrade: number;
+    lowestGrade: number;
+    averageAttendance: number;
+    highestAttendance: number;
+    lowestAttendance: number;
+    riskDistribution: RiskDistribution;
+    averageDropoutProbability: number;
+    topPerformers: Performer[];
+    bottomPerformers: Performer[];
+    atRiskStudents: AtRiskStudent[];
+    courseSummaries: CourseSummary[];
+  }
+  interface ReportData {
+    reportType?: string;
+    totalSchools: number;
+    totalStudents: number;
+    averageAttendance: number;
+    averageGrade: number;
+    totalAtRiskStudents: number;
+    schoolReports: SchoolReport[];
+  }
 
-  const reports = [
-    { name: 'Student Performance Report - Q4 2024', date: 'Jan 15, 2025', status: 'Ready' },
-    { name: 'Attendance Summary - December 2024', date: 'Jan 12, 2025', status: 'In Progress' },
-    { name: 'Regional Analysis - All Regions', date: 'Jan 10, 2025', status: 'Ready' },
-  ];
+  // Fetch report data from API
+  const fetchReport = async (type = reportType) => {
+    setLoading(true);
+    setError('');
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL ;
+      let url = `${baseUrl}/api/reports/government`;
+      if (type !== 'OVERALL') {
+        url += `?type=${type}`;
+      }
+      const token = localStorage.getItem('token');
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (data.success) {
+        setReportData(data.data);
+      } else {
+        setError(data.message || 'Failed to fetch report');
+      }
+    } catch {
+      setError('Failed to fetch report');
+    }
+    setLoading(false);
+          const [selectedSchoolId, setSelectedSchoolId] = useState<string>('ALL');
+  };
+
+  useEffect(() => {
+    fetchReport();
+    // eslint-disable-next-line
+  }, [reportType]);
 
   // Handle navigation to different tabs
   const handleNavigation = (path: string, tabName: string) => {
@@ -156,28 +250,46 @@ export default function ReportPage() {
     setSidebarOpen(false); // Close sidebar on mobile after navigation
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  // Removed unused handleLogout
 
   // Function to handle View Profile click - navigates to ReportsView
-  const handleViewProfile = (schoolName: string) => {
-    // You can pass school data if needed
-    navigate('/report-view', { state: { schoolName } });
+  const handleViewProfile = (schoolId: string) => {
+    navigate('/report-view', { state: { schoolId } });
   };
 
-  const getRiskLevelColor = (level: string) => {
-    switch (level) {
-      case 'Low':
-        return 'bg-green-100 text-green-700';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'High':
-        return 'bg-red-100 text-red-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
+  // Removed unused getRiskLevelColor
+
+  // Removed unused handleClearFilters
+
+
+  // School filter dropdown logic
+  const allSchools = reportData?.schoolReports || [];
+  const filteredSchools = selectedSchoolId === 'ALL'
+    ? allSchools
+    : allSchools.filter((school) => school.schoolId === selectedSchoolId);
+
+  // Aggregate metrics for all schools
+  // Removed unused aggregate function
+
+  // PDF Export (for summary table)
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.text('Organization Report', 14, 16);
+    autoTable(doc, {
+      head: [[
+        'School Name', 'Students', 'Courses', 'Teachers', 'Avg Grade', 'Avg Attendance', 'At-Risk'
+      ]],
+      body: filteredSchools.map((school) => [
+        school.schoolName,
+        school.totalStudents,
+        school.totalCourses,
+        school.totalTeachers,
+        Number(school.averageGrade).toFixed(2),
+        Number(school.averageAttendance).toFixed(2),
+        school.atRiskStudents?.length || 0
+      ]),
+    });
+    doc.save('organization_report.pdf');
   };
 
   return (
@@ -264,93 +376,47 @@ export default function ReportPage() {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 p-3 sm:p-4 lg:p-6">
-          {/* Filters Bar */}
-          <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <span className="text-sm font-medium text-gray-700">Filters:</span>
-              
-              {/* All Schools Dropdown */}
-              <div className="relative">
-                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
-                  <span className="text-gray-700">All Schools</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
-                </button>
-              </div>
-
-              {/* All Teachers Dropdown */}
-              <div className="relative">
-                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
-                  <span className="text-gray-700">All Teachers</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
-                </button>
-              </div>
-
-              {/* All Students Dropdown */}
-              <div className="relative">
-                <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-2 hover:border-gray-400 transition-colors text-sm">
-                  <span className="text-gray-700">All Students</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
-                </button>
-              </div>
-
-              {/* Save Filter Button */}
-              <button className="px-3 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium">
-                Save Filter
-              </button>
-            </div>
-
-            {/* Generate Report Button */}
-            <button className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium whitespace-nowrap flex items-center justify-center gap-2 mt-3 sm:mt-0">
-              <IoNotificationsSharp className="w-4 h-4" />
-              <span>+ Generate Report</span>
-            </button>
-          </div>
-
-          {/* Gasabo Section with New Cards */}
-          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6 sm:mb-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
-              {/* Dropdown */}
-              <div className="relative w-full sm:w-64">
-                <button className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400 transition-colors">
-                  <span className="font-semibold text-gray-900 text-sm sm:text-base">{selectedRegion}</span>
-                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                </button>
-              </div>
-
-              {/* Clear All Button */}
-              <button className="text-blue-600 hover:text-blue-700 font-medium text-sm self-end sm:self-auto">
-                Clear All
-              </button>
-            </div>
-          </div>
-
-          {/* Select Report Type - Made responsive */}
+          {/* Report Type Tabs (HOD-style) */}
           <div className="mb-6 sm:mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Report Type</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border-2 border-orange-500 hover:shadow-md transition-shadow text-left">
-                <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500 mb-2 sm:mb-3" />
-                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Student Performance Report</div>
-                <div className="text-xs sm:text-sm text-gray-600">Academic performance metrics</div>
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+              <button
+                onClick={() => setReportType('OVERALL')}
+                className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all duration-200 ${
+                  reportType === 'OVERALL'
+                    ? 'bg-black text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span>Overall Report</span>
               </button>
-
-              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
-                <TrendingDown className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 mb-2 sm:mb-3" />
-                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Dropout Statistics</div>
-                <div className="text-xs sm:text-sm text-gray-600">Student dropout analysis</div>
+              <button
+                onClick={() => setReportType('ATTENDANCE')}
+                className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all duration-200 ${
+                  reportType === 'ATTENDANCE'
+                    ? 'bg-black text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Calendar className="w-4 h-4" />
+                <span>Attendance Report</span>
               </button>
-
-              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
-                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mb-2 sm:mb-3" />
-                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Attendance Summary</div>
-                <div className="text-xs sm:text-sm text-gray-600">Student attendance data</div>
+              <button
+                onClick={() => setReportType('GRADES')}
+                className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all duration-200 ${
+                  reportType === 'GRADES'
+                    ? 'bg-black text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                <span>Grades Report</span>
               </button>
-
-              <button className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left">
-                <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 mb-2 sm:mb-3" />
-                <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Regional Analysis</div>
-                <div className="text-xs sm:text-sm text-gray-600">Regional performance comparison</div>
-              </button>
+              <div className="flex-1 flex justify-end">
+                <button onClick={handleExportPDF} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2">
+                  <Download className="w-4 h-4" /> Export PDF
+                </button>
+              </div>
             </div>
           </div>
 
@@ -369,7 +435,28 @@ export default function ReportPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
+            {/* New School Filter Dropdown */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Filter by School</label>
+              <select
+                value={selectedSchoolId}
+                onChange={(e) => setSelectedSchoolId(e.target.value)}
+                className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+              >
+                <option value="ALL">All Schools</option>
+                {allSchools.length > 0 ? (
+                  allSchools.map((school) => (
+                    <option key={school.schoolId} value={school.schoolId}>
+                      {school.schoolName}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No schools available</option>
+                )}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
                 <input
@@ -387,23 +474,6 @@ export default function ReportPage() {
                   className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                 />
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Region</label>
-                <div className="relative">
-                  <select
-                    value={selectedRegion}
-                    onChange={(e) => setSelectedRegion(e.target.value)}
-                    className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-                  >
-                    <option>All Regions</option>
-                    <option>Region A</option>
-                    <option>Region B</option>
-                    <option>Region C</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 pointer-events-none" />
-                </div>
-              </div>
             </div>
 
             <button className="bg-blue-400 hover:bg-blue-500 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base">
@@ -412,122 +482,298 @@ export default function ReportPage() {
             </button>
           </div>
 
-          {/* Schools Table - Made responsive */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 sm:mb-8">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-max">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">School Name</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Region</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Dropout Rate</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Risk Level</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {schools.map((school, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <a href="#" className="text-blue-500 hover:text-blue-700 font-medium text-sm sm:text-base">
-                          {school.name}
-                        </a>
-                      </td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.region}</td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{school.dropoutRate}</td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRiskLevelColor(school.riskLevel)}`}>
-                          {school.riskLevel}
-                        </span>
-                      </td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
-                          <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto">
-                            <IoNotificationsSharp className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                            <span>Generate Report</span>
-                          </button>
-                          <button 
-                            onClick={() => handleViewProfile(school.name)}
-                            className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium flex items-center justify-center gap-1 w-full sm:w-auto cursor-pointer"
-                          >
-                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span>View Profile</span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          {/* Per-School Report UI */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 sm:mb-8 p-4 sm:p-6">
+            {loading ? (
+              <div className="p-8 text-center text-gray-500">Loading report data...</div>
+            ) : error ? (
+              <div className="p-8 text-center text-red-500">{error}</div>
+            ) : reportData && (
+              <>
+                {/* Metrics Summary */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  <div className="p-3 rounded-lg bg-gray-50">
+                    <p className="text-xs font-medium text-gray-600">Total Schools</p>
+                    <p className="text-xl font-bold mt-1 text-gray-900">{reportData.totalSchools}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-gray-50">
+                    <p className="text-xs font-medium text-gray-600">Total Students</p>
+                    <p className="text-xl font-bold mt-1 text-gray-900">{reportData.totalStudents}</p>
+                  </div>
+                  {/* Show Average Attendance only for OVERALL and ATTENDANCE */}
+                  {(reportType === 'OVERALL' || reportType === 'ATTENDANCE') && (
+                    <div className="p-3 rounded-lg bg-gray-50">
+                      <p className="text-xs font-medium text-gray-600">Average Attendance</p>
+                      <p className="text-xl font-bold mt-1 text-gray-900">{reportData.averageAttendance?.toFixed(1)}%</p>
+                    </div>
+                  )}
+                  {/* Show Average Grade only for OVERALL and GRADES */}
+                  {(reportType === 'OVERALL' || reportType === 'GRADES') && (
+                    <div className="p-3 rounded-lg bg-gray-50">
+                      <p className="text-xs font-medium text-gray-600">Average Grade</p>
+                      <p className="text-xl font-bold mt-1 text-gray-900">{reportData.averageGrade?.toFixed(2)}</p>
+                    </div>
+                  )}
+                </div>
 
-            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
-              <div className="text-xs sm:text-sm text-gray-600">
-                Showing 1 to 6 of 24 schools
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2">
-                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
-                  Previous
-                </button>
-                <button className="px-2 sm:px-3 py-1 bg-orange-500 text-white rounded text-xs sm:text-sm">1</button>
-                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">2</button>
-                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">3</button>
-                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">4</button>
-                <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
-                  Next
-                </button>
-              </div>
-            </div>
+                {/* Per-School Sections */}
+                {filteredSchools.map((school: SchoolReport) => (
+                  <div key={school.schoolId} className="mb-12 border rounded-lg p-4 sm:p-6 bg-gray-50">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2">
+                      <div>
+                        <h2 className="text-lg font-bold text-blue-700 mb-1">{school.schoolName}</h2>
+                        <div className="text-xs text-gray-600">Students: {school.totalStudents} | Courses: {school.totalCourses} | Teachers: {school.totalTeachers}</div>
+                      </div>
+                    </div>
+
+                    {/* School Metrics - dynamic by reportType */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                      {reportType !== 'ATTENDANCE' && (
+                        <div className="p-3 rounded-lg bg-white border">
+                          <p className="text-xs font-medium text-gray-600">Avg Grade</p>
+                          <p className="text-xl font-bold mt-1 text-gray-900">{school.averageGrade?.toFixed(2)}</p>
+                          {typeof school.lowestGrade === 'number' && typeof school.highestGrade === 'number' && (
+                            <p className="text-xs text-gray-500">Range: {school.lowestGrade} - {school.highestGrade}</p>
+                          )}
+                        </div>
+                      )}
+                      {reportType !== 'GRADES' && (
+                        <div className="p-3 rounded-lg bg-white border">
+                          <p className="text-xs font-medium text-gray-600">Avg Attendance</p>
+                          <p className="text-xl font-bold mt-1 text-gray-900">{school.averageAttendance?.toFixed(1)}%</p>
+                          {typeof school.lowestAttendance === 'number' && typeof school.highestAttendance === 'number' && (
+                            <p className="text-xs text-gray-500">Range: {school.lowestAttendance}% - {school.highestAttendance}%</p>
+                          )}
+                        </div>
+                      )}
+                      {reportType === 'OVERALL' && (
+                        <>
+                          <div className="p-3 rounded-lg bg-white border">
+                            <p className="text-xs font-medium text-gray-600">Dropout Probability</p>
+                            <p className="text-xl font-bold mt-1 text-gray-900">{(school.averageDropoutProbability * 100).toFixed(1)}%</p>
+                          </div>
+                          <div className="p-3 rounded-lg bg-white border">
+                            <p className="text-xs font-medium text-gray-600">Risk Trend</p>
+                            <p className={`text-xl font-bold mt-1 ${
+                              school.riskDistribution?.trend === 'CONCERNING' ? 'text-orange-600' :
+                              school.riskDistribution?.trend === 'CRITICAL' ? 'text-red-600' : 'text-green-600'
+                            }`}>{school.riskDistribution?.trend}</p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Risk Distribution - only for OVERALL */}
+                    {reportType === 'OVERALL' && school.riskDistribution && (
+                      <div className="mb-6">
+                        <h3 className="text-base font-semibold mb-3 text-gray-900">Risk Distribution</h3>
+                        <div className="overflow-x-auto">
+                          <table className="w-full">
+                            <thead>
+                              <tr className="border-b border-gray-200">
+                                <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Risk Level</th>
+                                <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Count</th>
+                                <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Percentage</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr className="border-b border-gray-100">
+                                <td className="py-2 px-3 text-sm"><span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Low Risk</span></td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.lowRiskCount || 0}</td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.lowRiskPercentage?.toFixed(2) || 0}%</td>
+                              </tr>
+                              <tr className="border-b border-gray-100">
+                                <td className="py-2 px-3 text-sm"><span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Medium Risk</span></td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.mediumRiskCount || 0}</td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.mediumRiskPercentage?.toFixed(2) || 0}%</td>
+                              </tr>
+                              <tr className="border-b border-gray-100">
+                                <td className="py-2 px-3 text-sm"><span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">High Risk</span></td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.highRiskCount || 0}</td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.highRiskPercentage?.toFixed(2) || 0}%</td>
+                              </tr>
+                              <tr className="border-b border-gray-100">
+                                <td className="py-2 px-3 text-sm"><span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">Critical Risk</span></td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.criticalRiskCount || 0}</td>
+                                <td className="py-2 px-3 text-center text-sm">{school.riskDistribution?.criticalRiskPercentage?.toFixed(2) || 0}%</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Top & Bottom Performers - only for GRADES and OVERALL */}
+                    {(reportType === 'GRADES' || reportType === 'OVERALL') && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        {/* Top Performers */}
+                        <div>
+                          <h3 className="text-base font-semibold mb-3 text-gray-900">Top Performers</h3>
+                          {school.topPerformers?.length > 0 ? (
+                            <div className="overflow-x-auto">
+                              <table className="w-full">
+                                <thead>
+                                  <tr className="border-b border-gray-200">
+                                    <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Student Name</th>
+                                    <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Avg Grade</th>
+                                    {reportType === 'OVERALL' && <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Percentile</th>}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {school.topPerformers.map((student) => (
+                                    <tr key={student.studentId} className="border-b border-gray-100 hover:bg-gray-50">
+                                      <td className="py-2 px-3 text-sm font-medium text-gray-900">{student.studentName}</td>
+                                      <td className="py-2 px-3 text-center text-sm">
+                                        <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                          {student.averageGrade.toFixed(2)}{reportType === 'OVERALL' ? '/20' : ''}
+                                        </span>
+                                      </td>
+                                      {reportType === 'OVERALL' && <td className="py-2 px-3 text-center text-sm">{student.percentileRank?.toFixed(0)}%</td>}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-center py-4 text-gray-500">No top performers data available</p>
+                          )}
+                        </div>
+                        {/* Bottom Performers */}
+                        <div>
+                          <h3 className="text-base font-semibold mb-3 text-gray-900">Bottom Performers</h3>
+                          {school.bottomPerformers?.length > 0 ? (
+                            <div className="overflow-x-auto">
+                              <table className="w-full">
+                                <thead>
+                                  <tr className="border-b border-gray-200">
+                                    <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Student Name</th>
+                                    <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Avg Grade</th>
+                                    {reportType === 'OVERALL' && <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Percentile</th>}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {school.bottomPerformers.map((student) => (
+                                    <tr key={student.studentId} className="border-b border-gray-100 hover:bg-gray-50">
+                                      <td className="py-2 px-3 text-sm font-medium text-gray-900">{student.studentName}</td>
+                                      <td className="py-2 px-3 text-center text-sm">
+                                        <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                                          {student.averageGrade.toFixed(2)}{reportType === 'OVERALL' ? '/20' : ''}
+                                        </span>
+                                      </td>
+                                      {reportType === 'OVERALL' && <td className="py-2 px-3 text-center text-sm">{student.percentileRank?.toFixed(0)}%</td>}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-center py-4 text-gray-500">No bottom performers data available</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* At-Risk Students - only for OVERALL */}
+                    {reportType === 'OVERALL' && (
+                      <div className="mb-6">
+                        <h3 className="text-base font-semibold mb-3 text-gray-900">At-Risk Students</h3>
+                        {school.atRiskStudents?.length > 0 ? (
+                          <div className="overflow-x-auto">
+                            <table className="w-full min-w-[700px]">
+                              <thead>
+                                <tr className="border-b border-gray-200">
+                                  <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Student Name</th>
+                                  <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Risk Level</th>
+                                  <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Dropout Probability</th>
+                                  <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Avg Grade</th>
+                                  <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Attendance</th>
+                                  <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Behavior Incidents</th>
+                                  <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Primary Concern</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {school.atRiskStudents.map((student) => (
+                                  <tr key={student.studentId} className="border-b border-gray-100 hover:bg-gray-50">
+                                    <td className="py-2 px-3 text-sm font-medium text-gray-900">{student.studentName}</td>
+                                    <td className="py-2 px-3 text-center">
+                                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                                        student.riskLevel === 'CRITICAL'
+                                          ? 'bg-red-100 text-red-800'
+                                          : student.riskLevel === 'HIGH'
+                                          ? 'bg-orange-100 text-orange-800'
+                                          : student.riskLevel === 'MEDIUM'
+                                          ? 'bg-yellow-100 text-yellow-800'
+                                          : 'bg-green-100 text-green-800'
+                                      }`}>
+                                        {student.riskLevel}
+                                      </span>
+                                    </td>
+                                    <td className={`py-2 px-3 text-center text-sm font-semibold ${
+                                      student.dropoutProbability >= 0.7
+                                        ? 'text-red-600'
+                                        : student.dropoutProbability >= 0.5
+                                        ? 'text-orange-600'
+                                        : 'text-yellow-600'
+                                    }`}>
+                                      {(student.dropoutProbability * 100).toFixed(1)}%
+                                    </td>
+                                    <td className="py-2 px-3 text-center text-sm">{student.averageGrade.toFixed(2)}</td>
+                                    <td className="py-2 px-3 text-center text-sm">{student.attendanceRate.toFixed(1)}%</td>
+                                    <td className="py-2 px-3 text-center text-sm">{student.behaviorIncidents}</td>
+                                    <td className="py-2 px-3 text-sm">{student.primaryConcern}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-center py-4 text-gray-500">No at-risk students identified</p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Course Summaries - dynamic by reportType */}
+                    <div>
+                      <h3 className="text-base font-semibold mb-3 text-gray-900">Course Summaries</h3>
+                      <div className="overflow-x-auto">
+                        <table className="w-full min-w-[600px]">
+                          <thead>
+                            <tr className="border-b border-gray-200">
+                              <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Course Name</th>
+                              {reportType !== 'ATTENDANCE' && <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Teacher</th>}
+                              <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Students</th>
+                              {reportType !== 'ATTENDANCE' && <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Avg Grade</th>}
+                              {reportType !== 'GRADES' && <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">Attendance</th>}
+                              <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">At Risk</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {school.courseSummaries.map((course) => (
+                              <tr key={course.courseId} className="border-b border-gray-100 hover:bg-gray-50">
+                                <td className="py-2 px-3 text-sm font-medium text-gray-900">{course.courseName}</td>
+                                {reportType !== 'ATTENDANCE' && <td className="py-2 px-3 text-sm text-gray-600">{course.teacherName || 'N/A'}</td>}
+                                <td className="py-2 px-3 text-center text-sm">{course.studentCount}</td>
+                                {reportType !== 'ATTENDANCE' && <td className="py-2 px-3 text-center text-sm">{typeof course.averageGrade === 'number' ? course.averageGrade.toFixed(2) : '-'}</td>}
+                                {reportType !== 'GRADES' && <td className="py-2 px-3 text-center text-sm">{typeof course.attendanceRate === 'number' ? course.attendanceRate.toFixed(1) + '%' : '-'}</td>}
+                                <td className="py-2 px-3 text-center">{course.atRiskCount > 0 ? (
+                                  <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">{course.atRiskCount}</span>
+                                ) : (
+                                  <span className="text-sm text-gray-400">0</span>
+                                )}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Student Summaries - for GRADES and ATTENDANCE (removed, property does not exist) */}
+                  </div>
+                ))}
+              </>
+            )}
           </div>
 
-          {/* Generated Reports - Made responsive */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Generated Reports</h2>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-max">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Report Name</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Date Generated</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Status</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold text-gray-700">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {reports.map((report, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-900 text-sm sm:text-base">{report.name}</td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm sm:text-base">{report.date}</td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <span className={`inline-flex px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-                          report.status === 'Ready' 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          {report.status}
-                        </span>
-                      </td>
-                      <td className="px-4 sm:px-6 py-3 sm:py-4">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                          <button className="text-blue-500 hover:text-blue-700 flex items-center gap-1 text-xs sm:text-sm">
-                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">View</span>
-                          </button>
-                          <button className="text-gray-600 hover:text-gray-800 flex items-center gap-1 text-xs sm:text-sm">
-                            <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">Download</span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
         </main>
       </div>
     </div>

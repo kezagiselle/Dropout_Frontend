@@ -37,10 +37,8 @@ import ViewStudents from "./components/OrganisationPages/ViewStudents";
 import TeacherPage from "./components/OrganisationPages/TeacherPage";
 import ViewTeacherDetails from "./components/OrganisationPages/ViewTeacherDetails";
 import CoursePage from "./components/OrganisationPages/CoursePage";
-import ExamPages from "./components/OrganisationPages/ExamPages";
 import TimetablePage from "./components/OrganisationPages/TimetablePage";
 import ReportPage from "./components/OrganisationPages/ReportPage";
-import ReportsView from "./components/OrganisationPages/ReportView";
 import OrganSettings from "./components/OrganisationPages/OrganSettings";
 import PredictionProfile from "./components/HodPages/PredictionProfile";
 
@@ -91,10 +89,8 @@ function App() {
           <Route path="/teacher-page" element={<TeacherPage />} />
           <Route path="/view-teachers" element={<ViewTeacherDetails/>} />
           <Route path="/course-timetable" element={<CoursePage/>} />
-          <Route path="/exams-grades" element={<ExamPages/>} />
           <Route path="/organ-timetable" element={<TimetablePage/>} />
           <Route path="/organ-report" element={<ReportPage/>} />
-          <Route path="/report-view" element={<ReportsView/>} />
           <Route path="/organ-settings" element={<OrganSettings/>} />
           <Route path="/prediction-profile" element={<PredictionProfile/>} />
 

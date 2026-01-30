@@ -46,7 +46,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
     { icon: Users, label: 'Students', path: '/student-page' },
     { icon: FaChalkboardTeacher, label: 'Teachers', path: '/teacher-page' },
     { icon: BookOpen, label: 'Courses & Timetable', path: '/course-timetable' },
-    { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },
+    // { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },
     { icon: FileText, label: 'Reports', path: '/reports' },
     { icon: Settings, label: 'Settings', path: '/organ-settings' }
   ];
@@ -129,6 +129,7 @@ export default function ReportPage() {
       ];
     // School filter state
     const [selectedSchoolId, setSelectedSchoolId] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
   const [reportType, setReportType] = useState<'OVERALL' | 'GRADES' | 'ATTENDANCE'>('OVERALL');
   // Removed unused state: startDate, endDate, selectedSchool
   // Removed unused selectedRegion state
@@ -151,6 +152,12 @@ export default function ReportPage() {
     averageGrade: number;
     attendanceRate: number;
     atRiskCount: number;
+  }
+  interface StudentSummary {
+    studentId: string;
+    studentName: string;
+    averageAttendance?: number;
+    averageGrade?: number;
   }
   interface RiskDistribution {
     lowRiskCount: number;
@@ -198,6 +205,7 @@ export default function ReportPage() {
     bottomPerformers: Performer[];
     atRiskStudents: AtRiskStudent[];
     courseSummaries: CourseSummary[];
+    studentSummaries: StudentSummary[];
   }
   interface ReportData {
     reportType?: string;
@@ -235,7 +243,6 @@ export default function ReportPage() {
       setError('Failed to fetch report');
     }
     setLoading(false);
-          const [selectedSchoolId, setSelectedSchoolId] = useState<string>('ALL');
   };
 
   useEffect(() => {
@@ -264,32 +271,442 @@ export default function ReportPage() {
 
   // School filter dropdown logic
   const allSchools = reportData?.schoolReports || [];
-  const filteredSchools = selectedSchoolId === 'ALL'
-    ? allSchools
-    : allSchools.filter((school) => school.schoolId === selectedSchoolId);
+  const filteredSchools = allSchools
+    .filter((school) => selectedSchoolId === 'ALL' || school.schoolId === selectedSchoolId)
+    .filter((school) => searchQuery === '' || school.schoolName.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // Aggregate metrics for all schools
   // Removed unused aggregate function
 
-  // PDF Export (for summary table)
+  // PDF Export (professional format like Reports.tsx)
   const handleExportPDF = () => {
+    if (!reportData) {
+      console.error('No report data available');
+      return;
+    }
+
     const doc = new jsPDF();
-    doc.text('Organization Report', 14, 16);
-    autoTable(doc, {
-      head: [[
-        'School Name', 'Students', 'Courses', 'Teachers', 'Avg Grade', 'Avg Attendance', 'At-Risk'
-      ]],
-      body: filteredSchools.map((school) => [
-        school.schoolName,
-        school.totalStudents,
-        school.totalCourses,
-        school.totalTeachers,
-        Number(school.averageGrade).toFixed(2),
-        Number(school.averageAttendance).toFixed(2),
-        school.atRiskStudents?.length || 0
-      ]),
+    const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
+    let yPos = 0;
+
+    // ============ PROFESSIONAL HEADER (Report Card Style) ============
+    yPos = 15;
+
+    // Organization Name and Logo Area (Left side)
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    const orgName = user?.name || 'Education Organization';
+    doc.text(orgName, 14, yPos);
+    yPos += 5;
+
+    // Report title under organization name
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    const reportTitle = reportType === 'OVERALL' ? 'Organization Comprehensive Report'
+                      : reportType === 'ATTENDANCE' ? 'Organization Attendance Analysis Report'
+                      : 'Organization Academic Performance Report';
+    doc.text(reportTitle, 14, yPos);
+    yPos += 4;
+
+    // Period info
+    doc.setFontSize(8);
+    doc.text('Period: Current Academic Year', 14, yPos);
+    yPos += 4;
+
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
-    doc.save('organization_report.pdf');
+    doc.text(`Page 1 of 1`, 14, yPos);
+
+    // Right side information box
+    yPos = 15;
+    const infoBoxX = pageWidth - 80;
+
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+
+    // Create bordered boxes for info
+    const boxWidth = 65;
+    const boxHeight = 4;
+
+    // Administrator
+    doc.setDrawColor(150, 150, 150);
+    doc.setLineWidth(0.3);
+    doc.rect(infoBoxX, yPos - 3, 25, boxHeight);
+    doc.rect(infoBoxX + 25, yPos - 3, boxWidth - 25, boxHeight);
+    doc.text('Administrator:', infoBoxX + 1, yPos);
+    doc.text(user?.name || 'Organization Admin', infoBoxX + 26, yPos);
+    yPos += 4;
+
+    // Date
+    doc.rect(infoBoxX, yPos - 3, 25, boxHeight);
+    doc.rect(infoBoxX + 25, yPos - 3, boxWidth - 25, boxHeight);
+    doc.text('Generated:', infoBoxX + 1, yPos);
+    doc.text(currentDate, infoBoxX + 26, yPos);
+    yPos += 4;
+
+    // Report Type
+    doc.rect(infoBoxX, yPos - 3, 25, boxHeight);
+    doc.rect(infoBoxX + 25, yPos - 3, boxWidth - 25, boxHeight);
+    doc.text('Report Type:', infoBoxX + 1, yPos);
+    const reportTypeText = reportType.charAt(0).toUpperCase() + reportType.slice(1);
+    doc.text(reportTypeText, infoBoxX + 26, yPos);
+    yPos += 4;
+
+    // Filter (if applicable)
+    if (selectedSchoolId !== 'ALL') {
+      const selectedSchool = allSchools.find(school => school.schoolId === selectedSchoolId);
+      doc.rect(infoBoxX, yPos - 3, 25, boxHeight);
+      doc.rect(infoBoxX + 25, yPos - 3, boxWidth - 25, boxHeight);
+      doc.text('School Filter:', infoBoxX + 1, yPos);
+      doc.text(selectedSchool?.schoolName.substring(0, 25) || 'N/A', infoBoxX + 26, yPos);
+      yPos += 4;
+    }
+
+    // Horizontal line separator
+    yPos = 42;
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.8);
+    doc.line(14, yPos, pageWidth - 14, yPos);
+
+    yPos = 50;
+
+    // ============ ORGANIZATION OVERVIEW SECTION ============
+    doc.setFillColor(230, 230, 230);
+    doc.rect(14, yPos, pageWidth - 28, 7, 'F');
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.rect(14, yPos, pageWidth - 28, 7, 'S');
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('[O1] ORGANIZATION OVERVIEW', 16, yPos + 5);
+    yPos += 7;
+
+    // Organization statistics grid
+    const overviewData = [
+      ['Total Schools', reportData.totalSchools.toString()],
+      ['Total Students', reportData.totalStudents.toString()],
+    ];
+
+    // Add report-specific metrics
+    if (reportType === 'ATTENDANCE') {
+      overviewData.push(['Average Attendance', `${reportData.averageAttendance?.toFixed(1) || 'N/A'}%`]);
+    } else if (reportType === 'GRADES') {
+      overviewData.push(['Average Grade', `${reportData.averageGrade?.toFixed(2) || 'N/A'}/20`]);
+    }
+
+    overviewData.push(
+      ['Schools with At-Risk', filteredSchools.filter(school => (school.atRiskStudents?.length || 0) > 0).length.toString()],
+      ['Total At-Risk Students', reportData.totalAtRiskStudents?.toString() || '0']
+    );
+
+    doc.setFontSize(8);
+    let currentY = yPos;
+
+    overviewData.forEach((item, index) => {
+      const col = index % 2;
+      const row = Math.floor(index / 2);
+      const x = 14 + (col * (pageWidth - 28) / 2);
+      const y = currentY + (row * 12);
+
+      // Draw cell borders
+      doc.setDrawColor(180, 180, 180);
+      doc.setLineWidth(0.3);
+      doc.rect(x, y, (pageWidth - 28) / 2, 12);
+
+      // Label (bold)
+      doc.setFont('helvetica', 'bold');
+      doc.text(item[0], x + 2, y + 4);
+
+      // Value
+      doc.setFont('helvetica', 'normal');
+      doc.text(item[1], x + 2, y + 9);
+    });
+
+    yPos = currentY + (Math.ceil(overviewData.length / 2) * 12) + 8;
+
+    // ============ SCHOOL PERFORMANCE SUMMARY ============
+    if (yPos > pageHeight - 60) {
+      doc.addPage();
+      yPos = 20;
+    }
+
+    doc.setFillColor(230, 230, 230);
+    doc.rect(14, yPos, pageWidth - 28, 7, 'F');
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.rect(14, yPos, pageWidth - 28, 7, 'S');
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('[O2] SCHOOL PERFORMANCE SUMMARY', 16, yPos + 5);
+    yPos += 7;
+
+    // School performance table
+    let schoolTableHead = ['School Name', 'Students', 'Courses', 'Teachers'];
+    let schoolTableBody = filteredSchools.map((school) => {
+      let row = [
+        school.schoolName || 'N/A',
+        school.totalStudents?.toString() || '0',
+        school.totalCourses?.toString() || '0',
+        school.totalTeachers?.toString() || '0',
+      ];
+      if (reportType === 'GRADES') {
+          schoolTableHead = ['School Name', 'Students', 'Courses', 'Teachers', 'Avg Grade'];
+          row.push(`${school.averageGrade?.toFixed(2) || 'N/A'}`);
+      } else if (reportType === 'ATTENDANCE') {
+          schoolTableHead = ['School Name', 'Students', 'Courses', 'Teachers', 'Avg Attendance'];
+          row.push(`${school.averageAttendance?.toFixed(1) || 0}%`);
+      } else {
+          schoolTableHead = ['School Name', 'Students', 'Courses', 'Teachers', 'Avg Grade', 'Avg Attendance', 'At-Risk Students'];
+          row.push(`${school.averageGrade?.toFixed(2) || 'N/A'}`);
+          row.push(`${school.averageAttendance?.toFixed(1) || 0}%`);
+      }
+        if (reportType === 'OVERALL') {
+          row.push((school.atRiskStudents?.length || 0).toString());
+        }
+      return row;
+    });
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [schoolTableHead],
+      body: schoolTableBody,
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 3,
+        lineColor: [180, 180, 180],
+        lineWidth: 0.3,
+      },
+      headStyles: {
+        fillColor: [200, 200, 200],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        halign: 'center',
+      },
+    });
+    yPos = (doc as any).lastAutoTable.finalY + 8;
+
+    // ============ DETAILED SCHOOL ANALYSIS (for filtered schools) ============
+    filteredSchools.forEach((school, index) => {
+      if (yPos > pageHeight - 80) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      // School Section Header
+      doc.setFillColor(240, 240, 240);
+      doc.rect(14, yPos, pageWidth - 28, 7, 'F');
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.rect(14, yPos, pageWidth - 28, 7, 'S');
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`[S${index + 1}] ${school.schoolName.toUpperCase()}`, 16, yPos + 5);
+      yPos += 7;
+
+      // School Info Grid
+      doc.setDrawColor(180, 180, 180);
+      doc.setLineWidth(0.3);
+
+      const infoHeight = 5;
+      doc.rect(14, yPos, 30, infoHeight);
+      doc.rect(44, yPos, pageWidth - 58, infoHeight);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Students:', 16, yPos + 3.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text(school.totalStudents?.toString() || '0', 46, yPos + 3.5);
+      yPos += infoHeight;
+
+      doc.rect(14, yPos, 30, infoHeight);
+      doc.rect(44, yPos, pageWidth - 58, infoHeight);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Courses:', 16, yPos + 3.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text(school.totalCourses?.toString() || '0', 46, yPos + 3.5);
+      yPos += infoHeight;
+
+      doc.rect(14, yPos, 30, infoHeight);
+      doc.rect(44, yPos, pageWidth - 58, infoHeight);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Teachers:', 16, yPos + 3.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text(school.totalTeachers?.toString() || '0', 46, yPos + 3.5);
+      yPos += infoHeight;
+
+      // Performance Metrics
+      if (reportType === 'OVERALL' || reportType === 'GRADES') {
+        doc.rect(14, yPos, 30, infoHeight);
+        doc.rect(44, yPos, pageWidth - 58, infoHeight);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Avg Grade:', 16, yPos + 3.5);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${school.averageGrade?.toFixed(2) || 'N/A'}/20`, 46, yPos + 3.5);
+        yPos += infoHeight;
+      }
+
+      if (reportType === 'OVERALL' || reportType === 'ATTENDANCE') {
+        doc.rect(14, yPos, 30, infoHeight);
+        doc.rect(44, yPos, pageWidth - 58, infoHeight);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Avg Attendance:', 16, yPos + 3.5);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${school.averageAttendance?.toFixed(1) || 0}%`, 46, yPos + 3.5);
+        yPos += infoHeight;
+      }
+
+      yPos += 5;
+
+      // Risk Distribution (only for OVERALL)
+      if (reportType === 'OVERALL' && school.riskDistribution) {
+        if (yPos > pageHeight - 60) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        autoTable(doc, {
+          startY: yPos,
+          head: [['Risk Category', 'Count', 'Percentage', 'Status']],
+          body: [
+            ['Low Risk', (school.riskDistribution.lowRiskCount || 0).toString(), `${school.riskDistribution.lowRiskPercentage?.toFixed(2) || 0}%`, 'Optimal'],
+            ['Medium Risk', (school.riskDistribution.mediumRiskCount || 0).toString(), `${school.riskDistribution.mediumRiskPercentage?.toFixed(2) || 0}%`, 'Monitor'],
+            ['High Risk', (school.riskDistribution.highRiskCount || 0).toString(), `${school.riskDistribution.highRiskPercentage?.toFixed(2) || 0}%`, 'Intervention Required'],
+            ['Critical Risk', (school.riskDistribution.criticalRiskCount || 0).toString(), `${school.riskDistribution.criticalRiskPercentage?.toFixed(2) || 0}%`, 'Urgent Action'],
+          ],
+          theme: 'grid',
+          styles: {
+            fontSize: 8,
+            cellPadding: 3,
+            lineColor: [180, 180, 180],
+            lineWidth: 0.3,
+          },
+          headStyles: {
+            fillColor: [200, 200, 200],
+            textColor: [0, 0, 0],
+            fontStyle: 'bold',
+            halign: 'center',
+          },
+          columnStyles: {
+            0: { cellWidth: 40 },
+            1: { cellWidth: 30, halign: 'center' },
+            2: { cellWidth: 30, halign: 'center' },
+            3: { cellWidth: 'auto' },
+          },
+        });
+        yPos = (doc as any).lastAutoTable.finalY + 8;
+      }
+
+      // Course Summaries
+      if (school.courseSummaries && school.courseSummaries.length > 0) {
+        if (yPos > pageHeight - 70) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        // Dynamically build columns based on report type
+        let courseHead = ['Course Name'];
+        let courseBody = school.courseSummaries.map((course: any) => {
+          let row = [course.courseName || 'N/A'];
+          if (reportType !== 'ATTENDANCE') {
+            courseHead.push('Teacher');
+            row.push(course.teacherName || 'N/A');
+          }
+          courseHead.push('Enrolled');
+          row.push((course.studentCount || 0).toString());
+          if (reportType !== 'ATTENDANCE') {
+            courseHead.push('Avg Grade');
+            row.push(`${course.averageGrade?.toFixed(2) || 'N/A'}`);
+          }
+          if (reportType !== 'GRADES') {
+            courseHead.push('Attendance');
+            row.push(`${course.attendanceRate?.toFixed(1) || 0}%`);
+          }
+          courseHead.push('At Risk');
+          row.push((course.atRiskCount || 0).toString());
+          return row;
+        });
+
+        // Remove duplicate headers
+        courseHead = [...new Set(courseHead)];
+        autoTable(doc, {
+          startY: yPos,
+          head: [courseHead],
+          body: courseBody,
+          theme: 'grid',
+          styles: {
+            fontSize: 8,
+            cellPadding: 2,
+            lineColor: [180, 180, 180],
+            lineWidth: 0.3,
+          },
+          headStyles: {
+            fillColor: [200, 200, 200],
+            textColor: [0, 0, 0],
+            fontStyle: 'bold',
+            halign: 'center',
+            fontSize: 8,
+          },
+        });
+        yPos = (doc as any).lastAutoTable.finalY + 8;
+      }
+
+      // Student Summaries (for ATTENDANCE and GRADES reports)
+      if ((reportType === 'ATTENDANCE' || reportType === 'GRADES') && school.studentSummaries && school.studentSummaries.length > 0) {
+        if (yPos > pageHeight - 70) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        const studentHead = [['Student Name', reportType === 'ATTENDANCE' ? 'Average Attendance (%)' : 'Average Grade']];
+        const studentBody = school.studentSummaries.map((student: StudentSummary) => [
+          student.studentName || 'N/A',
+          reportType === 'ATTENDANCE' ? `${student.averageAttendance?.toFixed(1) || 0}%` : `${student.averageGrade?.toFixed(2) || 'N/A'}`,
+        ]);
+
+        autoTable(doc, {
+          startY: yPos,
+          head: studentHead,
+          body: studentBody,
+          theme: 'grid',
+          styles: {
+            fontSize: 8,
+            cellPadding: 2,
+            lineColor: [180, 180, 180],
+            lineWidth: 0.3,
+          },
+          headStyles: {
+            fillColor: [200, 200, 200],
+            textColor: [0, 0, 0],
+            fontStyle: 'bold',
+            halign: 'center',
+            fontSize: 8,
+          },
+          columnStyles: {
+            0: { cellWidth: 100 },
+            1: { cellWidth: 40, halign: 'center' },
+          },
+        });
+        yPos = (doc as any).lastAutoTable.finalY + 8;
+      }
+    });
+
+    // Footer on last page
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(100, 100, 100);
+    doc.text('This report is confidential and intended for authorized organization administration.', pageWidth / 2, pageHeight - 10, { align: 'center' });
+    doc.setTextColor(0, 0, 0);
+
+    // Save the PDF
+    const fileName = `organization_${reportType.toLowerCase()}_report_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
   };
 
   return (
@@ -312,32 +729,7 @@ export default function ReportPage() {
             </div>
 
             {/* Header Navigation Links */}
-            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
-              <button 
-                onClick={() => handleNavigation('/org-dash', 'Dashboard')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Dashboard
-              </button>
-              <button 
-                onClick={() => handleNavigation('/org-schools', 'Schools')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Schools
-              </button>
-              <button 
-                onClick={() => handleNavigation('/organ-report', 'Reports')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Reports
-              </button>
-              <button 
-                onClick={() => handleNavigation('/organ-settings', 'Settings')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Settings
-              </button>
-            </div>
+            {/* Top menu bar removed as requested */}
           </div>
 
           {/* Right Section - Calendar, Notifications, Profile */}
@@ -430,6 +822,8 @@ export default function ReportPage() {
                 <input
                   type="text"
                   placeholder="Search by School name"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                 />
               </div>
@@ -475,11 +869,6 @@ export default function ReportPage() {
                 />
               </div>
             </div>
-
-            <button className="bg-blue-400 hover:bg-blue-500 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base">
-              <span>▶</span>
-              Generate Report
-            </button>
           </div>
 
           {/* Per-School Report UI */}
@@ -766,6 +1155,53 @@ export default function ReportPage() {
                         </table>
                       </div>
                     </div>
+
+                    {/* Student Summaries - for ATTENDANCE and GRADES reports */}
+                    {(reportType === 'ATTENDANCE' || reportType === 'GRADES') && school.studentSummaries && school.studentSummaries.length > 0 && (
+                      <div className="mt-6">
+                        <h3 className="text-base font-semibold mb-3 text-gray-900">
+                          {reportType === 'ATTENDANCE' ? 'Student Attendance Summary' : 'Student Grades Summary'}
+                        </h3>
+                        <div className="overflow-x-auto">
+                          <table className="w-full min-w-[400px]">
+                            <thead>
+                              <tr className="border-b border-gray-200">
+                                <th className="text-left py-2 px-3 text-xs font-semibold text-gray-700">Student Name</th>
+                                <th className="text-center py-2 px-3 text-xs font-semibold text-gray-700">
+                                  {reportType === 'ATTENDANCE' ? 'Average Attendance (%)' : 'Average Grade'}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {school.studentSummaries.map((student) => (
+                                <tr key={student.studentId} className="border-b border-gray-100 hover:bg-gray-50">
+                                  <td className="py-2 px-3 text-sm font-medium text-gray-900">{student.studentName}</td>
+                                  <td className="py-2 px-3 text-center text-sm">
+                                    {reportType === 'ATTENDANCE' ? (
+                                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                                        (student.averageAttendance || 0) >= 80 ? 'bg-green-100 text-green-800' :
+                                        (student.averageAttendance || 0) >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-red-100 text-red-800'
+                                      }`}>
+                                        {student.averageAttendance?.toFixed(1) || 0}%
+                                      </span>
+                                    ) : (
+                                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                                        (student.averageGrade || 0) >= 15 ? 'bg-green-100 text-green-800' :
+                                        (student.averageGrade || 0) >= 10 ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-red-100 text-red-800'
+                                      }`}>
+                                        {student.averageGrade?.toFixed(2) || 'N/A'}
+                                      </span>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Student Summaries - for GRADES and ATTENDANCE (removed, property does not exist) */}
                   </div>

@@ -107,44 +107,7 @@ export default function TeacherPage() {
             </div>
 
             {/* Header Navigation Links */}
-            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
-              <button 
-                onClick={() => handleNavigation('/org-dash', 'Dashboard')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Dashboard
-              </button>
-              <button 
-                onClick={() => handleNavigation('/org-schools', 'Schools')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Schools
-              </button>
-              <button 
-                onClick={() => handleNavigation('/student-page', 'Students')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Students
-              </button>
-              <button 
-                onClick={() => handleNavigation('/teachers', 'Teachers')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Teachers
-              </button>
-              <button 
-                onClick={() => handleNavigation('/reports', 'Reports')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Reports
-              </button>
-              <button 
-                onClick={() => handleNavigation('/organ-settings', 'Settings')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Settings
-              </button>
-            </div>
+              {/* Top menu bar removed as requested */}
           </div>
 
           {/* Right Section - Calendar, Notifications, Profile */}

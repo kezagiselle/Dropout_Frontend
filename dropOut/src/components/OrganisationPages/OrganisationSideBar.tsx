@@ -40,7 +40,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
     { icon: Users, label: 'Students', path: '/student-page' },
     { icon: FaChalkboardTeacher, label: 'Teachers', path: '/teacher-page' },
     { icon: BookOpen, label: 'Courses & Timetable', path: '/course-timetable' },
-    { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },
+    // { icon: CalendarDays, label: 'Exams & Grades', path: '/exams-grades' },
     { icon: FileText, label: 'Reports', path: '/organ-report' },
     { icon: Settings, label: 'Settings', path: '/organ-settings' }
   ];
@@ -61,6 +61,7 @@ const OrganizationSidebar: React.FC<OrganizationSidebarProps> = ({
       )}
       
       <nav className="p-3 sm:p-4 relative z-50 bg-white h-full flex flex-col">
+      {/* Top menu bar removed as requested */}
         <div className="flex-1">
           {/* Dashboard Button */}
           <button 

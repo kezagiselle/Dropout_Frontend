@@ -108,34 +108,6 @@ export default function SchoolsPage() {
               <span className="font-semibold text-gray-800 text-xs sm:text-sm lg:text-base">{user?.name || 'Education Organization'}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 hidden sm:block" />
             </div>
-
-            {/* Header Navigation Links */}
-            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
-              <button 
-                onClick={() => handleNavigation('/org-dash', 'Dashboard')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Dashboard
-              </button>
-              <button 
-                onClick={() => handleNavigation('/org-schools', 'Schools')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Schools
-              </button>
-              <button 
-                onClick={() => handleNavigation('/re', 'Reports')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Reports
-              </button>
-              <button 
-                onClick={() => handleNavigation('/organization-settings', 'Settings')}
-                className="hover:text-orange-600 transition-colors"
-              >
-                Settings
-              </button>
-            </div>
           </div>
 
           {/* Right Section - Calendar, Notifications, Profile */}

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDownRight, ArrowUpRight, ChevronDown, Calendar, Bell, Menu, X } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, ChevronDown, Calendar, Bell, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { FaCalendarCheck } from 'react-icons/fa';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import userr from "../../../src/img/userr.png";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useUserAuth } from '../../context/useUserAuth';
 import StudentSidebar from './StudentSidebar';
 
@@ -20,6 +20,20 @@ interface AttendanceApiResponse {
   };
 }
 
+// Dashboard API attendance overview interface
+interface AttendanceOverview {
+  day: string; // "2025-10-24"
+  attendance: number; // 0 or 100
+}
+
+// Calendar day interface
+interface CalendarDay {
+  date: number;
+  fullDate: string;
+  isCurrentMonth: boolean;
+  attendance?: number;
+}
+
 const StudentAttendance: React.FC = () => {
   // Base URL for API calls
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -33,7 +47,45 @@ const StudentAttendance: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('My Attendance');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, token } = useUserAuth();
+  
+  // Calendar state
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [attendanceOverview, setAttendanceOverview] = useState<AttendanceOverview[]>([]);
+  
+  // Get attendance data from route state or fetch from dashboard
+  useEffect(() => {
+    if (location.state?.attendanceOverview) {
+      setAttendanceOverview(location.state.attendanceOverview);
+    } else {
+      // Fetch dashboard data to get attendanceOverview
+      const fetchDashboardData = async () => {
+        try {
+          if (!token || !user?.studentId) return;
+          
+          const response = await fetch(`${baseUrl}/api/students/dashboard/${user.studentId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            if (result.success && result.data.attendanceOverview) {
+              setAttendanceOverview(result.data.attendanceOverview);
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching dashboard data:', err);
+        }
+      };
+      
+      fetchDashboardData();
+    }
+  }, [location.state, token, user?.studentId, baseUrl]);
 
   // Fetch attendance data from API
   useEffect(() => {
@@ -84,6 +136,75 @@ const StudentAttendance: React.FC = () => {
     navigate(path);
     setSidebarOpen(false);
   };
+
+  // Calendar helper functions
+  const getAttendanceMap = () => {
+    return new Map(attendanceOverview.map(item => [item.day, item.attendance]));
+  };
+  
+  const generateCalendarDays = (year: number, month: number): CalendarDay[] => {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay()); // Start from Sunday
+    
+    const days: CalendarDay[] = [];
+    const attendanceMap = getAttendanceMap();
+    
+    for (let i = 0; i < 42; i++) { // 6 weeks
+      const currentDate = new Date(startDate);
+      currentDate.setDate(startDate.getDate() + i);
+      const dateString = currentDate.toISOString().split('T')[0];
+      
+      days.push({
+        date: currentDate.getDate(),
+        fullDate: dateString,
+        isCurrentMonth: currentDate.getMonth() === month,
+        attendance: attendanceMap.get(dateString)
+      });
+    }
+    
+    return days;
+  };
+  
+  const getDateStyle = (day: CalendarDay): string => {
+    let baseClasses = 'text-center p-1';
+    
+    if (!day.isCurrentMonth) {
+      return `${baseClasses} text-gray-400`;
+    }
+    
+    if (day.attendance === undefined) {
+      return `${baseClasses} text-gray-900`; // No attendance data
+    }
+    
+    if (day.attendance === 100) {
+      return `${baseClasses} bg-green-400 text-green-900 rounded font-medium`; // Present
+    }
+    
+    if (day.attendance === 0) {
+      return `${baseClasses} bg-red-400 text-red-900 rounded font-medium`; // Absent
+    }
+    
+    return `${baseClasses} text-gray-900`;
+  };
+  
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    const newDate = new Date(currentDate);
+    if (direction === 'prev') {
+      newDate.setMonth(newDate.getMonth() - 1);
+    } else {
+      newDate.setMonth(newDate.getMonth() + 1);
+    }
+    setCurrentDate(newDate);
+  };
+  
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const calendarDays = generateCalendarDays(currentDate.getFullYear(), currentDate.getMonth());
 
   // Transform API data for chart
   const chartData = attendanceData ? 
@@ -701,52 +822,65 @@ const StudentAttendance: React.FC = () => {
 
             {/* Right Column */}
             <div className="space-y-6">
-              {/* November 2025 Calendar */}
+              {/* Dynamic Calendar */}
               <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
-                <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-4">November 2025</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900">
+                    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => navigateMonth('prev')}
+                      className="p-1 hover:bg-gray-100 rounded"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button 
+                      onClick={() => navigateMonth('next')}
+                      className="p-1 hover:bg-gray-100 rounded"
+                    >
+                      <ChevronRight className="w-4 h-4 text-gray-600" />
+                    </button>
+                  </div>
+                </div>
+                
                 <div className="grid grid-cols-7 gap-1 text-xs mb-4">
                   {/* Day headers */}
-                  <div className="text-gray-400 text-center font-medium">Sun</div>
-                  <div className="text-gray-400 text-center font-medium">Mon</div>
-                  <div className="text-gray-400 text-center font-medium">Tue</div>
-                  <div className="text-gray-400 text-center font-medium">Wed</div>
-                  <div className="text-gray-400 text-center font-medium">Thu</div>
-                  <div className="text-gray-400 text-center font-medium">Fri</div>
-                  <div className="text-gray-400 text-center font-medium">Sat</div>
+                  <div className="text-gray-400 text-center font-medium py-2">Sun</div>
+                  <div className="text-gray-400 text-center font-medium py-2">Mon</div>
+                  <div className="text-gray-400 text-center font-medium py-2">Tue</div>
+                  <div className="text-gray-400 text-center font-medium py-2">Wed</div>
+                  <div className="text-gray-400 text-center font-medium py-2">Thu</div>
+                  <div className="text-gray-400 text-center font-medium py-2">Fri</div>
+                  <div className="text-gray-400 text-center font-medium py-2">Sat</div>
                   
                   {/* Calendar days */}
-                  <div className="text-center p-1 text-gray-400">26</div>
-                  <div className="text-center p-1 text-gray-400">27</div>
-                  <div className="text-center p-1 text-gray-400">28</div>
-                  <div className="text-center p-1 text-gray-400">29</div>
-                  <div className="text-center p-1 text-gray-400">30</div>
-                  <div className="text-center p-1 text-gray-400">31</div>
-                  <div className="text-center p-1">1</div>
-                  <div className="text-center p-1">2</div>
-                  <div className="bg-red-100 text-red-800 rounded text-center p-1 font-medium">3</div>
-                  <div className="bg-red-100 text-red-800 rounded text-center p-1 font-medium">4</div>
-                  <div className="bg-red-100 text-red-800 rounded text-center p-1 font-medium">5</div>
-                  <div className="text-center p-1">6</div>
-                  <div className="text-center p-1">7</div>
-                  <div className="text-center p-1">8</div>
-                  <div className="text-center p-1">9</div>
-                  <div className="bg-red-100 text-red-800 rounded text-center p-1 font-medium">10</div>
-                  <div className="bg-red-100 text-red-800 rounded text-center p-1 font-medium">11</div>
-                  <div className="bg-red-100 text-red-800 rounded text-center p-1 font-medium">12</div>
-                  <div className="text-center p-1">13</div>
+                  {calendarDays.map((day, index) => (
+                    <div
+                      key={index}
+                      className={getDateStyle(day)}
+                      title={day.attendance !== undefined ? 
+                        `${day.fullDate}: ${day.attendance === 100 ? 'Present' : 'Absent'}` : 
+                        day.fullDate
+                      }
+                    >
+                      {day.date}
+                    </div>
+                  ))}
                 </div>
+                
                 <div className="flex items-center justify-center gap-3 text-xs">
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 bg-green-400 rounded"></div>
                     <span>Present</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 bg-orange-400 rounded"></div>
-                    <span>Late</span>
-                  </div>
-                  <div className="flex items-center gap-1">
                     <div className="w-3 h-3 bg-red-400 rounded"></div>
                     <span>Absent</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 bg-gray-200 rounded border border-gray-300"></div>
+                    <span>No Data</span>
                   </div>
                 </div>
               </div>

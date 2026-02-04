@@ -17,7 +17,6 @@ import ViewMarks from "./components/TeacherPages/ViewMarks";
 import StudentDashboard from "./components/StudentPages/StudentDashboard";
 import StudentClasses from "./components/StudentPages/StudentClasses";
 import Timetable from "./components/StudentPages/Timetable";
-import Assignments from "./components/StudentPages/Assignments";
 import StudentBehavior from "./components/StudentPages/StudentBehavior";
 import StudentAttendance from "./components/StudentPages/StudentAttendance";
 import StudentSettings from "./components/StudentPages/StudentSettings";
@@ -37,7 +36,6 @@ import ViewStudents from "./components/OrganisationPages/ViewStudents";
 import TeacherPage from "./components/OrganisationPages/TeacherPage";
 import ViewTeacherDetails from "./components/OrganisationPages/ViewTeacherDetails";
 import CoursePage from "./components/OrganisationPages/CoursePage";
-import TimetablePage from "./components/OrganisationPages/TimetablePage";
 import ReportPage from "./components/OrganisationPages/ReportPage";
 import OrganSettings from "./components/OrganisationPages/OrganSettings";
 import PredictionProfile from "./components/HodPages/PredictionProfile";
@@ -70,7 +68,6 @@ function App() {
           <Route path="/student-class" element={<StudentClasses />} />
           <Route path="/student-marks" element={<StudentMarks />} />
           <Route path="/timetable" element={<Timetable />} />
-          <Route path="/my-assignments" element={<Assignments />} />
           <Route path="/student-behavior" element={<StudentBehavior />} />
           <Route path="/student-attendance" element={<StudentAttendance />} />
           <Route path="/student-settings" element={<StudentSettings />} />
@@ -89,7 +86,6 @@ function App() {
           <Route path="/teacher-page" element={<TeacherPage />} />
           <Route path="/view-teachers" element={<ViewTeacherDetails/>} />
           <Route path="/course-timetable" element={<CoursePage/>} />
-          <Route path="/organ-timetable" element={<TimetablePage/>} />
           <Route path="/organ-report" element={<ReportPage/>} />
           <Route path="/organ-settings" element={<OrganSettings/>} />
           <Route path="/prediction-profile" element={<PredictionProfile/>} />

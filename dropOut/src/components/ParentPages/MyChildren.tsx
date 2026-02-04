@@ -308,7 +308,7 @@ export default function MyChildren() {
                           <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
                           <p className="text-xs sm:text-sm text-gray-600">GPA</p>
                         </div>
-                        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">{child.gpa}</p>
+                        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">{child.gpa.toFixed(1)}</p>
                         <p className="text-xs text-gray-500">Out of 4.0</p>
                       </div>
                     </div>

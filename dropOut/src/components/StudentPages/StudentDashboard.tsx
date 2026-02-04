@@ -56,6 +56,47 @@ export default function StudentDashboard() {
     setSidebarOpen(false); 
   };
 
+  // Helper function to get risk level colors
+  const getRiskLevelColors = (riskLevel: string | null) => {
+    const risk = riskLevel?.toUpperCase() || 'LOW';
+    
+    switch (risk) {
+      case 'CRITICAL':
+        return {
+          bgColor: 'bg-red-900/10',
+          iconColor: 'text-red-900',
+          badgeBg: 'bg-red-900',
+          badgeText: 'text-white',
+          statusText: '🚨 Critical Risk'
+        };
+      case 'HIGH':
+        return {
+          bgColor: 'bg-red-100',
+          iconColor: 'text-red-600',
+          badgeBg: 'bg-red-100',
+          badgeText: 'text-red-700',
+          statusText: '⚠ High Risk'
+        };
+      case 'MEDIUM':
+        return {
+          bgColor: 'bg-orange-100',
+          iconColor: 'text-orange-600',
+          badgeBg: 'bg-orange-100',
+          badgeText: 'text-orange-700',
+          statusText: '⚡ Medium Risk'
+        };
+      case 'LOW':
+      default:
+        return {
+          bgColor: 'bg-emerald-100',
+          iconColor: 'text-emerald-600',
+          badgeBg: 'bg-emerald-100',
+          badgeText: 'text-emerald-700',
+          statusText: '✓ Low Risk'
+        };
+    }
+  };
+
   // Fetch dashboard data from API
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -286,8 +327,10 @@ export default function StudentDashboard() {
                 <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
                   <TbWaveSawTool className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
                 </div>
-                <span className="bg-blue-50 text-blue-600 text-xs font-medium px-1 py-0.5 rounded whitespace-nowrap">
-                  Average
+                <span className={`text-xs sm:text-sm font-semibold whitespace-nowrap ${
+                  (dashboardData?.averageGPA || 0) === 0 ? 'text-green-600' : 'text-orange-600'
+                }`}>
+                  {(dashboardData?.averageGPA || 0) === 0 ? '✓ Good' : '⚠ Alert'}
                 </span>
               </div>
               <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
@@ -324,19 +367,21 @@ export default function StudentDashboard() {
             {/* Risk Level */}
             <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 lg:p-6">
               <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
-                <div className="bg-emerald-100 p-1.5 sm:p-2 rounded-lg">
-                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-600" />
+                <div className={`${getRiskLevelColors(dashboardData?.riskLevel ?? null).bgColor} p-1.5 sm:p-2 rounded-lg`}>
+                  <Shield className={`w-3 h-3 sm:w-4 sm:h-4 ${getRiskLevelColors(dashboardData?.riskLevel ?? null).iconColor}`} />
                 </div>
-                <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded whitespace-nowrap">
-                  {dashboardData?.riskLevel || 'LOW'}
+                <span className={`text-xs sm:text-sm font-semibold whitespace-nowrap`}>
+                  {getRiskLevelColors(dashboardData?.riskLevel ?? null).statusText}
                 </span>
               </div>
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-600 mb-1">
-                Low Risk
+              
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                {dashboardData?.probabilityPercent ? `${dashboardData.probabilityPercent.toFixed(1)}%` : '0.0%'}
               </div>
+              
               <div className="text-gray-600 text-xs sm:text-sm font-bold">Dropout Risk Level</div>
-              <div className="text-gray-500 text-xs mt-1">
-                {dashboardData?.probabilityPercent ? `${dashboardData.probabilityPercent}% probability` : '0% probability'}
+              <div className={`text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded mt-2 inline-block ${getRiskLevelColors(dashboardData?.riskLevel ?? null).badgeBg} ${getRiskLevelColors(dashboardData?.riskLevel ?? null).badgeText}`}>
+                {dashboardData?.riskLevel || 'LOW'} RISK
               </div>
             </div>
               </>

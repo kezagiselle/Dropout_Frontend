@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Users, Calendar, TrendingUp, AlertTriangle, MessageSquare, Video, ChevronDown, Bell, Menu, X } from 'lucide-react';
+import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
 import pe1 from "../../img/pe1.png";
@@ -155,6 +156,18 @@ export default function ParentDashboard() {
   // Only use real API data; no demo/fallback data
   const data: DashboardData | null = dashboardData;
 
+  // Static performance trends data for multiple children
+  const performanceTrendsData = [
+    { gradeType: 'Quiz', 'Sarah Johnson': 16, 'Mike Johnson': 14, 'Emma Johnson': 18 },
+    { gradeType: 'Assignment', 'Sarah Johnson': 17, 'Mike Johnson': 15, 'Emma Johnson': 17 },
+    { gradeType: 'Group Work', 'Sarah Johnson': 18, 'Mike Johnson': 16, 'Emma Johnson': 19 },
+    { gradeType: 'Exam', 'Sarah Johnson': 15, 'Mike Johnson': 13, 'Emma Johnson': 16 }
+  ];
+
+  // Colors for different children's trend lines
+  const childrenColors = ['#3b82f6', '#10b981', '#f59e0b'];
+  const childrenNames = ['Sarah Johnson', 'Mike Johnson', 'Emma Johnson'];
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -208,7 +221,7 @@ export default function ParentDashboard() {
             {/* Calendar - Hidden on mobile, visible on tablet and up */}
             <div className="hidden sm:flex items-center gap-1 lg:gap-2 text-xs sm:text-sm text-gray-600">
               <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden lg:inline">Jan 15 - Feb 18, 2024</span>
+              <span className="hidden lg:inline">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
               <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 hidden lg:block" />
             </div>
 
@@ -309,217 +322,159 @@ export default function ParentDashboard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            {/* My Children Section with Attendance & Behavior cards below */}
-            <div className="lg:col-span-2">
-              <h2 className="text-xl font-bold mb-4">My Children</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                {data?.children && data.children.length > 0 ? (
-                  data.children.map((child, idx) => (
-                    <div key={idx} className="bg-white rounded-lg shadow p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <img src={child.img || pe1} alt={child.name} className="w-12 h-12 rounded-full object-cover" />
-                          <div>
-                            <h3 className="font-semibold">{child.name}</h3>
-                            <p className="text-sm text-gray-600">{child.grade}</p>
-                          </div>
-                        </div>
-                        <span className={`px-3 py-1 bg-${child.riskColor || 'orange'}-100 text-${child.riskColor || 'orange'}-700 text-xs rounded-full`}>
-                          {child.risk}
+          {/* Performance Trends Section */}
+          <div className="bg-white rounded-lg shadow p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Children Performance Trends</h2>
+              <span className="text-emerald-600 text-sm flex items-center gap-1">
+                <TrendingUp className="w-5 h-5" />
+                <span>Academic progress comparison</span>
+              </span>
+            </div>
+            <div className="relative h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={performanceTrendsData}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 20,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="gradeType" 
+                    fontSize={12} 
+                  />
+                  <YAxis 
+                    domain={[0, 20]}
+                    fontSize={12}
+                  />
+                  <Tooltip 
+                    formatter={(value, name) => [`${value}/20`, name]}
+                    labelFormatter={(label) => `Assessment: ${label}`}
+                  />
+                  {childrenNames.map((childName, index) => (
+                    <Line 
+                      key={childName}
+                      type="monotone" 
+                      dataKey={childName} 
+                      stroke={childrenColors[index]} 
+                      strokeWidth={3}
+                      dot={{ fill: childrenColors[index], strokeWidth: 2, r: 5 }}
+                      activeDot={{ r: 7 }}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            
+            {/* Legend */}
+            <div className="flex justify-center gap-6 mt-4">
+              {childrenNames.map((childName, index) => (
+                <div key={childName} className="flex items-center gap-2">
+                  <div 
+                    className="w-4 h-4 rounded-full" 
+                    style={{ backgroundColor: childrenColors[index] }}
+                  ></div>
+                  <span className="text-sm text-gray-700 font-medium">{childName}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Attendance Trends Section */}
+          <div className="bg-white rounded-lg shadow p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Weekly Attendance Trends</h2>
+              <div className="flex items-center gap-2 text-blue-600">
+                <Calendar className="w-5 h-5" />
+                <span className="text-sm font-medium">Weekly Overview</span>
+              </div>
+            </div>
+            <div className="relative h-64">
+              {data?.attendanceTrends && data.attendanceTrends.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={data.attendanceTrends.map(trend => ({
+                      week: trend.weekLabel,
+                      attendance: trend.weeklyAverage
+                    }))}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="week" 
+                      fontSize={12} 
+                    />
+                    <YAxis 
+                      domain={[0, 100]}
+                      fontSize={12}
+                    />
+                    <Tooltip 
+                      formatter={(value) => [`${Math.round(Number(value))}%`, 'Attendance']}
+                      labelFormatter={(label) => `Week: ${label}`}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="attendance" 
+                      stroke="#10b981" 
+                      strokeWidth={3}
+                      dot={{ fill: '#10b981', strokeWidth: 2, r: 5 }}
+                      activeDot={{ r: 7 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  <div className="text-center">
+                    <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-lg font-semibold mb-2">No Attendance Data</h3>
+                    <p>Weekly attendance trend data is not available</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Behavior Log - Full Width */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-6">Behavior Log</h2>
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-semibold text-gray-900 text-xl">Recent Activity</h3>
+                <AlertTriangle className="w-7 h-7 text-orange-600" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                {data?.behaviorLog && data.behaviorLog.length > 0 ? (
+                  data.behaviorLog.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-6 rounded-xl border-l-4 ${item.type === 'Incident' ? 'bg-red-50 border-red-400' : 'bg-green-50 border-green-400'} hover:shadow-md transition-shadow`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <span className="text-lg font-semibold text-gray-800 leading-relaxed">{item.label}</span>
+                        <span
+                          className={`px-4 py-2 text-sm font-bold rounded-full ${item.type === 'Incident' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'} shadow-sm`}
+                        >
+                          {item.incidentType || item.type}
                         </span>
                       </div>
-                      <div className="space-y-2 mb-4">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Attendance:</span>
-                          <span className="font-semibold">{child.attendance}%</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">GPA:</span>
-                          <span className="font-semibold">{child.gpa}</span>
-                        </div>
-                      </div>
-                      <button className="w-full bg-blue-200 text-blue-800 py-2 rounded-lg hover:bg-blue-300 transition">
-                        View Full Profile
-                      </button>
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-2 text-center text-gray-400 py-8">No children data available.</div>
+                  <div className="col-span-full text-center text-gray-400 py-16">
+                    <AlertTriangle className="w-16 h-16 mx-auto mb-6 text-gray-300" />
+                    <h4 className="text-2xl font-bold mb-4">No Behavior Data</h4>
+                    <p className="text-lg">No behavior log data available at the moment.</p>
+                  </div>
                 )}
-              </div>
-
-              {/* Attendance & Behavior cards moved here under My Children */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Attendance Trend - Weekly data from backend */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-gray-900">Attendance Trend</h3>
-                    <Calendar className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div className="relative h-40">
-                    {data?.attendanceTrends && data.attendanceTrends.length > 0 ? (
-                      <>
-                        <svg className="w-full h-full" viewBox="0 0 300 120">
-                          <line x1="30" y1="100" x2="270" y2="100" stroke="#e5e7eb" strokeWidth="1" />
-                          <line x1="30" y1="60" x2="270" y2="60" stroke="#e5e7eb" strokeWidth="1" />
-                          <line x1="30" y1="20" x2="270" y2="20" stroke="#e5e7eb" strokeWidth="1" />
-                          
-                          <polyline
-                            points={data.attendanceTrends.map((trend, i) => {
-                              const x = 50 + (i * (220 / Math.max(data.attendanceTrends!.length - 1, 1)));
-                              const y = 100 - (trend.weeklyAverage * 0.8);
-                              return `${x},${y}`;
-                            }).join(' ')}
-                            fill="none"
-                            stroke="#10b981"
-                            strokeWidth="2"
-                          />
-                          
-                          {data.attendanceTrends.map((trend, i) => {
-                            const x = 50 + (i * (220 / Math.max(data.attendanceTrends!.length - 1, 1)));
-                            const y = 100 - (trend.weeklyAverage * 0.8);
-                            return (
-                              <g key={i}>
-                                <circle 
-                                  cx={x} 
-                                  cy={y} 
-                                  r="3" 
-                                  fill="#10b981"
-                                  className="cursor-pointer transition-all"
-                                  onMouseEnter={() => setHoveredWeek({ label: trend.weekLabel, value: trend.weeklyAverage, x, y })}
-                                  onMouseLeave={() => setHoveredWeek(null)}
-                                />
-                                <circle 
-                                  cx={x} 
-                                  cy={y} 
-                                  r="10" 
-                                  fill="transparent"
-                                  className="cursor-pointer"
-                                  onMouseEnter={() => setHoveredWeek({ label: trend.weekLabel, value: trend.weeklyAverage, x, y })}
-                                  onMouseLeave={() => setHoveredWeek(null)}
-                                />
-                              </g>
-                            );
-                          })}
-                          
-                          <text x="35" y="105" fontSize="8" fill="#6b7280">0</text>
-                          <text x="30" y="65" fontSize="8" fill="#6b7280">50</text>
-                          <text x="25" y="25" fontSize="8" fill="#6b7280">100</text>
-                          
-                          {data.attendanceTrends.map((trend, i) => {
-                            const x = 50 + (i * (220 / Math.max(data.attendanceTrends!.length - 1, 1)));
-                            return (
-                              <text key={i} x={x} y="115" fontSize="8" fill="#6b7280" textAnchor="middle">
-                                {trend.weekLabel}
-                              </text>
-                            );
-                          })}
-                        </svg>
-                        {hoveredWeek && (
-                          <div 
-                            className="absolute bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none"
-                            style={{
-                              left: `${(hoveredWeek.x / 300) * 100}%`,
-                              top: `${(hoveredWeek.y / 120) * 100 - 10}%`,
-                              transform: 'translate(-50%, -100%)'
-                            }}
-                          >
-                            {hoveredWeek.label}: {Math.round(hoveredWeek.value)}%
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-gray-400 text-sm">
-                        No attendance trend data available
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Behavior Log - Minimized */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-gray-900">Behavior Log</h3>
-                    <AlertTriangle className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div className="space-y-3">
-                    {data?.behaviorLog && data.behaviorLog.length > 0 ? (
-                      data.behaviorLog.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className={`flex justify-between items-center p-2 rounded-lg ${item.type === 'Incident' ? 'bg-red-50' : 'bg-green-50'}`}
-                        >
-                          <span className="text-xs">{item.label}</span>
-                          <span
-                            className={`px-2 py-0.5 text-xs rounded-full ${item.type === 'Incident' ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'}`}
-                          >
-                            {item.incidentType || item.type}
-                          </span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-center text-gray-400 py-8">No behavior log data available.</div>
-                    )}
-                  </div>
-                      {/* Loading and error states */}
-                      {loading && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-                          <div className="p-6 bg-white rounded-lg shadow text-lg font-semibold text-gray-700 animate-pulse">Loading dashboard...</div>
-                        </div>
-                      )}
-                      {error && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
-                          <div className="p-6 bg-white rounded-lg shadow text-lg font-semibold text-red-600">{error}</div>
-                        </div>
-                      )}
-                </div>
-              </div>
-            </div>
-
-            {/* Communication Section */}
-            <div>
-              <h2 className="text-xl font-bold mb-4">Communication</h2>
-              <div className="bg-white rounded-lg shadow p-6 mb-6">
-                <h3 className="font-semibold mb-4">Messages</h3>
-                <div className="space-y-3">
-                  <div className="border-b pb-3">
-                    <div className="flex justify-between items-start mb-1">
-                      <p className="text-sm font-medium">Teacher Smith</p>
-                      <p className="text-xs text-gray-500">Sept 20</p>
-                    </div>
-                    <p className="text-sm text-gray-600">Math Assignment Feedback</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-4">Actions</h3>
-                <div className="space-y-3">
-                  <button className="w-full bg-blue-300 text-blue-900 py-3 rounded-lg hover:bg-blue-400 transition flex items-center justify-center gap-2">
-                    <MessageSquare className="w-4 h-4" />
-                    Message Teacher
-                  </button>
-                  <button className="w-full bg-green-300 text-green-900 py-3 rounded-lg hover:bg-green-400 transition flex items-center justify-center gap-2">
-                    <Video className="w-4 h-4" />
-                    Request Meeting
-                  </button>
-                </div>
-              </div>
-
-              {/* Announcements with colored rectangles */}
-              <div className="bg-white rounded-lg shadow p-6 mt-6">
-                <h3 className="font-semibold mb-4">Announcements</h3>
-                <div className="space-y-3 text-sm">
-                  <p className="text-gray-700">
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Parent-Teacher</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Meeting</span> on Oct 2
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Midterm</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">exams</span> start Oct 15
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -528,9 +483,7 @@ export default function ParentDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <button className="bg-blue-300 text-blue-900 py-3 rounded-lg hover:bg-blue-400 transition font-medium">
-                Message Teacher
-              </button>
+
               <button className="bg-orange-400 text-white py-3 rounded-lg hover:bg-orange-500 transition font-medium">
                 Check Attendance
               </button>

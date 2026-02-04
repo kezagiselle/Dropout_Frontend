@@ -476,7 +476,7 @@ export default function Academic() {
                             <div className="space-y-2 mb-4">
                               <div className="flex items-center justify-between">
                                 <span className="text-xs sm:text-sm text-gray-600">Current GPA</span>
-                                <span className="font-semibold text-gray-900 text-sm sm:text-base">{course.currentGpa}/20</span>
+                                <span className="font-semibold text-gray-900 text-sm sm:text-base">{course.currentGpa.toFixed(1)}/20</span>
                               </div>
                               <div className="w-full bg-gray-200 rounded-full h-2">
                                 <div 

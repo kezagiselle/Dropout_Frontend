@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Users, AlertTriangle, Plus, Calendar, ChevronDown, Bell, Menu, X } from 'lucide-react';
+import { Users, AlertTriangle, Calendar, ChevronDown, Bell, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { IoMdSettings } from "react-icons/io";
 import userr from "../../../src/img/userr.png";
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,14 @@ interface AttendanceApiResponse {
   };
 }
 
+// Calendar day interface
+interface CalendarDay {
+  date: number;
+  fullDate: string;
+  isCurrentMonth: boolean;
+  attendance?: number;
+}
+
 export default function ParentAttendance() {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [activeTab, setActiveTab] = useState('Attendance');
@@ -26,6 +34,7 @@ export default function ParentAttendance() {
   const [error, setError] = useState<string | null>(null);
   const [attendanceData, setAttendanceData] = useState<AttendanceApiResponse['data'] | null>(null);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const { user, token, studentIds } = useUserAuth();
 
@@ -135,6 +144,80 @@ export default function ParentAttendance() {
   console.log('Overall attendance:', overallAttendance);
   const totalPresent = Math.round(overallAttendance);
   const totalAbsent = Math.round(100 - overallAttendance);
+
+  // Calendar helper functions
+  const generateCalendarDays = (year: number, month: number): CalendarDay[] => {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay()); // Start from Sunday
+    
+    const days: CalendarDay[] = [];
+    
+    for (let i = 0; i < 42; i++) { // 6 weeks
+      const currentDate = new Date(startDate);
+      currentDate.setDate(startDate.getDate() + i);
+      const dateString = currentDate.toISOString().split('T')[0];
+      
+      // Generate random attendance for demo (since this is for parent view)
+      let attendance: number | undefined = undefined;
+      if (currentDate.getMonth() === month) {
+        // Random attendance for current month days
+        const randomValue = Math.random();
+        if (randomValue < 0.7) attendance = 100; // 70% chance present
+        else if (randomValue < 0.85) attendance = 0; // 15% chance absent
+        // 15% chance no data (undefined)
+      }
+      
+      days.push({
+        date: currentDate.getDate(),
+        fullDate: dateString,
+        isCurrentMonth: currentDate.getMonth() === month,
+        attendance: attendance
+      });
+    }
+    
+    return days;
+  };
+
+  const getDateStyle = (day: CalendarDay): string => {
+    let baseClasses = 'text-center p-1';
+    
+    if (!day.isCurrentMonth) {
+      return `${baseClasses} text-gray-400`;
+    }
+    
+    if (day.attendance === undefined) {
+      return `${baseClasses} text-gray-900`; // No attendance data
+    }
+    
+    if (day.attendance === 100) {
+      return `${baseClasses} bg-green-400 text-green-900 rounded font-medium`; // Present
+    }
+    
+    if (day.attendance === 0) {
+      return `${baseClasses} bg-red-400 text-red-900 rounded font-medium`; // Absent
+    }
+    
+    return `${baseClasses} text-gray-900`;
+  };
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    const newDate = new Date(currentDate);
+    if (direction === 'prev') {
+      newDate.setMonth(newDate.getMonth() - 1);
+    } else {
+      newDate.setMonth(newDate.getMonth() + 1);
+    }
+    setCurrentDate(newDate);
+  };
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const calendarDays = generateCalendarDays(currentDate.getFullYear(), currentDate.getMonth());
 
   // Loading state
   if (loading) {
@@ -571,53 +654,67 @@ export default function ParentAttendance() {
                 </div>
               </div>
 
-              {/* Positive Commendations */}
+              {/* Attendance Calendar */}
               <div className="bg-white rounded-lg shadow-sm sm:shadow transition-transform hover:scale-[1.01] hover:shadow-md">
                 <div className="p-3 xs:p-4 sm:p-5 lg:p-6">
-                  <div className="flex items-center gap-1.5 xs:gap-2 mb-2 xs:mb-3 sm:mb-4">
-                    <Plus className="w-4 h-4 xs:w-5 xs:h-5 text-green-600" />
+                  <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm xs:text-base sm:text-lg font-semibold text-gray-900">
-                      Positive Commendations
+                      {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                     </h3>
-                  </div>
-
-                  <div className="space-y-2 xs:space-y-3 mb-3 xs:mb-4 sm:mb-5 lg:mb-6">
-                    <div className="bg-green-50 border-l-3 xs:border-l-4 border-green-500 p-2 xs:p-3 sm:p-4 rounded hover:bg-green-100 transition-colors">
-                      <div className="flex items-start justify-between mb-0.5 xs:mb-1">
-                        <div className="flex items-center gap-1.5 xs:gap-2">
-                          <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-green-500 rounded-full"></span>
-                          <span className="text-xs xs:text-sm font-semibold text-gray-900">Sept 18</span>
-                        </div>
-                        <span className="px-1.5 xs:px-2 py-0.5 xs:py-1 bg-green-200 text-green-800 text-[10px] xs:text-xs rounded-full font-medium whitespace-nowrap">
-                          Green Tag
-                        </span>
-                      </div>
-                      <p className="text-xs xs:text-sm text-gray-700 ml-4 xs:ml-5 mt-0.5 xs:mt-1">
-                        Excellent participation
-                      </p>
-                    </div>
-
-                    <div className="bg-green-50 border-l-3 xs:border-l-4 border-green-500 p-2 xs:p-3 sm:p-4 rounded hover:bg-green-100 transition-colors">
-                      <div className="flex items-start justify-between mb-0.5 xs:mb-1">
-                        <div className="flex items-center gap-1.5 xs:gap-2">
-                          <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-green-500 rounded-full"></span>
-                          <span className="text-xs xs:text-sm font-semibold text-gray-900">Sept 14</span>
-                        </div>
-                        <span className="px-1.5 xs:px-2 py-0.5 xs:py-1 bg-green-200 text-green-800 text-[10px] xs:text-xs rounded-full font-medium whitespace-nowrap">
-                          Green Tag
-                        </span>
-                      </div>
-                      <p className="text-xs xs:text-sm text-gray-700 ml-4 xs:ml-5 mt-0.5 xs:mt-1">
-                        Helped classmates
-                      </p>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => navigateMonth('prev')}
+                        className="p-1 hover:bg-gray-100 rounded"
+                      >
+                        <ChevronLeft className="w-4 h-4 text-gray-600" />
+                      </button>
+                      <button 
+                        onClick={() => navigateMonth('next')}
+                        className="p-1 hover:bg-gray-100 rounded"
+                      >
+                        <ChevronRight className="w-4 h-4 text-gray-600" />
+                      </button>
                     </div>
                   </div>
-
-                  <div className="bg-green-50 rounded-lg p-3 xs:p-4 sm:p-5 lg:p-6 text-center hover:bg-green-100 transition-colors">
-                    <p className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-green-600 mb-1 xs:mb-2">
-                      2
-                    </p>
-                    <p className="text-xs xs:text-sm text-gray-700 font-medium">This Month</p>
+                  
+                  <div className="grid grid-cols-7 gap-1 text-xs mb-4">
+                    {/* Day headers */}
+                    <div className="text-gray-400 text-center font-medium py-2">Sun</div>
+                    <div className="text-gray-400 text-center font-medium py-2">Mon</div>
+                    <div className="text-gray-400 text-center font-medium py-2">Tue</div>
+                    <div className="text-gray-400 text-center font-medium py-2">Wed</div>
+                    <div className="text-gray-400 text-center font-medium py-2">Thu</div>
+                    <div className="text-gray-400 text-center font-medium py-2">Fri</div>
+                    <div className="text-gray-400 text-center font-medium py-2">Sat</div>
+                    
+                    {/* Calendar days */}
+                    {calendarDays.map((day, index) => (
+                      <div
+                        key={index}
+                        className={getDateStyle(day)}
+                        title={day.attendance !== undefined ? 
+                          `${day.fullDate}: ${day.attendance === 100 ? 'Present' : 'Absent'}` : 
+                          day.fullDate
+                        }
+                      >
+                        {day.date}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-center gap-3 text-xs">
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 bg-green-400 rounded"></div>
+                      <span>Present</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 bg-red-400 rounded"></div>
+                      <span>Absent</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 bg-gray-200 rounded border border-gray-300"></div>
+                      <span>No Data</span>
+                    </div>
                   </div>
                 </div>
               </div>

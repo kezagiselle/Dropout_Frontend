@@ -31,7 +31,6 @@ const StudentSidebar: React.FC<StudentSidebarProps> = ({
   
   const menuItems: MenuItem[] = [
     { icon: SiGoogleclassroom, label: 'My Classes', path: '/student-class' },
-    { icon: FileText, label: 'My Assignments', path: '/my-assignments' },
     { icon: FaCalendarCheck, label: 'My Attendance', path: '/student-attendance' },
     { icon: TbReport, label: 'My Behavior', path: '/student-behavior' },
     { icon: IoMdSettings, label: 'My Profile', path: '/student-settings' }

@@ -26,6 +26,7 @@ export default function ParentDashboard() {
     riskColor: string;
     img?: string;
     attendanceTrends?: AttendanceTrend[];
+    performanceTrend?: { gradeType: string; averageMarks: number }[];
   }
   interface StatsData {
     totalChildren: number;
@@ -95,6 +96,7 @@ export default function ParentDashboard() {
             behaviorIncidents?: number;
             profileImage?: string;
             attendanceTrends?: AttendanceTrend[];
+            performanceTrend?: { gradeType: string; averageMarks: number }[];
           }) => {
             // Determine risk level based on attendance and behavior
             let risk = 'Low Risk';
@@ -115,7 +117,8 @@ export default function ParentDashboard() {
               risk: risk,
               riskColor: riskColor,
               img: child.profileImage || undefined,
-              attendanceTrends: child.attendanceTrends || []
+              attendanceTrends: child.attendanceTrends || [],
+              performanceTrend: child.performanceTrend || []
             };
           }),
           stats: {
@@ -156,17 +159,36 @@ export default function ParentDashboard() {
   // Only use real API data; no demo/fallback data
   const data: DashboardData | null = dashboardData;
 
-  // Static performance trends data for multiple children
-  const performanceTrendsData = [
-    { gradeType: 'Quiz', 'Sarah Johnson': 16, 'Mike Johnson': 14, 'Emma Johnson': 18 },
-    { gradeType: 'Assignment', 'Sarah Johnson': 17, 'Mike Johnson': 15, 'Emma Johnson': 17 },
-    { gradeType: 'Group Work', 'Sarah Johnson': 18, 'Mike Johnson': 16, 'Emma Johnson': 19 },
-    { gradeType: 'Exam', 'Sarah Johnson': 15, 'Mike Johnson': 13, 'Emma Johnson': 16 }
-  ];
+  const childrenColors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const childrenNames = data?.children?.map((child) => child.name) || [];
 
-  // Colors for different children's trend lines
-  const childrenColors = ['#3b82f6', '#10b981', '#f59e0b'];
-  const childrenNames = ['Sarah Johnson', 'Mike Johnson', 'Emma Johnson'];
+  const formatGradeType = (value: string) =>
+    value
+      .toLowerCase()
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  const performanceTrendsData = (() => {
+    if (!data?.children || data.children.length === 0) return [];
+
+    const gradeTypes = new Set<string>();
+    data.children.forEach((child) => {
+      child.performanceTrend?.forEach((trend) => {
+        gradeTypes.add(trend.gradeType);
+      });
+    });
+
+    return Array.from(gradeTypes).map((gradeType) => {
+      const row: Record<string, string | number> = {
+        gradeType: formatGradeType(gradeType)
+      };
+      data.children.forEach((child) => {
+        const match = child.performanceTrend?.find((trend) => trend.gradeType === gradeType);
+        row[child.name] = match ? Number(match.averageMarks.toFixed(2)) : 0;
+      });
+      return row;
+    });
+  })();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -332,56 +354,68 @@ export default function ParentDashboard() {
               </span>
             </div>
             <div className="relative h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={performanceTrendsData}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 20,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="gradeType" 
-                    fontSize={12} 
-                  />
-                  <YAxis 
-                    domain={[0, 20]}
-                    fontSize={12}
-                  />
-                  <Tooltip 
-                    formatter={(value, name) => [`${value}/20`, name]}
-                    labelFormatter={(label) => `Assessment: ${label}`}
-                  />
-                  {childrenNames.map((childName, index) => (
-                    <Line 
-                      key={childName}
-                      type="monotone" 
-                      dataKey={childName} 
-                      stroke={childrenColors[index]} 
-                      strokeWidth={3}
-                      dot={{ fill: childrenColors[index], strokeWidth: 2, r: 5 }}
-                      activeDot={{ r: 7 }}
+              {performanceTrendsData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={performanceTrendsData}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="gradeType" 
+                      fontSize={12} 
                     />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
+                    <YAxis 
+                      domain={[0, 20]}
+                      fontSize={12}
+                    />
+                    <Tooltip 
+                      formatter={(value, name) => [`${value}/20`, name]}
+                      labelFormatter={(label) => `Assessment: ${label}`}
+                    />
+                    {childrenNames.map((childName, index) => (
+                      <Line 
+                        key={childName}
+                        type="monotone" 
+                        dataKey={childName} 
+                        stroke={childrenColors[index % childrenColors.length]} 
+                        strokeWidth={3}
+                        dot={{ fill: childrenColors[index % childrenColors.length], strokeWidth: 2, r: 5 }}
+                        activeDot={{ r: 7 }}
+                      />
+                    ))}
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  <div className="text-center">
+                    <TrendingUp className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-lg font-semibold mb-2">No Performance Data</h3>
+                    <p>Performance trend data is not available</p>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Legend */}
-            <div className="flex justify-center gap-6 mt-4">
-              {childrenNames.map((childName, index) => (
-                <div key={childName} className="flex items-center gap-2">
-                  <div 
-                    className="w-4 h-4 rounded-full" 
-                    style={{ backgroundColor: childrenColors[index] }}
-                  ></div>
-                  <span className="text-sm text-gray-700 font-medium">{childName}</span>
-                </div>
-              ))}
-            </div>
+            {childrenNames.length > 0 && (
+              <div className="flex justify-center gap-6 mt-4">
+                {childrenNames.map((childName, index) => (
+                  <div key={childName} className="flex items-center gap-2">
+                    <div 
+                      className="w-4 h-4 rounded-full" 
+                      style={{ backgroundColor: childrenColors[index % childrenColors.length] }}
+                    ></div>
+                    <span className="text-sm text-gray-700 font-medium">{childName}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Attendance Trends Section */}

@@ -15,6 +15,17 @@ interface AttendanceApiResponse {
     overallAttendancePercentage: number;
     weeklyAttendancePercentages: Record<string, number>;
     courseAttendancePercentages: Record<string, number>;
+    mostMissedClassName: string;
+    mostMissedClassTotal: number;
+    attendanceOverview: {
+      day: string;
+      attendance: number;
+    }[];
+    behaviorIncidents: {
+      note: string;
+      incidentType: string;
+      severityLevel: string;
+    }[];
   };
 }
 
@@ -146,6 +157,11 @@ export default function ParentAttendance() {
   const totalAbsent = Math.round(100 - overallAttendance);
 
   // Calendar helper functions
+  const getAttendanceMap = () => {
+    if (!attendanceData?.attendanceOverview) return new Map();
+    return new Map(attendanceData.attendanceOverview.map(item => [item.day, item.attendance]));
+  };
+  
   const generateCalendarDays = (year: number, month: number): CalendarDay[] => {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
@@ -153,27 +169,18 @@ export default function ParentAttendance() {
     startDate.setDate(startDate.getDate() - firstDay.getDay()); // Start from Sunday
     
     const days: CalendarDay[] = [];
+    const attendanceMap = getAttendanceMap();
     
     for (let i = 0; i < 42; i++) { // 6 weeks
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
       const dateString = currentDate.toISOString().split('T')[0];
       
-      // Generate random attendance for demo (since this is for parent view)
-      let attendance: number | undefined = undefined;
-      if (currentDate.getMonth() === month) {
-        // Random attendance for current month days
-        const randomValue = Math.random();
-        if (randomValue < 0.7) attendance = 100; // 70% chance present
-        else if (randomValue < 0.85) attendance = 0; // 15% chance absent
-        // 15% chance no data (undefined)
-      }
-      
       days.push({
         date: currentDate.getDate(),
         fullDate: dateString,
         isCurrentMonth: currentDate.getMonth() === month,
-        attendance: attendance
+        attendance: attendanceMap.get(dateString)
       });
     }
     
@@ -606,50 +613,46 @@ export default function ParentAttendance() {
                   </div>
 
                   <div className="space-y-2 xs:space-y-3">
-                    <div className="bg-red-50 border-l-3 xs:border-l-4 border-red-500 p-2 xs:p-3 sm:p-4 rounded hover:bg-red-100 transition-colors">
-                      <div className="flex items-start justify-between mb-0.5 xs:mb-1">
-                        <div className="flex items-center gap-1.5 xs:gap-2">
-                          <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-red-500 rounded-full"></span>
-                          <span className="text-xs xs:text-sm font-semibold text-gray-900">Sept 20</span>
+                    {attendanceData?.behaviorIncidents && attendanceData.behaviorIncidents.length > 0 ? (
+                      attendanceData.behaviorIncidents.map((incident, index) => {
+                        const isLowSeverity = incident.severityLevel === 'LOW';
+                        const bgColor = isLowSeverity ? 'bg-orange-50 border-orange-500' : 'bg-red-50 border-red-500';
+                        const hoverColor = isLowSeverity ? 'hover:bg-orange-100' : 'hover:bg-red-100';
+                        const dotColor = isLowSeverity ? 'bg-orange-500' : 'bg-red-500';
+                        const tagColor = isLowSeverity ? 'bg-orange-200 text-orange-800' : 'bg-red-200 text-red-800';
+                        const tagText = `${incident.severityLevel} Severity`;
+                        
+                        return (
+                          <div key={index} className={`${bgColor} border-l-3 xs:border-l-4 p-3 xs:p-4 sm:p-5 rounded ${hoverColor} transition-colors`}>
+                            <div className="flex items-start justify-between mb-2 xs:mb-3">
+                              <div className="flex items-center gap-2 xs:gap-3">
+                                <span className={`w-2 h-2 xs:w-2.5 xs:h-2.5 ${dotColor} rounded-full`}></span>
+                                <div className="min-w-0">
+                                  <h4 className="text-sm xs:text-base sm:text-lg font-semibold text-gray-900 capitalize">
+                                    {incident.incidentType.toLowerCase().replace('_', ' ')}
+                                  </h4>
+                                  <span className="text-xs xs:text-sm text-gray-600">Recent incident</span>
+                                </div>
+                              </div>
+                              <span className={`px-2 xs:px-3 py-1 xs:py-1.5 ${tagColor} text-xs xs:text-sm rounded-full font-medium whitespace-nowrap`}>
+                                {tagText}
+                              </span>
+                            </div>
+                            <p className="text-sm xs:text-base sm:text-lg text-gray-700 ml-6 xs:ml-8 leading-relaxed">
+                              {incident.note}
+                            </p>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="text-center py-6">
+                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                          <span className="text-green-600 text-xl">✓</span>
                         </div>
-                        <span className="px-1.5 xs:px-2 py-0.5 xs:py-1 bg-red-200 text-red-800 text-[10px] xs:text-xs rounded-full font-medium whitespace-nowrap">
-                          Red Tag
-                        </span>
+                        <h3 className="text-sm font-medium text-gray-900 mb-1">No Recent Incidents</h3>
+                        <p className="text-xs text-gray-600">Great behavior! No incidents reported.</p>
                       </div>
-                      <p className="text-xs xs:text-sm text-gray-700 ml-4 xs:ml-5 mt-0.5 xs:mt-1">
-                        Disruptive behavior
-                      </p>
-                    </div>
-
-                    <div className="bg-orange-50 border-l-3 xs:border-l-4 border-orange-500 p-2 xs:p-3 sm:p-4 rounded hover:bg-orange-100 transition-colors">
-                      <div className="flex items-start justify-between mb-0.5 xs:mb-1">
-                        <div className="flex items-center gap-1.5 xs:gap-2">
-                          <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-orange-500 rounded-full"></span>
-                          <span className="text-xs xs:text-sm font-semibold text-gray-900">Sept 15</span>
-                        </div>
-                        <span className="px-1.5 xs:px-2 py-0.5 xs:py-1 bg-orange-200 text-orange-800 text-[10px] xs:text-xs rounded-full font-medium whitespace-nowrap">
-                          Orange Tag
-                        </span>
-                      </div>
-                      <p className="text-xs xs:text-sm text-gray-700 ml-4 xs:ml-5 mt-0.5 xs:mt-1">
-                        Late submission
-                      </p>
-                    </div>
-
-                    <div className="bg-red-50 border-l-3 xs:border-l-4 border-red-500 p-2 xs:p-3 sm:p-4 rounded hover:bg-red-100 transition-colors">
-                      <div className="flex items-start justify-between mb-0.5 xs:mb-1">
-                        <div className="flex items-center gap-1.5 xs:gap-2">
-                          <span className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-red-500 rounded-full"></span>
-                          <span className="text-xs xs:text-sm font-semibold text-gray-900">Sept 12</span>
-                        </div>
-                        <span className="px-1.5 xs:px-2 py-0.5 xs:py-1 bg-red-200 text-red-800 text-[10px] xs:text-xs rounded-full font-medium whitespace-nowrap">
-                          Red Tag
-                        </span>
-                      </div>
-                      <p className="text-xs xs:text-sm text-gray-700 ml-4 xs:ml-5 mt-0.5 xs:mt-1">
-                        Absent without excuse
-                      </p>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -9,7 +9,6 @@ import Courses from './HodPages/Courses';
 import Reports from './HodPages/Reports';
 import Predictions from './HodPages/Prediction'; // Fixed: Changed from 'Prediction' to 'Predictions' if needed
 import Attendance from './HodPages/Attendance';
-import Exams from './HodPages/Exams';
 import Settings from './HodPages/Settings';
 import TeacherForm from './Forms/Teacher';
 import StudentForm from './Forms/Student';
@@ -56,7 +55,7 @@ export const useTheme = () => useContext(ThemeContext);
 const Hod = () => {
   const location = useLocation();
   // Update activeView to include 'predictions'
-  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'exams' | 'reports' | 'predictions' | 'settings'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'students' | 'teachers' | 'courses' | 'attendance' | 'reports' | 'predictions' | 'settings'>('dashboard');
   
   // Set activeView from navigation state (e.g., after teacher registration)
   useEffect(() => {
@@ -364,23 +363,7 @@ const Hod = () => {
                   <span className="font-medium">Attendance</span>
                 </div>
 
-                {/* Exams */}
-                <div 
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200 ${
-                    activeView === 'exams' 
-                      ? 'bg-orange-100 text-orange-700' 
-                      : theme === 'dark'
-                        ? 'text-gray-300 hover:bg-orange-600 hover:text-white'
-                        : 'text-gray-600 hover:bg-orange-600 hover:text-white'
-                  }`}
-                  onClick={() => { setActiveView('exams'); closeMobileMenu(); }}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                  </svg>
-                  <span className="font-medium">Exams/Grades</span>
-                </div>
+
 
                 {/* Reports */}
                 <div 
@@ -846,7 +829,7 @@ const Hod = () => {
             {activeView === 'reports' && <Reports />}
             {activeView === 'predictions' && <Predictions />}
             {activeView === 'attendance' && <Attendance />}
-            {activeView === 'exams' && <Exams />}
+
             {activeView === 'settings' && <Settings />}
             
             {/* Form Components */}

@@ -192,34 +192,7 @@ const LoginPage: React.FC = () => {
             <span>Sign In</span>
           </button>
 
-          {/* OR Divider */}
-          <div className="flex items-center my-6">
-            <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="px-4 text-gray-500 text-sm font-medium">OR</span>
-            <div className="flex-1 h-px bg-gray-300"></div>
-          </div>
 
-          {/* Social Buttons */}
-          <div className="flex flex-col gap-3">
-            <button
-              type="button"
-              className="w-full border border-gray-300 py-3 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors font-medium"
-            >
-              <img src={googleLogo} alt="Google" className="w-5 h-5" />
-              <span>Continue with Google</span>
-            </button>
-            <button
-              type="button"
-              className="w-full border border-gray-300 py-3 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors font-medium"
-            >
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png"
-                alt="Facebook"
-                className="w-5 h-5"
-              />
-              <span>Continue with Facebook</span>
-            </button>
-          </div>
 
           {/* Sign Up Link */}
           <p className="text-center text-sm text-gray-600">

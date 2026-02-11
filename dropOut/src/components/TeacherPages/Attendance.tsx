@@ -24,6 +24,16 @@ interface ChronicAbsence {
   avatar: string;
 }
 
+interface ChronicAbsenceStudent {
+  studentName: string;
+  absenceCount: number;
+}
+
+interface ChronicAbsenceData {
+  mostConsecutive: ChronicAbsenceStudent[];
+  mostTotal: ChronicAbsenceStudent[];
+}
+
 interface WeeklyTrend {
   courseName: string;
   weeklyAttendancePercentages: number[];
@@ -40,6 +50,7 @@ interface AttendanceResponse {
     attendance: number;
   }>;
   chronicAbsences?: ChronicAbsence[];
+  chronicAbsence?: ChronicAbsenceData;
 }
 
 const Attendance = () => {
@@ -60,13 +71,15 @@ const Attendance = () => {
       setIsLoading(true);
       const baseUrl = import.meta.env.VITE_API_BASE_URL;
       try {
-        const res = await fetch(`${baseUrl}/api/teachers/attendance-stats/${user.userId}`, {
+        const res = await fetch(`${baseUrl}/api/teachers/attendance/stats/${user.userId}`, {
           headers: { 
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
         const data = await res.json();
+        console.log('API Response:', data); // Debug log
+        console.log('Chronic Absence Data:', data.data?.chronicAbsence); // Debug log
         if (data.success && data.data) {
           setAttendanceData(data.data);
         }
@@ -102,8 +115,34 @@ const Attendance = () => {
   // Limit to 3 students for initial display
   const students: Student[] = allStudents.slice(0, 3);
 
-  // Chronic absences will be fetched from API or removed - placeholder for now
-  const chronicAbsences: ChronicAbsence[] = attendanceData?.chronicAbsences || [];
+  // Transform chronic absence data from API - separate categories
+  const getMostConsecutiveAbsences = (): ChronicAbsence[] => {
+    if (!attendanceData?.chronicAbsence?.mostConsecutive) return [];
+    
+    return attendanceData.chronicAbsence.mostConsecutive.map((student, index) => ({
+      name: student.studentName,
+      grade: 'Consecutive Absences',
+      days: `${student.absenceCount} days`,
+      risk: '',
+      avatar: [pe1, pe2, pe3][index % 3]
+    }));
+  };
+
+  const getMostTotalAbsences = (): ChronicAbsence[] => {
+    if (!attendanceData?.chronicAbsence?.mostTotal) return [];
+    
+    return attendanceData.chronicAbsence.mostTotal.map((student, index) => ({
+      name: student.studentName,
+      grade: 'Total Absences',
+      days: `${student.absenceCount} days`,
+      risk: '',
+      avatar: [pe1, pe2, pe3][index % 3]
+    }));
+  };
+
+  // Get both categories
+  const mostConsecutiveAbsences: ChronicAbsence[] = getMostConsecutiveAbsences();
+  const mostTotalAbsences: ChronicAbsence[] = getMostTotalAbsences();
 
   const getStatusStyle = (status: string, student: Student): string => {
     if (status === student.activeStatus) {
@@ -502,29 +541,76 @@ const Attendance = () => {
                 <p className="text-xs sm:text-sm text-gray-600">Students requiring attention</p>
               </div>
 
-              <div className="space-y-3 sm:space-y-4">
-                {chronicAbsences.map((student, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`flex items-center justify-between p-3 sm:p-4 rounded-lg border-2 transition-colors ${getChronicAbsenceBg(student.risk)}`}
-                  >
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
-                        <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
+              {/* Most Consecutive Absences Section */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-red-700 mb-3 flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  Most Consecutive Absences
+                </h3>
+                <div className="space-y-2 sm:space-y-3">
+                  {mostConsecutiveAbsences.length > 0 ? (
+                    mostConsecutiveAbsences.map((student, idx) => (
+                      <div 
+                        key={`consecutive-${idx}`} 
+                        className={`flex items-center justify-between p-3 sm:p-4 rounded-lg border-2 border-red-200 bg-red-50 transition-colors`}
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                            <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{student.name}</p>
+                          </div>
+                        </div>
+                        <div className="text-right flex-shrink-0 ml-2">
+                          <div className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-red-500 text-white`}>
+                            {student.days}
+                          </div>
+                        </div>
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{student.name}</p>
-                        <p className="text-xs text-gray-600 truncate">{student.grade}</p>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-3 text-gray-500 text-sm bg-gray-50 rounded-lg">
+                      No consecutive absence patterns
                     </div>
-                    <div className="text-right flex-shrink-0 ml-2">
-                      <div className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium mb-1 ${getRiskStyle(student.risk)}`}>
-                        {student.days}
+                  )}
+                </div>
+              </div>
+
+              {/* Most Total Absences Section */}
+              <div>
+                <h3 className="text-sm font-semibold text-orange-700 mb-3 flex items-center gap-2">
+                  <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                  Most Total Absences
+                </h3>
+                <div className="space-y-2 sm:space-y-3">
+                  {mostTotalAbsences.length > 0 ? (
+                    mostTotalAbsences.map((student, idx) => (
+                      <div 
+                        key={`total-${idx}`} 
+                        className={`flex items-center justify-between p-3 sm:p-4 rounded-lg border-2 border-orange-200 bg-orange-50 transition-colors`}
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                            <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{student.name}</p>
+                          </div>
+                        </div>
+                        <div className="text-right flex-shrink-0 ml-2">
+                          <div className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-orange-500 text-white`}>
+                            {student.days}
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600">{student.risk}</p>
+                    ))
+                  ) : (
+                    <div className="text-center py-3 text-gray-500 text-sm bg-gray-50 rounded-lg">
+                      No total absence patterns
                     </div>
-                  </div>
-                ))}
+                  )}
+                </div>
               </div>
             </div>
           </div>

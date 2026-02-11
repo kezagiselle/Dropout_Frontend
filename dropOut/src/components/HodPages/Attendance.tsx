@@ -425,30 +425,6 @@ const Attendance = () => {
               }`}>
                 Attendance Trends
               </h2>
-              <div className="flex items-center space-x-2">
-                 <button 
-                   onClick={() => handleExport('PDF')}
-                   className={`px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                     theme === 'dark' 
-                       ? 'bg-gray-600 hover:bg-gray-500 text-white' 
-                       : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
-                   }`}
-                 >
-                   <FaDownload className="w-3 h-3 text-black" />
-                   <span>PDF</span>
-                 </button>
-                 <button 
-                   onClick={() => handleExport('Excel')}
-                   className={`px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                     theme === 'dark' 
-                       ? 'bg-gray-600 hover:bg-gray-500 text-white' 
-                       : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
-                   }`}
-                 >
-                   <FaFileAlt className="w-3 h-3 text-black" />
-                   <span>Excel</span>
-                 </button>
-              </div>
             </div>
           </div>
           
@@ -539,30 +515,6 @@ const Attendance = () => {
               }`}>
                 Performance Trends
               </h2>
-              <div className="flex items-center space-x-2">
-                 <button 
-                   onClick={() => handleExport('PDF')}
-                   className={`px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                     theme === 'dark' 
-                       ? 'bg-gray-600 hover:bg-gray-500 text-white' 
-                       : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
-                   }`}
-                 >
-                   <FaDownload className="w-3 h-3 text-black" />
-                   <span>PDF</span>
-                 </button>
-                 <button 
-                   onClick={() => handleExport('Excel')}
-                   className={`px-3 py-1.5 rounded-lg flex items-center space-x-1 text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                     theme === 'dark' 
-                       ? 'bg-gray-600 hover:bg-gray-500 text-white' 
-                       : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
-                   }`}
-                 >
-                   <FaFileAlt className="w-3 h-3 text-black" />
-                   <span>Excel</span>
-                 </button>
-              </div>
             </div>
           </div>
           

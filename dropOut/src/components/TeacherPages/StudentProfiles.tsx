@@ -57,9 +57,9 @@ export default function StudentProfiles() {
   }, [user?.userId, token]);
 
   const getRiskColor = (riskLevel: string): RiskColor => {
-    if (riskLevel === 'CRITICAL') return 'red';
-    if (riskLevel === 'HIGH') return 'yellow';
-    return 'green'; // MEDIUM or LOW
+    if (riskLevel === 'CRITICAL' || riskLevel === 'HIGH') return 'red';
+    if (riskLevel === 'MEDIUM') return 'yellow';
+    return 'green'; // LOW
   };
 
   const getRiskBadgeClass = (color: RiskColor): string => {
